@@ -8,7 +8,9 @@ plugins {
 android {
     namespace = "service.app.salon_flutter"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+//    ndkVersion = flutter.ndkVersion
+
+    ndkVersion = "27.0.12077973"  // ← Добавьте эту строку
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
