@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:salon_flutter/feature/createaccountscreen/create_acc_screen.dart';
 import 'package:salon_flutter/feature/onboardingscreen/onboarding_screen.dart';
 import 'package:salon_flutter/feature/splashscreen/splash_screen.dart';
 import '../../feature/loginscreen/login_screen.dart';
@@ -23,7 +24,8 @@ class MyApp extends StatelessWidget {
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
       // home: SplashScreen(),
       // home: OnboardingScreen(),
-      home: LoginScreen(),
+      // home: LoginScreen(),
+      home: CreateAccountScreen(),
     );
   }
 }
