@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/feature/createaccountscreen/create_acc_screen.dart';
+import 'package:salon_flutter/feature/emailverificationscreen/email_verification_screen.dart';
 import 'package:salon_flutter/feature/forgotpasswordscreen/forgot_password_screen.dart';
 import 'package:salon_flutter/feature/onboardingscreen/onboarding_screen.dart';
 import 'package:salon_flutter/feature/splashscreen/splash_screen.dart';
@@ -27,7 +28,8 @@ class MyApp extends StatelessWidget {
       // home: OnboardingScreen(),
       // home: LoginScreen(),
       // home: CreateAccountScreen(),
-      home: ForgotPasswordScreen(),
+      // home: ForgotPasswordScreen(),
+      home: EmailVerificationScreen(),
     );
   }
 }
