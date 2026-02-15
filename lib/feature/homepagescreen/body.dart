@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:salon_flutter/feature/homepagescreen/home_page_screen.dart';
 import 'package:salon_flutter/feature/homepagescreen/sections/appbarsection/app_bar_section.dart';
 import 'package:salon_flutter/feature/homepagescreen/sections/bpttomnavbarsection/bottom_nav_bar_section.dart';
+import 'package:salon_flutter/feature/homepagescreen/sections/horizontalscrollbarsection/horizontal_scroll_bar_section.dart';
+import 'package:salon_flutter/feature/homepagescreen/sections/horizontalscrollbarsection/promo_data.dart';
 
 import '../homepagescreen//sections/background.dart';
 
@@ -71,10 +73,9 @@ class _BodyState extends State<Body> {
               AppBarSection(),
               // Add other sections here when needed
 
+              SizedBox(height: 16.0),
 
-              // SizedBox(height: 118.0), // Отступ между текстами
-
-              //
+              _buildPromoSection()
               // SizedBox(height: 12.0),
               //
               //
@@ -84,6 +85,23 @@ class _BodyState extends State<Body> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildPromoSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
+        ),
+        const SizedBox(height: _smallSpacing),
+
+        // Используем данные из отдельного класса
+        HorizontalScrollBarSection(
+          items: PromoData.promoItems,
+        ),
+      ],
     );
   }
 }
