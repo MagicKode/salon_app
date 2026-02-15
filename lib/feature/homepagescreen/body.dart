@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/feature/homepagescreen/home_page_screen.dart';
 import 'package:salon_flutter/feature/homepagescreen/sections/appbarsection/app_bar_section.dart';
 import 'package:salon_flutter/feature/homepagescreen/sections/bpttomnavbarsection/bottom_nav_bar_section.dart';
 import 'package:salon_flutter/feature/homepagescreen/sections/horizontalscrollbarsection/horizontal_scroll_bar_section.dart';
 import 'package:salon_flutter/feature/homepagescreen/sections/horizontalscrollbarsection/promo_data.dart';
+import 'package:salon_flutter/feature/homepagescreen/sections/servicelistsection/service_list_section.dart';
 
 import '../homepagescreen//sections/background.dart';
 
@@ -75,10 +75,18 @@ class _BodyState extends State<Body> {
 
               SizedBox(height: 16.0),
 
-              _buildPromoSection()
-              // SizedBox(height: 12.0),
-              //
-              //
+              _buildPromoSection(),
+
+              SizedBox(height: 16.0),
+
+              // Секция с услугами
+              ServiceListSection(
+                onCategoryTap: (category) {
+                  // Обработка нажатия на категорию
+                  print('Выбрана категория: ${category.title}');
+                  // Навигация или другие действия
+                },
+              ),
               // SizedBox(height: 108.0),
               //
             ],
