@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/feature/homepagescreen/sections/appbarsection/app_bar_section.dart';
 import 'package:salon_flutter/feature/homepagescreen/sections/bpttomnavbarsection/bottom_nav_bar_section.dart';
+import 'package:salon_flutter/feature/homepagescreen/sections/descriptionsection/description_data.dart';
+import 'package:salon_flutter/feature/homepagescreen/sections/descriptionsection/description_section.dart';
 import 'package:salon_flutter/feature/homepagescreen/sections/horizontalscrollbarsection/horizontal_scroll_bar_section.dart';
 import 'package:salon_flutter/feature/homepagescreen/sections/horizontalscrollbarsection/promo_data.dart';
 import 'package:salon_flutter/feature/homepagescreen/sections/servicelistsection/service_list_section.dart';
@@ -16,22 +18,9 @@ class _BodyState extends State<Body> {
   // Navigation state
   int _selectedIndex = 0;
 
-  // Переменные для управления состоянием
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final ValueNotifier<bool> _isPasswordVisible = ValueNotifier<bool>(false);
-  bool _isLoading = false;
-  bool _isGoogleLoading = false;
-
-  //переменные для отслеживания фокуса полей
-  final FocusNode _emailFocusNode = FocusNode();
-  final FocusNode _passwordFocusNode = FocusNode();
-
   // Constants
   static const double _verticalPadding = 24.0;
-  static const double _extraLargeSpacing = 118.0;
   static const double _smallSpacing = 12.0;
-  static const double _largeSpacing = 108.0;
 
   @override
   Widget build(BuildContext context) {
@@ -71,8 +60,8 @@ class _BodyState extends State<Body> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AppBarSection(),
-              // Add other sections here when needed
 
+              // Add other sections here when needed
               SizedBox(height: 16.0),
 
               _buildPromoSection(),
@@ -87,8 +76,9 @@ class _BodyState extends State<Body> {
                   // Навигация или другие действия
                 },
               ),
-              // SizedBox(height: 108.0),
-              //
+              SizedBox(height: 16.0),
+
+              DescriptionSection(data: DescriptionData.barberShop),
             ],
           ),
         ),
@@ -100,15 +90,11 @@ class _BodyState extends State<Body> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0),
-        ),
+        const Padding(padding: EdgeInsets.symmetric(horizontal: 16.0)),
         const SizedBox(height: _smallSpacing),
 
         // Используем данные из отдельного класса
-        HorizontalScrollBarSection(
-          items: PromoData.promoItems,
-        ),
+        HorizontalScrollBarSection(items: PromoData.promoItems),
       ],
     );
   }

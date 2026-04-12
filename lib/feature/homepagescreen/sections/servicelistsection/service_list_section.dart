@@ -35,9 +35,9 @@ class ServiceListSection extends StatelessWidget {
 
         // Сетка услуг
         Container(
-          height: 260,
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               // Первый ряд
               _buildServiceRow(rows[0]),
