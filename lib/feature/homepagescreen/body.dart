@@ -3,6 +3,8 @@ import 'package:salon_flutter/feature/homepagescreen/sections/appbarsection/app_
 import 'package:salon_flutter/feature/homepagescreen/sections/bpttomnavbarsection/bottom_nav_bar_section.dart';
 import 'package:salon_flutter/feature/homepagescreen/sections/descriptionsection/description_data.dart';
 import 'package:salon_flutter/feature/homepagescreen/sections/descriptionsection/description_section.dart';
+import 'package:salon_flutter/feature/homepagescreen/sections/feedbacksection/presentation/FeedbackData.dart';
+import 'package:salon_flutter/feature/homepagescreen/sections/feedbacksection/presentation/feedback_section.dart';
 import 'package:salon_flutter/feature/homepagescreen/sections/horizontalscrollbarsection/horizontal_scroll_bar_section.dart';
 import 'package:salon_flutter/feature/homepagescreen/sections/horizontalscrollbarsection/promo_data.dart';
 import 'package:salon_flutter/feature/homepagescreen/sections/servicelistsection/service_list_section.dart';
@@ -79,6 +81,13 @@ class _BodyState extends State<Body> {
               SizedBox(height: 16.0),
 
               DescriptionSection(data: DescriptionData.barberShop),
+
+              SizedBox(height: 16.0),
+
+              FeedbackSection(feedbacks: FeedbackData.items),
+
+              SizedBox(height: 16.0),
+
             ],
           ),
         ),
