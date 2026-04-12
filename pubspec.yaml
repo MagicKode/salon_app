@@ -36,6 +36,9 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter_native_splash: ^2.4.6
   expandable_text: ^2.3.0
+  flutter_map: ^6.1.0 # Для самой карты
+  latlong2: ^0.9.1    # Для работы с координатами
+  geolocator: ^11.0.0
 
 dev_dependencies:
   flutter_test:
