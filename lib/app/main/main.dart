@@ -6,6 +6,7 @@ import 'package:salon_flutter/feature/forgotpasswordscreen/forgot_password_scree
 import 'package:salon_flutter/feature/homepagescreen/home_page_screen.dart';
 import 'package:salon_flutter/feature/nearbymapscreen/nearby_map_screen.dart';
 import 'package:salon_flutter/feature/onboardingscreen/onboarding_screen.dart';
+import 'package:salon_flutter/feature/servicedetailscreen/sevice_detail_screen.dart';
 import 'package:salon_flutter/feature/splashscreen/splash_screen.dart';
 import '../../feature/loginscreen/login_screen.dart';
 
@@ -35,7 +36,8 @@ class MyApp extends StatelessWidget {
       // home: EmailVerificationScreen(),
       // home: CreateNewPassScreen(),
       // home: HomePageScreen(),
-      home: NearbyMapScreen(),
+      // home: NearbyMapScreen(),
+      home: ServiceDetailScreen(),
     );
   }
 }
