@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/feature/servicedetailscreen/sections/ServiceDescriptionSection.dart';
-import 'package:salon_flutter/feature/servicedetailscreen/sections/ServiceImageHeaderSection.dart';
-import 'package:salon_flutter/feature/servicedetailscreen/sections/ServiceInfoSection.dart';
+import 'package:salon_flutter/feature/servicedetailscreen/sections/servicedescriptionsection/ServiceDescriptionSection.dart';
+import 'package:salon_flutter/feature/servicedetailscreen/sections/serviceimageheadersection/ServiceImageHeaderSection.dart';
+import 'package:salon_flutter/feature/servicedetailscreen/sections/serviceonfosection/ServiceInfoSection.dart';
 import 'domain/ServiceDetail.dart';
 
 class Body extends StatelessWidget {

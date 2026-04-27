@@ -9,6 +9,7 @@ import 'package:salon_flutter/feature/onboardingscreen/onboarding_screen.dart';
 import 'package:salon_flutter/feature/servicedetailscreen/sevice_detail_screen.dart';
 import 'package:salon_flutter/feature/splashscreen/splash_screen.dart';
 import '../../feature/loginscreen/login_screen.dart';
+import '../../feature/servicemenuscreen/service_menu_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -37,7 +38,8 @@ class MyApp extends StatelessWidget {
       // home: CreateNewPassScreen(),
       // home: HomePageScreen(),
       // home: NearbyMapScreen(),
-      home: ServiceDetailScreen(),
+      // home: ServiceDetailScreen(),
+      home: ServiceMenuScreen(),
     );
   }
 }
