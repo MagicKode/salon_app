@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:salon_flutter/uikit/strings/app_strings.dart';
 import '../../../../uikit/colors/app_colors.dart';
 
 class SignUpSection extends StatelessWidget {
@@ -17,7 +18,7 @@ class SignUpSection extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            "Don’t have an account? ",
+            AppStrings.dontHaveAccount,
             style: TextStyle(
               color: Colors.grey[600],
               fontSize: 14.0,
@@ -31,7 +32,7 @@ class SignUpSection extends StatelessWidget {
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
             child: const Text(
-              "Join Now",
+              AppStrings.joinNow,
               style: TextStyle(
                 color: AppColors.primaryBlue,
                 fontSize: 14.0,

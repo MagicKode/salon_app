@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:salon_flutter/uikit/strings/app_strings.dart';
 import '../../../../uikit/colors/app_colors.dart';
 
 class ForgotPasswordSection extends StatelessWidget {
@@ -11,9 +12,9 @@ class ForgotPasswordSection extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: TextButton(
-          onPressed: () => print("Forgot password tap"),
+          onPressed: () => print(AppStrings.forgotPassword),
           child: const Text(
-            "Forgot password?",
+            AppStrings.forgotPassword,
             style: TextStyle(
               color: AppColors.primaryBlue,
               fontWeight: FontWeight.w600,

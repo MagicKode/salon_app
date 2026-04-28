@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:salon_flutter/feature/auth/createaccountscreen/sections/create_account_section.dart';
 import 'package:salon_flutter/feature/auth/createaccountscreen/sections/sign_in_section.dart';
 import 'package:salon_flutter/feature/auth/createaccountscreen/sections/term_and_privacy.dart';
+import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 import '../../../uikit/widgets/app_button.dart';
 import '../../../uikit/widgets/google_button.dart';
@@ -68,7 +69,10 @@ class _CreateAccountBodyState extends State<CreateAccountBody> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  WelcomeSection(),
+                  WelcomeSection(
+                    title: AppStrings.registerTitle,
+                    subtitle: AppStrings.registerSubtitle,
+                  ),
 
                   const SizedBox(height: 38.0),
 
@@ -89,7 +93,7 @@ class _CreateAccountBodyState extends State<CreateAccountBody> {
                   const SizedBox(height: 24.0),
 
                   AppButton(
-                    text: "Join Now",
+                    text: AppStrings.joinNow,
                     onPressed: _register,
                     isLoading: _isLoading,
                   ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:salon_flutter/uikit/strings/app_strings.dart';
 import '../../../../uikit/widgets/app_text_field.dart';
 
 class LoginFormSection extends StatelessWidget {
@@ -19,13 +20,13 @@ class LoginFormSection extends StatelessWidget {
       children: [
         AppTextField(
           controller: emailController,
-          hintText: "Email",
+          hintText: AppStrings.emailHint,
           prefixIcon: Icons.email_outlined,
         ),
         const SizedBox(height: 16.0),
         AppTextField(
           controller: passwordController,
-          hintText: "Password",
+          hintText: AppStrings.passwordHint,
           prefixIcon: Icons.lock_outline,
           isPassword: true,
           passwordVisibility: isPasswordVisible,

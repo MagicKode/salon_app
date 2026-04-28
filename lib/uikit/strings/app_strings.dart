@@ -1,12 +1,42 @@
 class AppStrings {
-  // Welcome Section
-  static const String welcomeTitle = "Создайте аккаунт,";
-  static const String welcomeSubtitle = "Пожалуйста, заполните все поля для создания аккаунта";
+  // Общие элементы
+  static const String or = "или";
+  static const String loading = "Загрузка...";
+
+  // Экран Login
+  static const String loginTitle = "С возвращением,";
+  static const String loginSubtitle = "Рады видеть вас снова! Пожалуйста, войдите в аккаунт, чтобы продолжить.";
+  static const String loginButton = "Войти";
+  static const String dontHaveAccount = "Нет аккаунта? ";
+  static const String forgotPassword = "Забыли пароль? ";
+  static const String joinNow = "Присоединиться";
+
+  // Экран Create Account
+  static const String registerTitle = "Создать аккаунт,";
+  static const String registerSubtitle = "Пожалуйста, заполните данные, чтобы зарегистрироваться и начать работу";
+  static const String registerButton = "Зарегистрироваться";
+  static const String alreadyHaveAccount = "Уже есть аккаунт? ";
+  static const String signIn = "Войти";
+
+  // Экран New Password
+  static const String newPassTitle = "Новый пароль,";
+  static const String newPassSubtitle = "Теперь вы можете создать новый пароль и подтвердить его";
+  static const String confirmButton = "Подтвердить";
+  static const String differentPasswords = "Пароли не совпадают";
+  static const String passwordSuccessfullyChanged = "Пароль успешно изменен";
 
   // Auth Sections
   static const String registerBtn = "Зарегистрироваться";
-  static const String alreadyHaveAccount = "Уже есть аккаунт? ";
   static const String loginLink = "Войти";
+
+  // Поля ввода (Hints)
+  static const String emailHint = "Email";
+  static const String passwordHint = "Пароль";
+  static const String phoneHint = "Телефон";
+  static const String newPasswordHint = "Новый пароль";
+  static const String confirmPasswordHint = "Подтвердите новый пароль";
+  static const String firstNameHint = "Имя";
+  static const String lastNameHint = "Фамилия";
 
   // Terms & Privacy
   static const String termsPrefix = "При регистрации, вы соглашаетесь с \n";
@@ -29,7 +59,6 @@ class AppStrings {
   static const String getStarted = 'Приступим';
   static const String signInWithEmail = 'Войти с помощью Email';
   static const String signInWithGoogle = 'Войти с помощью Google';
-  static const String signIn = 'Войти';
 
   static const String imageAddressFirst = 'assets/images/onboarding1.jpg';
   static const String imageAddressSecond = 'assets/images/onboarding2.jpg';

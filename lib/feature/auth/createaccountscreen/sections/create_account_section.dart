@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:salon_flutter/uikit/strings/app_strings.dart';
 import '../../../../uikit/widgets/app_text_field.dart';
 
 class CreateAccountSection extends StatelessWidget {
@@ -23,25 +24,25 @@ class CreateAccountSection extends StatelessWidget {
       children: [
         AppTextField(
           controller: nameController,
-          hintText: "Имя",
+          hintText: AppStrings.firstNameHint,
           prefixIcon: Icons.person, // Исправлено с email на person
         ),
         const SizedBox(height: 16.0),
         AppTextField(
           controller: emailController,
-          hintText: "Email адрес",
+          hintText: AppStrings.emailHint,
           prefixIcon: Icons.email,
         ),
         const SizedBox(height: 16.0),
         AppTextField(
           controller: mobileController,
-          hintText: "Телефон",
+          hintText: AppStrings.phoneHint,
           prefixIcon: Icons.phone,
         ),
         const SizedBox(height: 16.0),
         AppTextField(
           controller: passwordController,
-          hintText: "Пароль",
+          hintText: AppStrings.passwordHint,
           prefixIcon: Icons.lock,
           isPassword: true,
           passwordVisibility: isPasswordVisible,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:salon_flutter/feature/auth/loginscreen/sections/forgot_password_section.dart';
 import 'package:salon_flutter/feature/auth/loginscreen/sections/login_form_section.dart';
 import 'package:salon_flutter/feature/auth/loginscreen/sections/sign_up_section.dart';
+import 'package:salon_flutter/uikit/strings/app_strings.dart';
 import '../../../uikit/widgets/app_button.dart';
 import '../../../uikit/widgets/google_button.dart';
 import '../../../uikit/widgets/welcome_section.dart';
@@ -31,7 +32,10 @@ class _LoginBodyState extends State<LoginBody> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 24),
-              WelcomeSection(),
+              WelcomeSection(
+                title: AppStrings.loginTitle,
+                subtitle: AppStrings.loginSubtitle,
+              ),
 
               const SizedBox(height: 118.0),
 
@@ -47,7 +51,7 @@ class _LoginBodyState extends State<LoginBody> {
 
               // Используем общую кнопку JoinNowButton или переименованную в AppButton
               AppButton(
-                text: "Sign In",
+                text: AppStrings.signIn,
                 onPressed: _signIn,
                 isLoading: _isLoading,
               ),
