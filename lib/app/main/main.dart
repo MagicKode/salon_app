@@ -1,15 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/feature/createaccountscreen/create_acc_screen.dart';
-import 'package:salon_flutter/feature/createnewpasswordscreen/create_new_pass_screen.dart';
-import 'package:salon_flutter/feature/emailverificationscreen/email_verification_screen.dart';
-import 'package:salon_flutter/feature/forgotpasswordscreen/forgot_password_screen.dart';
-import 'package:salon_flutter/feature/homepagescreen/home_page_screen.dart';
-import 'package:salon_flutter/feature/nearbymapscreen/nearby_map_screen.dart';
-import 'package:salon_flutter/feature/onboardingscreen/onboarding_screen.dart';
-import 'package:salon_flutter/feature/servicedetailscreen/sevice_detail_screen.dart';
-import 'package:salon_flutter/feature/splashscreen/splash_screen.dart';
-import '../../feature/loginscreen/login_screen.dart';
-import '../../feature/servicemenuscreen/service_menu_screen.dart';
+
+import '../../feature/core/servicemenuscreen/service_menu_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,15 +20,12 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
       ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      // home: SplashScreen(),
-      // home: OnboardingScreen(),
       // home: LoginScreen(),
       // home: CreateAccountScreen(),
       // home: ForgotPasswordScreen(),
       // home: EmailVerificationScreen(),
       // home: CreateNewPassScreen(),
       // home: HomePageScreen(),
-      // home: NearbyMapScreen(),
       // home: ServiceDetailScreen(),
       home: ServiceMenuScreen(),
     );
