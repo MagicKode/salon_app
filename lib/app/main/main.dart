@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:salon_flutter/feature/core/bookingservicescreen/booking_service_screen.dart';
 
 import '../../feature/core/servicemenuscreen/service_menu_screen.dart';
 
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
       // home: CreateNewPassScreen(),
       // home: HomePageScreen(),
       // home: ServiceDetailScreen(),
-      home: ServiceMenuScreen(),
+      home: BookingServiceScreen(),
     );
   }
 }
