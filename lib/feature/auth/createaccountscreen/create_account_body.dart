@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/feature/auth/createaccountscreen/sections/create_account_section.dart';
-import 'package:salon_flutter/feature/auth/createaccountscreen/sections/join_now_button_section.dart';
 import 'package:salon_flutter/feature/auth/createaccountscreen/sections/sign_in_section.dart';
 import 'package:salon_flutter/feature/auth/createaccountscreen/sections/term_and_privacy.dart';
-import 'package:salon_flutter/feature/auth/createaccountscreen/sections/welcome_section.dart';
 
+import '../../../uikit/widgets/app_button.dart';
+import '../../../uikit/widgets/google_button.dart';
+import '../../../uikit/widgets/welcome_section.dart';
 import '../../core/homepagescreen/sections/background.dart';
-import '../loginscreen/sections/or_section.dart';
-import '../loginscreen/sections/sign_in_with_google_section.dart';
+import '../../../uikit/widgets/or_divider.dart';
 
 class CreateAccountBody extends StatefulWidget {
   const CreateAccountBody({super.key});
@@ -68,7 +68,7 @@ class _CreateAccountBodyState extends State<CreateAccountBody> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const WelcomeSection(), // Теперь const
+                  WelcomeSection(),
 
                   const SizedBox(height: 38.0),
 
@@ -82,20 +82,25 @@ class _CreateAccountBodyState extends State<CreateAccountBody> {
 
                   const SizedBox(height: 12.0),
 
-                  TermsAndPrivacy(onTermAndPrivacyPressed: _onTermAndPrivacyPressed),
+                  TermsAndPrivacy(
+                    onTermAndPrivacyPressed: _onTermAndPrivacyPressed,
+                  ),
 
                   const SizedBox(height: 24.0),
 
-                  JoinNowButton(onPressed: _register, isLoading: _isLoading),
+                  AppButton(
+                    text: "Join Now",
+                    onPressed: _register,
+                    isLoading: _isLoading,
+                  ),
 
                   const OrDivider(),
 
-                  SignInWithGoogleButton(
+                  GoogleButton(
                     onPressed: _signInWithGoogle,
                     isLoading: _isGoogleLoading,
                   ),
 
-                  // ИСПРАВЛЕНО: параметр onSignInPressed вместо onJoinNowPressed
                   SignInSection(onSignInPressed: _signIn),
                 ],
               ),

@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/uikit/colors/app_colors.dart';
+import '../colors/app_colors.dart';
 
-import '../../../../uikit/strings/app_strings.dart';
-
-class JoinNowButton extends StatelessWidget {
+class AppButton extends StatelessWidget {
+  final String text;
   final VoidCallback onPressed;
   final bool isLoading;
+  final Color? backgroundColor;
 
-  const JoinNowButton({
+  const AppButton({
     super.key,
+    required this.text,
     required this.onPressed,
     this.isLoading = false,
+    this.backgroundColor,
   });
 
   @override
@@ -19,14 +21,14 @@ class JoinNowButton extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: SizedBox(
         width: double.infinity,
-        height: 54,
+        height: 54, // Стандартная высота из твоего дизайна
         child: ElevatedButton(
           onPressed: isLoading ? null : onPressed,
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primaryBlue,
+            backgroundColor: backgroundColor ?? AppColors.primaryBlue,
             foregroundColor: Colors.white,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(50.0),
+              borderRadius: BorderRadius.circular(50.0), // Твой радиус 50px
             ),
             elevation: 0,
           ),
@@ -36,12 +38,15 @@ class JoinNowButton extends StatelessWidget {
             height: 24,
             child: CircularProgressIndicator(
               color: Colors.white,
-              strokeWidth: 2.5,
+              strokeWidth: 2,
             ),
           )
-              : const Text(
-             AppStrings.registerBtn,
-            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
+              : Text(
+            text,
+            style: const TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ),

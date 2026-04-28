@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/uikit/colors/app_colors.dart';
+import '../../../../uikit/colors/app_colors.dart';
 
 class SignUpSection extends StatelessWidget {
   final VoidCallback onJoinNowPressed;
 
   const SignUpSection({
-    Key? key,
+    super.key,
     required this.onJoinNowPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 32.0, bottom: 32.0),
+      padding: const EdgeInsets.symmetric(vertical: 32.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -21,17 +21,21 @@ class SignUpSection extends StatelessWidget {
             style: TextStyle(
               color: Colors.grey[600],
               fontSize: 14.0,
-              fontWeight: FontWeight.w400,
             ),
           ),
-          GestureDetector(
-            onTap: onJoinNowPressed,
-            child: Text(
+          TextButton(
+            onPressed: onJoinNowPressed,
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.zero,
+              minimumSize: const Size(0, 0),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            child: const Text(
               "Join Now",
               style: TextStyle(
                 color: AppColors.primaryBlue,
                 fontSize: 14.0,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ),

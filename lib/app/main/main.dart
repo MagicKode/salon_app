@@ -3,6 +3,7 @@ import 'package:salon_flutter/feature/core/bookingservicescreen/booking_service_
 import 'package:salon_flutter/feature/profile/my_booking_screen.dart';
 
 import '../../feature/auth/createaccountscreen/create_acc_screen.dart';
+import '../../feature/auth/loginscreen/login_screen.dart';
 import '../../feature/core/servicemenuscreen/service_menu_screen.dart';
 
 void main() {
@@ -23,8 +24,8 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
       ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      // home: LoginScreen(),
-      home: CreateAccountScreen(),
+      home: LoginScreen(),
+      // home: CreateAccountScreen(),
       // home: ForgotPasswordScreen(),
       // home: EmailVerificationScreen(),
       // home: CreateNewPassScreen(),
