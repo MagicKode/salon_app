@@ -1,45 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
+import 'package:flutter/gestures.dart';
+
+import '../../../../uikit/strings/app_strings.dart';
+
 class TermsAndPrivacy extends StatelessWidget {
   final VoidCallback onTermAndPrivacyPressed;
 
   const TermsAndPrivacy({
-    Key? key,
-    required this.onTermAndPrivacyPressed
-  }) : super(key: key);
+    super.key,
+    required this.onTermAndPrivacyPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.0),
+      padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: RichText(
         textAlign: TextAlign.start,
         text: TextSpan(
+          style: const TextStyle(
+            color: Color(0xFF757575), // Colors.grey[600]
+            fontSize: 14.0,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'Manrope', // Твой шрифт из проекта
+          ),
           children: [
-            // Первая строка - обычный текст
+            const TextSpan(text: AppStrings.termsPrefix),
             TextSpan(
-              text: "При регистрации, вы соглашаетесь с \n",
-              style: TextStyle(
-                color: Colors.grey[600],
-                fontSize: 14.0,
-                fontWeight: FontWeight.w400,
+              text: AppStrings.termsLink,
+              style: const TextStyle(
+                color: AppColors.primaryBlue,
+                fontWeight: FontWeight.bold,
               ),
-            ),
-
-            // Вторая строка - кликабельная часть
-            WidgetSpan(
-              child: GestureDetector(
-                onTap: onTermAndPrivacyPressed,
-                child: Text(
-                  "Условиями Политики конфиденциальности",
-                  style: TextStyle(
-                    color: AppColors.primaryBlue,
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
+              recognizer: TapGestureRecognizer()..onTap = onTermAndPrivacyPressed,
             ),
           ],
         ),

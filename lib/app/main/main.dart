@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:salon_flutter/feature/core/bookingservicescreen/booking_service_screen.dart';
 import 'package:salon_flutter/feature/profile/my_booking_screen.dart';
 
+import '../../feature/auth/createaccountscreen/create_acc_screen.dart';
 import '../../feature/core/servicemenuscreen/service_menu_screen.dart';
 
 void main() {
@@ -23,14 +24,14 @@ class MyApp extends StatelessWidget {
       ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
       // home: LoginScreen(),
-      // home: CreateAccountScreen(),
+      home: CreateAccountScreen(),
       // home: ForgotPasswordScreen(),
       // home: EmailVerificationScreen(),
       // home: CreateNewPassScreen(),
       // home: HomePageScreen(),
       // home: ServiceDetailScreen(),
       // home: BookingServiceScreen(),
-      home: MyBookingsScreen(),
+      // home: MyBookingsScreen(),
     );
   }
 }

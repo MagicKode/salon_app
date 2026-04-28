@@ -1,39 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
+import '../../../../uikit/strings/app_strings.dart';
+
 class JoinNowButton extends StatelessWidget {
   final VoidCallback onPressed;
   final bool isLoading;
 
   const JoinNowButton({
-    Key? key,
+    super.key,
     required this.onPressed,
     this.isLoading = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
-        left: 16.0,
-        right: 16.0,
-      ),
-      child: Container(
-        width: double.infinity, // Занимает всю доступную ширину
-        height: 54, // Такая же высота как у полей ввода
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: SizedBox(
+        width: double.infinity,
+        height: 54,
         child: ElevatedButton(
           onPressed: isLoading ? null : onPressed,
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.primaryBlue,
             foregroundColor: Colors.white,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(50.0), // Radius 50px
+              borderRadius: BorderRadius.circular(50.0),
             ),
-            elevation: 0, // Убираем тень
-            padding: EdgeInsets.symmetric(vertical: 16.0), // Отступы внутри кнопки
+            elevation: 0,
           ),
           child: isLoading
-              ? SizedBox(
+              ? const SizedBox(
             width: 24,
             height: 24,
             child: CircularProgressIndicator(
@@ -41,12 +39,9 @@ class JoinNowButton extends StatelessWidget {
               strokeWidth: 2.5,
             ),
           )
-              : Text(
-            "Зарегестрироваться",
-            style: TextStyle(
-              fontSize: 16.0,
-              fontWeight: FontWeight.w600,
-            ),
+              : const Text(
+             AppStrings.registerBtn,
+            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
           ),
         ),
       ),

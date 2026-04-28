@@ -1,4 +1,17 @@
 class AppStrings {
+  // Welcome Section
+  static const String welcomeTitle = "Создайте аккаунт,";
+  static const String welcomeSubtitle = "Пожалуйста, заполните все поля для создания аккаунта";
+
+  // Auth Sections
+  static const String registerBtn = "Зарегистрироваться";
+  static const String alreadyHaveAccount = "Уже есть аккаунт? ";
+  static const String loginLink = "Войти";
+
+  // Terms & Privacy
+  static const String termsPrefix = "При регистрации, вы соглашаетесь с \n";
+  static const String termsLink = "Условиями Политики конфиденциальности";
+
   static const String studio = 'Студия';
   static const String pavlaYaroshenko = 'Павла Ярошенко';
   static const String alreadyHaveAnAccount = 'Уже есть аккаунт?';
