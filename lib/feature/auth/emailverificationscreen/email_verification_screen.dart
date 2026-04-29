@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/feature/auth/emailverificationscreen/email_verification_body.dart';
+
+import 'email_verification_body.dart';
 
 class EmailVerificationScreen extends StatelessWidget {
   @override

@@ -1,34 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/uikit/colors/app_colors.dart';
+import '../../../../uikit/colors/app_colors.dart';
+import '../../../../uikit/strings/app_strings.dart';
 
 class UsePhoneNumberSection extends StatelessWidget {
-  final VoidCallback onUsePhoneNumberPressed;
+  final VoidCallback onPressed;
 
-  const UsePhoneNumberSection({Key? key, required this.onUsePhoneNumberPressed})
-    : super(key: key);
+  const UsePhoneNumberSection({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          // кликабельная часть
-          GestureDetector(
-            child: GestureDetector(
-              onTap: onUsePhoneNumberPressed,
-              child: Text(
-                "Номер телефона ?",
-                style: TextStyle(
-                  color: AppColors.primaryBlue,
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: GestureDetector(
+          onTap: onPressed,
+          child: const Text(
+            AppStrings.usePhoneNumber,
+            style: TextStyle(
+              color: AppColors.primaryBlue,
+              fontSize: 14.0,
+              fontWeight: FontWeight.w600,
             ),
           ),
-        ],
+        ),
       ),
     );
   }

@@ -49,6 +49,11 @@ class AppStrings {
   static const String resendCodeIn = "Повторная отправка через ";
   static const String resendCodeAction = "Отправить код повторно";
 
+  // Forgot password
+  static const String forgotPassSubtitle = "Пожалуйста, укажите свой email для получения OTP кода";
+  static const String sendCodeButton = "Отправить код";
+  static const String usePhoneNumber = "Номер телефона?";
+
   static const String studio = 'Студия';
   static const String pavlaYaroshenko = 'Павла Ярошенко';
   static const String alreadyHaveAnAccount = 'Уже есть аккаунт?';
