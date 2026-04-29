@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../feature/core/homepagescreen/home_page_screen.dart';
+import '../../feature/core/servicedetailscreen/sevice_detail_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -26,8 +27,8 @@ class MyApp extends StatelessWidget {
       // home: ForgotPasswordScreen(),
       // home: EmailVerificationScreen(),
       // home: CreateNewPassScreen(),
-      home: HomePageScreen(),
-      // home: ServiceDetailScreen(),
+      // home: HomePageScreen(),
+      home: ServiceDetailScreen(),
       // home: BookingServiceScreen(),
       // home: MyBookingsScreen(),
     );

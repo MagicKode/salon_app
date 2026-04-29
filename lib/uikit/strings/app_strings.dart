@@ -74,6 +74,18 @@ class AppStrings {
   static const String pavlaYaroshenko = 'Павла Ярошенко';
   static const String alreadyHaveAnAccount = 'Уже есть аккаунт?';
 
+  // Service Detail Screen
+  static const String descriptionHeader = "Описание";
+  static const String bookNow = "Забронировать";
+  static const String durationUnit = "мин";
+  static const String currency = "BYN";
+
+  // Тестовые данные для примера (можно оставить здесь или в domain)
+  static const String dummyServiceTitle = "Мужская стрижка";
+  static const String dummyServiceDescription =
+      "Классическая техника стрижки, адаптированная под ваши индивидуальные особенности. "
+      "Включает в себя мытье головы, подбор формы и укладку профессиональными средствами.";
+
   static const String titleFirst = 'Лучший Стилист Для Вас';
   static const String descriptionFirst = 'Создай свой стиль согласно твоему образу жизни';
   static const String titleSecond = 'Наши Специалисты';

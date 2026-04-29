@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 class ServiceDescriptionSection extends StatelessWidget {
   final String description;
+
   const ServiceDescriptionSection({super.key, required this.description});
 
   @override
@@ -9,11 +11,18 @@ class ServiceDescriptionSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Описание', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        const Text(
+          AppStrings.descriptionHeader,
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
         const SizedBox(height: 12),
         Text(
           description,
-          style: const TextStyle(fontSize: 16, color: Colors.black87, height: 1.5),
+          style: const TextStyle(
+            fontSize: 16,
+            color: Colors.black87,
+            height: 1.5,
+          ),
         ),
       ],
     );
