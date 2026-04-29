@@ -7,7 +7,7 @@ import '../domain/home_models.dart';
 class FeedbackSection extends StatelessWidget {
   final List<FeedbackItem> feedbacks;
 
-  const FeedbackSection({Key? key, required this.feedbacks}) : super(key: key);
+  const FeedbackSection({super.key, required this.feedbacks});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class FeedbackSection extends StatelessWidget {
 class _FeedbackCard extends StatelessWidget {
   final FeedbackItem item;
 
-  const _FeedbackCard({Key? key, required this.item}) : super(key: key);
+  const _FeedbackCard({required this.item});
 
   @override
   Widget build(BuildContext context) {

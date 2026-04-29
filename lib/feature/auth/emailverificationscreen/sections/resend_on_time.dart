@@ -9,10 +9,10 @@ class ResendOnTime extends StatefulWidget {
   final int countdownSeconds;
 
   const ResendOnTime({
-    Key? key,
+    super.key,
     required this.onResendPressed,
     this.countdownSeconds = 180,
-  }) : super(key: key);
+  });
 
   @override
   _ResendOnTimeState createState() => _ResendOnTimeState();

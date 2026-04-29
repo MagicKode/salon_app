@@ -1,50 +1,87 @@
 import 'package:flutter/material.dart';
 
-class TimeSelectionSection extends StatelessWidget {
+import '../../../../uikit/strings/app_strings.dart';
+import '../utils/date_helper.dart';
+
+class TimeSelectionSection extends StatefulWidget {
   const TimeSelectionSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // Демо-данные для слотов
-    final List<String> timeSlots = [
-      "08:00 AM", "09:00 AM", "10:00 AM",
-      "11:00 AM", "01:00 PM", "02:00 PM"
-    ];
+  State<TimeSelectionSection> createState() => _TimeSelectionSectionState();
+}
 
+class _TimeSelectionSectionState extends State<TimeSelectionSection> {
+  // Генерируем слоты с 9:00 до 20:00 каждые 30 минут
+  final List<TimeOfDay> _slots = DateHelper.generateTimeSlots(
+    startHour: 9,
+    endHour: 20,
+    intervalMinutes: 60,
+  );
+
+  TimeOfDay? _selectedTime;
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          "Time",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          AppStrings.timeSection,
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 12),
-        Wrap( // Используем Wrap для автоматического переноса кнопок на новую строку
+        const SizedBox(height: 16),
+        Wrap(
           spacing: 10,
           runSpacing: 10,
-          children: timeSlots.map((time) {
-            final isSelected = time == "10:00 AM"; // Заглушка выбора
-            return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              decoration: BoxDecoration(
-                color: isSelected ? const Color(0xFFE8F4F4) : Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: isSelected ? const Color(0xFF4CA6A8) : Colors.grey.shade300,
-                  width: 1.5,
-                ),
-              ),
-              child: Text(
-                time,
-                style: TextStyle(
-                  color: isSelected ? const Color(0xFF4CA6A8) : Colors.black,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                ),
-              ),
-            );
-          }).toList(),
+          children:
+              _slots.map((time) {
+                final isSelected = _selectedTime == time;
+                return TimeSlotChip(
+                  time: DateHelper.formatTime(context, time),
+                  isSelected: isSelected,
+                  onTap: () => setState(() => _selectedTime = time),
+                );
+              }).toList(),
         ),
       ],
+    );
+  }
+}
+
+class TimeSlotChip extends StatelessWidget {
+  final String time;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const TimeSlotChip({
+    super.key,
+    required this.time,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: isSelected ? const Color(0xFF1D4D4F) : Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isSelected ? Colors.transparent : Colors.grey.shade300,
+          ),
+        ),
+        child: Text(
+          time,
+          style: TextStyle(
+            color: isSelected ? Colors.white : Colors.black,
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
+      ),
     );
   }
 }

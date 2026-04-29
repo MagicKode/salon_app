@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
-import '../../feature/others/servicemenuscreen/service_menu_screen.dart';
+import '../../feature/core/bookingservicescreen/booking_service_screen.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await initializeDateFormatting('ru', null);
+
   runApp(const MyApp());
 }
 
@@ -28,8 +33,7 @@ class MyApp extends StatelessWidget {
       // home: CreateNewPassScreen(),
       // home: HomePageScreen(),
       // home: ServiceDetailScreen(),
-      home: ServiceMenuScreen(),
-      // home: BookingServiceScreen(),
+      home: BookingServiceScreen(),
       // home: MyBookingsScreen(),
     );
   }

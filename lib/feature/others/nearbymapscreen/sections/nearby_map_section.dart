@@ -6,8 +6,7 @@ import 'package:geolocator/geolocator.dart';
 class NearbyMapSection extends StatefulWidget {
   final LatLng shopLocation;
 
-  const NearbyMapSection({Key? key, required this.shopLocation})
-    : super(key: key);
+  const NearbyMapSection({super.key, required this.shopLocation});
 
   @override
   State<NearbyMapSection> createState() => _NearbyMapSectionState();

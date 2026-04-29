@@ -10,7 +10,7 @@ class OrDivider extends StatelessWidget {
   final double lineThickness;
 
   const OrDivider({
-    Key? key,
+    super.key,
     this.text = "or",
     this.textColor,
     this.lineColor,
@@ -18,7 +18,7 @@ class OrDivider extends StatelessWidget {
     this.verticalPadding = 24.0,
     this.horizontalPadding = 16.0,
     this.lineThickness = 1.0,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

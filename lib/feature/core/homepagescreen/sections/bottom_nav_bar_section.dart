@@ -6,10 +6,10 @@ class BottomNavBarSection extends StatelessWidget {
   final Function(int) onTap;
 
   const BottomNavBarSection({
-    Key? key,
+    super.key,
     required this.currentIndex,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   // Navigation items data
   static const List<_NavItemData> _navItems = [
@@ -72,13 +72,12 @@ class _NavItem extends StatelessWidget {
   final Function(int) onTap;
 
   const _NavItem({
-    Key? key,
     required this.index,
     required this.currentIndex,
     required this.icon,
     required this.activeIcon,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   bool get _isSelected => index == currentIndex;
 

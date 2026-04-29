@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:salon_flutter/feature/core/bookingservicescreen/booking_service_body.dart';
 import 'package:salon_flutter/feature/core/bookingservicescreen/sections/booking_bottom_bar.dart';
 
+import '../../../uikit/strings/app_strings.dart';
+
 class BookingServiceScreen extends StatelessWidget {
   const BookingServiceScreen({super.key});
 
@@ -10,7 +12,9 @@ class BookingServiceScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Booking', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+        title: const Text(AppStrings.bookingTitle,
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+        centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 0,
         leading: const BackButton(color: Colors.black),
@@ -20,3 +24,4 @@ class BookingServiceScreen extends StatelessWidget {
     );
   }
 }
+

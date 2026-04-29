@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 class OrderSummarySection extends StatelessWidget {
-  const OrderSummarySection({super.key});
+  final List<String> services;
+
+  const OrderSummarySection({super.key, required this.services});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Your Services Order", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        const Text(
+          AppStrings.orderSummaryTitle,
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
         const SizedBox(height: 16),
         Container(
           padding: const EdgeInsets.all(16),
@@ -19,13 +25,22 @@ class OrderSummarySection extends StatelessWidget {
           ),
           child: Column(
             children: [
-              _buildOrderItem("Woman Blunt Cut", "30 BYN"),
+              ...services.map(
+                (service) =>
+                    _buildOrderItem(service, "30 ${AppStrings.currency}"),
+              ),
               const Divider(height: 24),
               TextButton.icon(
                 onPressed: () => Navigator.pop(context),
-                icon: const Icon(Icons.add, size: 18, color: Color(0xFF4CA6A8)),
-                label: const Text("Add more services", style: TextStyle(color: Color(0xFF4CA6A8))),
-              )
+                icon: const Icon(Icons.add, size: 18, color: Color(0xFF1D4D4F)),
+                label: const Text(
+                  AppStrings.addMoreServices,
+                  style: TextStyle(
+                    color: Color(0xFF1D4D4F),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -34,18 +49,15 @@ class OrderSummarySection extends StatelessWidget {
   }
 
   Widget _buildOrderItem(String title, String price) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
-        Row(
-          children: [
-            Text(price, style: const TextStyle(fontWeight: FontWeight.bold)),
-            const SizedBox(width: 8),
-            const Icon(Icons.remove_circle_outline, color: Colors.redAccent, size: 20),
-          ],
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
+          Text(price, style: const TextStyle(fontWeight: FontWeight.bold)),
+        ],
+      ),
     );
   }
 }

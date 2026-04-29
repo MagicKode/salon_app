@@ -83,6 +83,20 @@ class AppStrings {
   //
   static const String serviceMenuTitle = "Услуги";
 
+  // Booking screen
+  static const String bookingTitle = "Бронирование";
+  static const String totalPrice = "Итоговая цена";
+  static const String dateSection = "Дата";
+  static const String timeSection = "Время";
+  static const String specialistSection = "Специалист";
+  static const String notesSection = "Заметки";
+  static const String notesHint = "Введите ваши пожелания здесь...";
+  static const String addMoreServices = "Добавить еще услуги";
+  static const String bookingSuccessTitle = "Успешно!";
+  static const String bookingSuccessSub = "Ваша запись подтверждена.";
+  static const String orderSummaryTitle = "Ваш заказ";
+  static const String notesHeader = "Заметки";
+
   // Тестовые данные для примера (можно оставить здесь или в domain)
   static const String dummyServiceTitle = "Мужская стрижка";
   static const String dummyServiceDescription =

@@ -3,6 +3,8 @@ import 'package:salon_flutter/uikit/colors/app_colors.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 class OnboardingScreen extends StatefulWidget {
+  const OnboardingScreen({super.key});
+
   @override
   _OnboardingScreenState createState() => _OnboardingScreenState();
 }
@@ -57,7 +59,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   return Stack(
                     children: [
                       // Фон - картинка
-                      Container(
+                      SizedBox(
                         width: double.infinity,
                         height: double.infinity,
                         child: Image.asset(page['image'], fit: BoxFit.cover),
