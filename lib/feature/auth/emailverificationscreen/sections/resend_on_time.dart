@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
+import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 class ResendOnTime extends StatefulWidget {
   final VoidCallback onResendPressed;
@@ -75,12 +76,12 @@ class _ResendOnTimeState extends State<ResendOnTime> {
         crossAxisAlignment: CrossAxisAlignment.end, // Контент справа
         children: [
           if (!_canResend)
-          // Во время отсчета - текст справа
+            // Во время отсчета - текст справа
             Row(
               mainAxisSize: MainAxisSize.min, // Занимает только нужное место
               children: [
                 Text(
-                  "Повторная отправка через ",
+                  AppStrings.resendCodeIn,
                   style: TextStyle(
                     color: AppColors.primaryBlue,
                     fontSize: 14.0,
@@ -102,11 +103,11 @@ class _ResendOnTimeState extends State<ResendOnTime> {
               ],
             )
           else
-          // Когда отсчет закончен - кнопка справа
+            // Когда отсчет закончен - кнопка справа
             GestureDetector(
               onTap: _handleResend,
               child: Text(
-                "Отправить код повторно",
+                AppStrings.resendCodeAction,
                 style: TextStyle(
                   color: AppColors.primaryBlue,
                   fontSize: 14.0,

@@ -42,6 +42,13 @@ class AppStrings {
   static const String termsPrefix = "При регистрации, вы соглашаетесь с \n";
   static const String termsLink = "Условиями Политики конфиденциальности";
 
+  // Email verification
+  static const String verificationTitle = "Email верификация,";
+  static const String verificationSubtitle = "Укажите свой OTP код, который вы получили";
+  static const String verifyButton = "Подтвердить Email";
+  static const String resendCodeIn = "Повторная отправка через ";
+  static const String resendCodeAction = "Отправить код повторно";
+
   static const String studio = 'Студия';
   static const String pavlaYaroshenko = 'Павла Ярошенко';
   static const String alreadyHaveAnAccount = 'Уже есть аккаунт?';
