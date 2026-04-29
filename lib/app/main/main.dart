@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../feature/core/homepagescreen/home_page_screen.dart';
-import '../../feature/core/servicedetailscreen/sevice_detail_screen.dart';
+import '../../feature/others/servicemenuscreen/service_menu_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,7 +27,8 @@ class MyApp extends StatelessWidget {
       // home: EmailVerificationScreen(),
       // home: CreateNewPassScreen(),
       // home: HomePageScreen(),
-      home: ServiceDetailScreen(),
+      // home: ServiceDetailScreen(),
+      home: ServiceMenuScreen(),
       // home: BookingServiceScreen(),
       // home: MyBookingsScreen(),
     );

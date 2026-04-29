@@ -80,6 +80,9 @@ class AppStrings {
   static const String durationUnit = "мин";
   static const String currency = "BYN";
 
+  //
+  static const String serviceMenuTitle = "Услуги";
+
   // Тестовые данные для примера (можно оставить здесь или в domain)
   static const String dummyServiceTitle = "Мужская стрижка";
   static const String dummyServiceDescription =
