@@ -54,6 +54,22 @@ class AppStrings {
   static const String sendCodeButton = "Отправить код";
   static const String usePhoneNumber = "Номер телефона?";
 
+  // home screen
+  static const String homeWelcome = "Привет, Гость";
+  static const String homeSubtitle = "Выберите желаемый сервис";
+  static const String sectionServices = "Выберите услугу";
+  static const String sectionAbout = "О нас";
+  static const String sectionFeedback = "Отзывы клиентов";
+  static const String hideDetails = "Свернуть";
+  static const String aboutFullDescription =
+      "Наша парикмахерская работает с 2010 года. За это время мы заслужили "
+      "доверие клиентов благодаря профессионализму наших мастеров и "
+      "индивидуальному подходу к каждому посетителю.\n"
+      "У нас уютная атмосфера, приветливый персонал и демократичные цены. "
+      "Мы гарантируем качество каждой услуги и дарим приятные эмоции "
+      "нашим клиентам!";
+  static const String moreDetails = "Подробнее";
+
   static const String studio = 'Студия';
   static const String pavlaYaroshenko = 'Павла Ярошенко';
   static const String alreadyHaveAnAccount = 'Уже есть аккаунт?';
@@ -80,5 +96,4 @@ class AppStrings {
   static const String image = 'image';
   static const String imageTitle = 'title';
   static const String imageDescription = 'description';
-
 }

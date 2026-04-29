@@ -1,13 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/feature/core/bookingservicescreen/booking_service_screen.dart';
-import 'package:salon_flutter/feature/profile/my_booking_screen.dart';
 
-import '../../feature/auth/createaccountscreen/create_acc_screen.dart';
-import '../../feature/auth/emailverificationscreen/email_verification_screen.dart';
-import '../../feature/auth/forgotpasswordscreen/forgot_password_screen.dart';
-import '../../feature/auth/loginscreen/login_screen.dart';
-import '../../feature/auth/splashscreen/splash_screen.dart';
-import '../../feature/core/servicemenuscreen/service_menu_screen.dart';
+import '../../feature/core/homepagescreen/home_page_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,13 +20,13 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      home: const SplashScreen(),
+      // home: const SplashScreen(),
       // home: LoginScreen(),
       // home: CreateAccountScreen(),
       // home: ForgotPasswordScreen(),
       // home: EmailVerificationScreen(),
       // home: CreateNewPassScreen(),
-      // home: HomePageScreen(),
+      home: HomePageScreen(),
       // home: ServiceDetailScreen(),
       // home: BookingServiceScreen(),
       // home: MyBookingsScreen(),

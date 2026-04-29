@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/feature/core/homepagescreen/body.dart';
+import 'package:salon_flutter/feature/core/homepagescreen/home_page_body.dart';
 
 class HomePageScreen extends StatelessWidget {
   @override

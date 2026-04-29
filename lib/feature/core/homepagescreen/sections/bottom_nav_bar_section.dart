@@ -2,25 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
 class BottomNavBarSection extends StatelessWidget {
-  final int initialIndex;
-  final Function(int) onTabSelected;
+  final int currentIndex;
+  final Function(int) onTap;
 
   const BottomNavBarSection({
     Key? key,
-    required this.initialIndex,
-    required this.onTabSelected,
+    required this.currentIndex,
+    required this.onTap,
   }) : super(key: key);
 
   // Navigation items data
   static const List<_NavItemData> _navItems = [
-    _NavItemData(
-      icon: Icons.home_outlined,
-      activeIcon: Icons.home,
-    ),
-    _NavItemData(
-      icon: Icons.explore_outlined,
-      activeIcon: Icons.explore,
-    ),
+    _NavItemData(icon: Icons.home_outlined, activeIcon: Icons.home),
+    _NavItemData(icon: Icons.explore_outlined, activeIcon: Icons.explore),
     _NavItemData(
       icon: Icons.calendar_today_outlined,
       activeIcon: Icons.calendar_today,
@@ -29,10 +23,7 @@ class BottomNavBarSection extends StatelessWidget {
       icon: Icons.chat_bubble_outline,
       activeIcon: Icons.chat_bubble,
     ),
-    _NavItemData(
-      icon: Icons.person_outlined,
-      activeIcon: Icons.person,
-    ),
+    _NavItemData(icon: Icons.person_outlined, activeIcon: Icons.person),
   ];
 
   @override
@@ -45,10 +36,10 @@ class BottomNavBarSection extends StatelessWidget {
         children: List.generate(_navItems.length, (index) {
           return _NavItem(
             index: index,
-            currentIndex: initialIndex,
+            currentIndex: currentIndex,
             icon: _navItems[index].icon,
             activeIcon: _navItems[index].activeIcon,
-            onTap: onTabSelected,
+            onTap: onTap,
           );
         }),
       ),
@@ -58,18 +49,9 @@ class BottomNavBarSection extends StatelessWidget {
   BoxDecoration _buildDecoration() {
     return BoxDecoration(
       color: Colors.white,
-      border: Border(
-        top: BorderSide(
-          color: Colors.grey[300]!,
-          width: 1,
-        ),
-      ),
+      border: Border(top: BorderSide(color: Colors.grey[300]!, width: 1)),
       boxShadow: const [
-        BoxShadow(
-          color: Colors.black12,
-          blurRadius: 4,
-          offset: Offset(0, -2),
-        ),
+        BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, -2)),
       ],
     );
   }
@@ -79,10 +61,7 @@ class _NavItemData {
   final IconData icon;
   final IconData activeIcon;
 
-  const _NavItemData({
-    required this.icon,
-    required this.activeIcon,
-  });
+  const _NavItemData({required this.icon, required this.activeIcon});
 }
 
 class _NavItem extends StatelessWidget {
@@ -117,11 +96,7 @@ class _NavItem extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              _isSelected ? activeIcon : icon,
-              color: _getColor(),
-              size: 24,
-            ),
+            Icon(_isSelected ? activeIcon : icon, color: _getColor(), size: 24),
           ],
         ),
       ),

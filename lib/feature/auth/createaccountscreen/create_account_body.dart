@@ -7,7 +7,6 @@ import 'package:salon_flutter/uikit/strings/app_strings.dart';
 import '../../../uikit/widgets/app_button.dart';
 import '../../../uikit/widgets/google_button.dart';
 import '../../../uikit/widgets/welcome_section.dart';
-import '../../core/homepagescreen/sections/background.dart';
 import '../../../uikit/widgets/or_divider.dart';
 
 class CreateAccountBody extends StatefulWidget {
@@ -63,51 +62,49 @@ class _CreateAccountBodyState extends State<CreateAccountBody> {
       body: SafeArea(
         child: SingleChildScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          child: Background(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  WelcomeSection(
-                    title: AppStrings.registerTitle,
-                    subtitle: AppStrings.registerSubtitle,
-                  ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                WelcomeSection(
+                  title: AppStrings.registerTitle,
+                  subtitle: AppStrings.registerSubtitle,
+                ),
 
-                  const SizedBox(height: 38.0),
+                const SizedBox(height: 38.0),
 
-                  CreateAccountSection(
-                    nameController: _nameController,
-                    emailController: _emailController,
-                    mobileController: _mobileNumberController,
-                    passwordController: _passwordController,
-                    isPasswordVisible: _isPasswordVisible,
-                  ),
+                CreateAccountSection(
+                  nameController: _nameController,
+                  emailController: _emailController,
+                  mobileController: _mobileNumberController,
+                  passwordController: _passwordController,
+                  isPasswordVisible: _isPasswordVisible,
+                ),
 
-                  const SizedBox(height: 12.0),
+                const SizedBox(height: 12.0),
 
-                  TermsAndPrivacy(
-                    onTermAndPrivacyPressed: _onTermAndPrivacyPressed,
-                  ),
+                TermsAndPrivacy(
+                  onTermAndPrivacyPressed: _onTermAndPrivacyPressed,
+                ),
 
-                  const SizedBox(height: 24.0),
+                const SizedBox(height: 24.0),
 
-                  AppButton(
-                    text: AppStrings.joinNow,
-                    onPressed: _register,
-                    isLoading: _isLoading,
-                  ),
+                AppButton(
+                  text: AppStrings.joinNow,
+                  onPressed: _register,
+                  isLoading: _isLoading,
+                ),
 
-                  const OrDivider(),
+                const OrDivider(),
 
-                  GoogleButton(
-                    onPressed: _signInWithGoogle,
-                    isLoading: _isGoogleLoading,
-                  ),
+                GoogleButton(
+                  onPressed: _signInWithGoogle,
+                  isLoading: _isGoogleLoading,
+                ),
 
-                  SignInSection(onSignInPressed: _signIn),
-                ],
-              ),
+                SignInSection(onSignInPressed: _signIn),
+              ],
             ),
           ),
         ),

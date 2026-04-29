@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
-import '../data/entities/feedback_Item.dart';
+import '../../../../uikit/strings/app_strings.dart';
+import '../domain/home_models.dart';
 
 class FeedbackSection extends StatelessWidget {
   final List<FeedbackItem> feedbacks;
@@ -16,7 +17,7 @@ class FeedbackSection extends StatelessWidget {
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.0),
           child: Text(
-            'Отзывы клиентов',
+            AppStrings.sectionFeedback,
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
         ),
