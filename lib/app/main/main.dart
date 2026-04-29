@@ -6,6 +6,7 @@ import '../../feature/auth/createaccountscreen/create_acc_screen.dart';
 import '../../feature/auth/emailverificationscreen/email_verification_screen.dart';
 import '../../feature/auth/forgotpasswordscreen/forgot_password_screen.dart';
 import '../../feature/auth/loginscreen/login_screen.dart';
+import '../../feature/auth/splashscreen/splash_screen.dart';
 import '../../feature/core/servicemenuscreen/service_menu_screen.dart';
 
 void main() {
@@ -15,7 +16,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -24,11 +24,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         scaffoldBackgroundColor: Colors.white,
+        useMaterial3: true,
       ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const SplashScreen(),
       // home: LoginScreen(),
       // home: CreateAccountScreen(),
-      home: ForgotPasswordScreen(),
+      // home: ForgotPasswordScreen(),
       // home: EmailVerificationScreen(),
       // home: CreateNewPassScreen(),
       // home: HomePageScreen(),
