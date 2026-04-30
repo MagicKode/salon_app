@@ -54,7 +54,7 @@ class _FeedbackCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: AppColors.boxDecorationColor,
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -72,7 +72,7 @@ class _FeedbackCard extends StatelessWidget {
               ),
               Text(
                 item.date,
-                style: TextStyle(color: Colors.grey[500], fontSize: 12),
+                style: TextStyle(color: AppColors.primaryGrey, fontSize: 12),
               ),
             ],
           ),
@@ -82,7 +82,7 @@ class _FeedbackCard extends StatelessWidget {
             children: List.generate(5, (index) {
               return Icon(
                 index < item.rating ? Icons.star : Icons.star_border,
-                color: Colors.amber,
+                color: AppColors.starsYellow,
                 size: 18,
               );
             }),
@@ -91,7 +91,7 @@ class _FeedbackCard extends StatelessWidget {
           Expanded(
             child: Text(
               item.comment,
-              style: const TextStyle(fontSize: 14, color: Colors.black87),
+              style: const TextStyle(fontSize: 14, color: AppColors.primaryBlack),
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
             ),

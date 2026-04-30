@@ -14,7 +14,10 @@ class DescriptionSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(AppStrings.sectionAbout, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          Text(
+            AppStrings.sectionAbout,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 8),
           ExpandableText(
             AppStrings.aboutFullDescription,

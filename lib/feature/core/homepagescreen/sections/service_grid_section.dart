@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../uikit/colors/app_colors.dart';
 import '../domain/home_models.dart';
 
 class ServiceGridSection extends StatelessWidget {
@@ -45,7 +46,7 @@ class _ServiceItem extends StatelessWidget {
         const SizedBox(height: 8),
         Text(
           category.title,
-          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.primaryBlue),
           textAlign: TextAlign.center,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,

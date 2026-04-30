@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// Убедись, что путь к AppColors верный
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
 class BottomNavBarSection extends StatelessWidget {
@@ -11,48 +12,45 @@ class BottomNavBarSection extends StatelessWidget {
     required this.onTap,
   });
 
-  // Navigation items data
   static const List<_NavItemData> _navItems = [
     _NavItemData(icon: Icons.home_outlined, activeIcon: Icons.home),
-    _NavItemData(icon: Icons.explore_outlined, activeIcon: Icons.explore),
     _NavItemData(
       icon: Icons.calendar_today_outlined,
       activeIcon: Icons.calendar_today,
-    ),
-    _NavItemData(
-      icon: Icons.chat_bubble_outline,
-      activeIcon: Icons.chat_bubble,
     ),
     _NavItemData(icon: Icons.person_outlined, activeIcon: Icons.person),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 70,
-      decoration: _buildDecoration(),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: List.generate(_navItems.length, (index) {
-          return _NavItem(
-            index: index,
-            currentIndex: currentIndex,
-            icon: _navItems[index].icon,
-            activeIcon: _navItems[index].activeIcon,
-            onTap: onTap,
-          );
-        }),
+    // Используем SafeArea, чтобы защитить нижнюю часть на iPhone/Android
+    return SafeArea(
+      top: false,
+      child: Container(
+        height: 65,
+        decoration: BoxDecoration(
+          color: AppColors.primaryWhite,
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.primaryBlackShadow,
+              blurRadius: 10,
+              offset: const Offset(0, -4),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: List.generate(_navItems.length, (index) {
+            return _NavItem(
+              index: index,
+              currentIndex: currentIndex,
+              icon: _navItems[index].icon,
+              activeIcon: _navItems[index].activeIcon,
+              onTap: onTap,
+            );
+          }),
+        ),
       ),
-    );
-  }
-
-  BoxDecoration _buildDecoration() {
-    return BoxDecoration(
-      color: Colors.white,
-      border: Border(top: BorderSide(color: Colors.grey[300]!, width: 1)),
-      boxShadow: const [
-        BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, -2)),
-      ],
     );
   }
 }
@@ -81,21 +79,30 @@ class _NavItem extends StatelessWidget {
 
   bool get _isSelected => index == currentIndex;
 
-  Color _getColor() {
-    return _isSelected ? AppColors.primaryBlue : Colors.grey[600]!;
-  }
-
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => onTap(index),
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => onTap(index),
+        behavior: HitTestBehavior.opaque,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(_isSelected ? activeIcon : icon, color: _getColor(), size: 24),
+            Icon(
+              _isSelected ? activeIcon : icon,
+              color: _isSelected ? AppColors.primaryBlue : AppColors.primaryGrey,
+              size: 26,
+            ),
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              margin: const EdgeInsets.only(top: 4),
+              height: 4,
+              width: _isSelected ? 4 : 0,
+              decoration: const BoxDecoration(
+                color: AppColors.primaryBlue,
+                shape: BoxShape.circle,
+              ),
+            ),
           ],
         ),
       ),

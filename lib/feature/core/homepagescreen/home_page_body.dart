@@ -34,6 +34,7 @@ class _HomePageBodyState extends State<HomePageBody> {
               const SizedBox(height: 20),
               ServiceGridSection(),
               const DescriptionSection(),
+              const SizedBox(height: 20),
               FeedbackSection(feedbacks: FeedbackData.items),
               const SizedBox(height: 20),
             ],
