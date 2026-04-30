@@ -97,6 +97,18 @@ class AppStrings {
   static const String orderSummaryTitle = "Ваш заказ";
   static const String notesHeader = "Заметки";
 
+  //Booking card
+  static const String finalInfo = "Итоговая информация";
+  static const String confirmBooking = "Подтвердить запись";
+  static const String paymentInSalon = "Оплата производится в салоне";
+  static const String paymentCash = "Оплата наличными";
+
+  // Метки для Grid
+  static const String labelDate = "Дата";
+  static const String labelTime = "Время";
+  static const String labelMaster = "Мастер";
+  static const String labelDuration = "Длительность";
+
   // Тестовые данные для примера (можно оставить здесь или в domain)
   static const String dummyServiceTitle = "Мужская стрижка";
   static const String dummyServiceDescription =

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:salon_flutter/feature/bookingcard/booking_card_body.dart';
 
-import '../../feature/core/bookingservicescreen/booking_service_screen.dart';
+import '../../feature/bookingcard/bookinghistory/feature/my_booking_checkout_screen.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,8 +34,8 @@ class MyApp extends StatelessWidget {
       // home: CreateNewPassScreen(),
       // home: HomePageScreen(),
       // home: ServiceDetailScreen(),
-      home: BookingServiceScreen(),
-      // home: MyBookingsScreen(),
+      // home: BookingServiceScreen(),
+      home: MyBookingCheckoutScreen(),
     );
   }
 }
