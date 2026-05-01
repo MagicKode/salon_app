@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../uikit/colors/app_colors.dart';
+
 class ServiceImageHeaderSection extends StatelessWidget {
   final String title;
   final String imageUrl;
@@ -13,7 +15,7 @@ class ServiceImageHeaderSection extends StatelessWidget {
       pinned: true,
       backgroundColor: const Color(0xFF093882),
       flexibleSpace: FlexibleSpaceBar(
-        title: Text(title, style: const TextStyle(color: Colors.white, fontSize: 16)),
+        title: Text(title, style: const TextStyle(color: AppColors.primaryWhite, fontSize: 16)),
         background: Image.network(imageUrl, fit: BoxFit.cover),
       ),
       leading: Padding(
@@ -21,7 +23,7 @@ class ServiceImageHeaderSection extends StatelessWidget {
         child: CircleAvatar(
           backgroundColor: Colors.white.withOpacity(0.3),
           child: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            icon: const Icon(Icons.arrow_back, color: AppColors.primaryWhite),
             onPressed: () => Navigator.pop(context),
           ),
         ),

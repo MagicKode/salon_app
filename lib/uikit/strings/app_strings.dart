@@ -80,7 +80,6 @@ class AppStrings {
   static const String durationUnit = "мин";
   static const String currency = "BYN";
 
-  //
   static const String serviceMenuTitle = "Услуги";
 
   // Booking screen
@@ -100,8 +99,29 @@ class AppStrings {
   //Booking card
   static const String finalInfo = "Итоговая информация";
   static const String confirmBooking = "Подтвердить запись";
+  static const String bookingConfirmation = "Подтвердить бронирование";
   static const String paymentInSalon = "Оплата производится в салоне";
   static const String paymentCash = "Оплата наличными";
+  static const String change = "Изменить";
+  static const String yourService = "Ваш заказ";
+  static const String cancelAndLeave = "Отменить и выйти";
+  static const String master = "Мастер:";
+
+  //BookingSuccessScreen
+  static const String bookingDetails = "Детали бронирования";
+  static const String bookedSuccessful = "Запись подтверждена!";
+  static const String toHomePage = "На главную";
+  static const String cancelBooking = "Отменить бронь";
+  static const String cancellingBooking = "Отмена брони";
+  static const String confirmationOfCancellingBooking = "Вы уверены, что хотите отменить запись? Это действие нельзя будет отменить.";
+  static const String bookingIsCanceled = "Бронирование отменено";
+  static const String confirmCancelling = "Да, отменить";
+  static const String back = "Назад";
+  static const String serviceWelcomeMessage = "Мы ждем вас в нашей студии.\nДетали записи доступны в профиле.";
+
+  //BookingserviceScreen
+  static const String yourMasterPavel = "Ваш мастер: Павел";
+  static const String topMaster = "Топ-стилист";
 
   // Метки для Grid
   static const String labelDate = "Дата";

@@ -16,7 +16,7 @@ class BookingInfoGrid extends StatelessWidget {
       children: [
         InfoTile(label: AppStrings.labelDate, value: "10 Марта"),
         InfoTile(label: AppStrings.labelTime, value: "10:00"),
-        InfoTile(label: AppStrings.labelMaster, value: "Елена"),
+        InfoTile(label: AppStrings.labelMaster, value: "Павел"),
         InfoTile(label: AppStrings.labelDuration, value: "1 час"),
       ],
     );

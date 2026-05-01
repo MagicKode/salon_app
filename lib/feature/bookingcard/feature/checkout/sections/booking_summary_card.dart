@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
+import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 import 'booking_info_grid.dart';
 import 'price_calculation_section.dart';
@@ -20,10 +21,10 @@ class BookingSummaryCard extends StatelessWidget {
         children: [
           const BookingInfoGrid(),
           const SizedBox(height: 20),
-          const Divider(color: Colors.white, thickness: 1.5),
+          const Divider(color: AppColors.primaryWhite, thickness: 1.5),
           const SizedBox(height: 20),
           const Text(
-            "Услуги",
+            AppStrings.serviceMenuTitle,
             style: TextStyle(
               color: AppColors.primaryBlack,
               fontWeight: FontWeight.w500,

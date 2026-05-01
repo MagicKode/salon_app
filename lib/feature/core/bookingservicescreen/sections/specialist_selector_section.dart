@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../uikit/assets/app_assets.dart';
 import '../../../../uikit/strings/app_strings.dart';
 
 class SpecialistSelectorSection extends StatelessWidget {
@@ -36,7 +37,7 @@ class SpecialistSelectorSection extends StatelessWidget {
                     ),
                     child: const CircleAvatar(
                       radius: 28,
-                      backgroundImage: NetworkImage('https://i.pravatar.cc/150'),
+                      backgroundImage: AssetImage(AppAssets.pavelImg),
                     ),
                   ),
                   const SizedBox(height: 8),

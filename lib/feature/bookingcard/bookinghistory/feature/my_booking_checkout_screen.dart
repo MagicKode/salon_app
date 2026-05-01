@@ -1,59 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/uikit/strings/app_strings.dart';
+import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
-import '../../../../uikit/colors/app_colors.dart';
-import '../../../../uikit/widgets/app_button.dart';
 import '../../booking_card_body.dart';
-
 class MyBookingCheckoutScreen extends StatelessWidget {
   const MyBookingCheckoutScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
-      appBar: AppBar(
-        backgroundColor: AppColors.primaryWhite,
-        elevation: 0,
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            color: AppColors.primaryBlack,
-            size: 20,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text(
-          AppStrings.finalInfo,
-          style: TextStyle(
-            color: AppColors.primaryBlack,
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-          ),
-        ),
-      ),
-      body: const BookingCardBody(),
-
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.fromLTRB(20, 12, 20, 34),
-        decoration: BoxDecoration(
+    return Material(
+      color: Colors.transparent,
+      child: Container(
+        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 20),
+        decoration: const BoxDecoration(
           color: AppColors.primaryWhite,
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.primaryBlackHint,
-              blurRadius: 10,
-              offset: const Offset(0, -5),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Линия-индикатор (handle) сверху
+            const SizedBox(height: 12),
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: AppColors.primaryGrey,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+
+            const Flexible(
+              child: SingleChildScrollView(
+                child: BookingCardBody(),
+              ),
             ),
           ],
-        ),
-        child: SafeArea(
-          child: AppButton(
-            text: AppStrings.confirmBooking,
-            onPressed: () {
-              // Действие при подтверждении
-            },
-          ),
         ),
       ),
     );

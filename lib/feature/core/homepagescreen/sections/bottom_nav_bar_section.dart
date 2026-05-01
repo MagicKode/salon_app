@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-// Убедись, что путь к AppColors верный
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
 class BottomNavBarSection extends StatelessWidget {

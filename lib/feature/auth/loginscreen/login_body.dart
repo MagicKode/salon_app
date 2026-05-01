@@ -7,6 +7,7 @@ import '../../../uikit/widgets/app_button.dart';
 import '../../../uikit/widgets/google_button.dart';
 import '../../../uikit/widgets/welcome_section.dart';
 import '../../../uikit/widgets/or_divider.dart';
+import '../../navigation/main_navigation_screen.dart';
 
 class LoginBody extends StatefulWidget {
   const LoginBody({super.key});
@@ -49,7 +50,6 @@ class _LoginBodyState extends State<LoginBody> {
 
               const SizedBox(height: 100.0),
 
-              // Используем общую кнопку JoinNowButton или переименованную в AppButton
               AppButton(
                 text: AppStrings.signIn,
                 onPressed: _signIn,
@@ -68,10 +68,13 @@ class _LoginBodyState extends State<LoginBody> {
     );
   }
 
-  void _signIn() async {
-    setState(() => _isLoading = true);
-    await Future.delayed(const Duration(seconds: 2));
-    if (mounted) setState(() => _isLoading = false);
+  void _signIn() async {  //ВРЕМЕННАЯ ЛОГИКА ДЛЯ ДЕМОНСТРАЦИИ !!!!
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const MainNavigationScreen(),
+      ),
+    );
   }
 
   void _signInWithGoogle() { /* логика */ }

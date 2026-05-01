@@ -4,27 +4,28 @@ import 'package:salon_flutter/feature/core/homepagescreen/sections/bottom_nav_ba
 import 'package:salon_flutter/feature/core/homepagescreen/sections/description_section.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/feedback_section.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/service_grid_section.dart';
+import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
 import 'domain/home_models.dart';
 
 class HomePageBody extends StatefulWidget {
-  const HomePageBody({super.key}); // Добавь const конструктор
+  const HomePageBody({super.key});
 
   @override
   State<HomePageBody> createState() => _HomePageBodyState();
 }
 
 class _HomePageBodyState extends State<HomePageBody> {
-  int _selectedIndex = 0;
+  // int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      bottomNavigationBar: BottomNavBarSection(
-        currentIndex: _selectedIndex,
-        onTap: (index) => setState(() => _selectedIndex = index),
-      ),
+      backgroundColor: AppColors.primaryWhite,
+      // bottomNavigationBar: BottomNavBarSection(
+      //   currentIndex: _selectedIndex,
+      //   onTap: (index) => setState(() => _selectedIndex = index),
+      // ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(

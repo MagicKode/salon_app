@@ -4,6 +4,9 @@ import 'package:salon_flutter/feature/core/bookingservicescreen/sections/notes_s
 import 'package:salon_flutter/feature/core/bookingservicescreen/sections/order_summary_section.dart';
 import 'package:salon_flutter/feature/core/bookingservicescreen/sections/time_selection_section.dart';
 
+import '../../../uikit/assets/app_assets.dart';
+import '../../../uikit/strings/app_strings.dart';
+
 class BookingServiceBody extends StatelessWidget {
   const BookingServiceBody({super.key});
 
@@ -17,14 +20,17 @@ class BookingServiceBody extends StatelessWidget {
           const OrderSummarySection(services: ["Woman Blunt Cut"]),
           const SizedBox(height: 24),
 
-          const ListTile(
+          ListTile(
             contentPadding: EdgeInsets.zero,
-            leading: CircleAvatar(
+            leading: const CircleAvatar(
               radius: 25,
-              backgroundImage: NetworkImage('https://i.pravatar.cc/150?img=5'),
+              backgroundImage: AssetImage(AppAssets.pavelImg),
             ),
-            title: Text("Ваш мастер: Павел Ярошенко", style: TextStyle(fontWeight: FontWeight.bold)),
-            subtitle: Text("Топ-стилист"),
+            title: Text(
+              AppStrings.yourMasterPavel,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            subtitle: const Text(AppStrings.topMaster),
           ),
 
           const SizedBox(height: 24),

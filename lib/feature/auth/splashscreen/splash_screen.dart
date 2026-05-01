@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../uikit/colors/app_colors.dart';
 import '../../../uikit/strings/app_strings.dart';
+import '../../navigation/main_navigation_screen.dart';
 import '../loginscreen/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -20,6 +21,15 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   @override
   void initState() {
     super.initState();
+
+    Future.delayed(const Duration(seconds: 3), () {
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
+        );
+      }
+    });
 
     _controller = AnimationController(
       vsync: this,
