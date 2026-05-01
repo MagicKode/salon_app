@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
+import '../../../../uikit/colors/app_colors.dart';
+
 class OrderSummarySection extends StatelessWidget {
   final List<String> services;
 
@@ -32,11 +34,11 @@ class OrderSummarySection extends StatelessWidget {
               const Divider(height: 24),
               TextButton.icon(
                 onPressed: () => Navigator.pop(context),
-                icon: const Icon(Icons.add, size: 18, color: Color(0xFF1D4D4F)),
+                icon: const Icon(Icons.add, size: 18, color: AppColors.primaryBlue),
                 label: const Text(
                   AppStrings.addMoreServices,
                   style: TextStyle(
-                    color: Color(0xFF1D4D4F),
+                    color: AppColors.primaryBlue,
                     fontWeight: FontWeight.w600,
                   ),
                 ),

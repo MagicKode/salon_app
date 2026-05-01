@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
 import '../../../../uikit/strings/app_strings.dart';
 import '../utils/date_helper.dart';
@@ -68,7 +69,7 @@ class TimeSlotChip extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF1D4D4F) : Colors.white,
+          color: isSelected ? AppColors.primaryBlue : AppColors.primaryWhite,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected ? Colors.transparent : Colors.grey.shade300,
@@ -77,7 +78,7 @@ class TimeSlotChip extends StatelessWidget {
         child: Text(
           time,
           style: TextStyle(
-            color: isSelected ? Colors.white : Colors.black,
+            color: isSelected ? AppColors.primaryWhite : AppColors.primaryBlack,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),
         ),
