@@ -1,27 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:salon_flutter/feature/core/servicedetailscreen/domain/service_detail_data.dart';
+import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
-class ServiceInfo extends StatelessWidget {
-  final String duration;
-  final String price;
+class ServiceInfoSection extends StatelessWidget {
+  final ServiceDetail service;
 
-  const ServiceInfo({super.key, required this.duration, required this.price});
+  const ServiceInfoSection({
+    super.key,
+    required this.service,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Row(
           children: [
-            const Icon(Icons.access_time, size: 20, color: Colors.blueGrey),
-            const SizedBox(width: 8),
-            Text(duration, style: const TextStyle(fontSize: 16, color: Colors.blueGrey)),
+            Icon(
+              Icons.access_time_rounded,
+              size: 18,
+              color: AppColors.primaryGrey,
+            ),
+            const SizedBox(width: 6),
+            Text(
+              service.duration,
+              style: TextStyle(
+                fontSize: 14,
+                color: AppColors.primaryGrey,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ],
         ),
-        const SizedBox(height: 16),
-        Text(
-          price,
-          style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Color(0xFF093882)),
+
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: Colors.blue.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Text(
+            service.price,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: AppColors.primaryBlue,
+            ),
+          ),
         ),
       ],
     );

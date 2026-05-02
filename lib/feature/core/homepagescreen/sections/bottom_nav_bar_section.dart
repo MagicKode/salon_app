@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/uikit/colors/app_colors.dart';
+import '../../../../uikit/colors/app_colors.dart';
+import '../domain/bottom_nav_item.dart';
+import '../domain/nav_item_model.dart';
 
 class BottomNavBarSection extends StatelessWidget {
   final int currentIndex;
@@ -11,18 +13,15 @@ class BottomNavBarSection extends StatelessWidget {
     required this.onTap,
   });
 
-  static const List<_NavItemData> _navItems = [
-    _NavItemData(icon: Icons.home_outlined, activeIcon: Icons.home),
-    _NavItemData(
-      icon: Icons.calendar_today_outlined,
-      activeIcon: Icons.calendar_today,
-    ),
-    _NavItemData(icon: Icons.person_outlined, activeIcon: Icons.person),
+  // Список можно вынести даже в отдельный конфиг-файл
+  static const List<NavItemModel> _navItems = [
+    NavItemModel(icon: Icons.home_outlined, activeIcon: Icons.home),
+    NavItemModel(icon: Icons.event_note_outlined, activeIcon: Icons.event_note),
+    NavItemModel(icon: Icons.person_outlined, activeIcon: Icons.person),
   ];
 
   @override
   Widget build(BuildContext context) {
-    // Используем SafeArea, чтобы защитить нижнюю часть на iPhone/Android
     return SafeArea(
       top: false,
       child: Container(
@@ -40,69 +39,15 @@ class BottomNavBarSection extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: List.generate(_navItems.length, (index) {
-            return _NavItem(
+            final item = _navItems[index];
+            return BottomNavItem(
               index: index,
               currentIndex: currentIndex,
-              icon: _navItems[index].icon,
-              activeIcon: _navItems[index].activeIcon,
+              icon: item.icon,
+              activeIcon: item.activeIcon,
               onTap: onTap,
             );
           }),
-        ),
-      ),
-    );
-  }
-}
-
-class _NavItemData {
-  final IconData icon;
-  final IconData activeIcon;
-
-  const _NavItemData({required this.icon, required this.activeIcon});
-}
-
-class _NavItem extends StatelessWidget {
-  final int index;
-  final int currentIndex;
-  final IconData icon;
-  final IconData activeIcon;
-  final Function(int) onTap;
-
-  const _NavItem({
-    required this.index,
-    required this.currentIndex,
-    required this.icon,
-    required this.activeIcon,
-    required this.onTap,
-  });
-
-  bool get _isSelected => index == currentIndex;
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: () => onTap(index),
-        behavior: HitTestBehavior.opaque,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              _isSelected ? activeIcon : icon,
-              color: _isSelected ? AppColors.primaryBlue : AppColors.primaryGrey,
-              size: 26,
-            ),
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              margin: const EdgeInsets.only(top: 4),
-              height: 4,
-              width: _isSelected ? 4 : 0,
-              decoration: const BoxDecoration(
-                color: AppColors.primaryBlue,
-                shape: BoxShape.circle,
-              ),
-            ),
-          ],
         ),
       ),
     );

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/app_bar_section.dart';
-import 'package:salon_flutter/feature/core/homepagescreen/sections/bottom_nav_bar_section.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/description_section.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/feedback_section.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/service_grid_section.dart';
@@ -16,16 +15,11 @@ class HomePageBody extends StatefulWidget {
 }
 
 class _HomePageBodyState extends State<HomePageBody> {
-  // int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primaryWhite,
-      // bottomNavigationBar: BottomNavBarSection(
-      //   currentIndex: _selectedIndex,
-      //   onTap: (index) => setState(() => _selectedIndex = index),
-      // ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../uikit/colors/app_colors.dart';
 import '../../../../uikit/strings/app_strings.dart';
+import '../../../../uikit/widgets/search_button.dart';
 
 class AppBarSection extends StatelessWidget {
   const AppBarSection({super.key});
@@ -26,28 +27,12 @@ class AppBarSection extends StatelessWidget {
               ),
             ],
           ),
-          _SearchButton(),
+          SearchButton(
+            onPressed: () {
+              // Логика поиска
+            },
+          ),
         ],
-      ),
-    );
-  }
-
-  Widget _SearchButton() {
-    return Container(
-      margin: const EdgeInsets.all(8),
-      decoration: const BoxDecoration(
-        color: AppColors.boxDecorationColor,
-        shape: BoxShape.circle,
-      ),
-      child: IconButton(
-        icon: const Icon(
-          Icons.search,
-          color: AppColors.primaryBlue,
-          size: 24,
-        ),
-        onPressed: () {
-          // Логика поиска
-        },
       ),
     );
   }
