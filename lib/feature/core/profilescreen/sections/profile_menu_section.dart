@@ -3,6 +3,7 @@ import 'package:salon_flutter/feature/core/notificationscreen/notifications_scre
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 import '../../../../uikit/colors/app_colors.dart';
+import '../../../auth/loginscreen/login_screen.dart';
 import '../../historyscreen/history_screen.dart';
 
 class ProfileMenuSection extends StatelessWidget {
@@ -28,7 +29,9 @@ class ProfileMenuSection extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const NotificationsScreen()),
+              MaterialPageRoute(
+                builder: (context) => const NotificationsScreen(),
+              ),
             );
           },
         ),
@@ -50,9 +53,7 @@ class ProfileMenuSection extends StatelessWidget {
           icon: Icons.logout_rounded,
           title: AppStrings.exitFromAccount,
           color: AppColors.primaryRed,
-          onTap: () {
-            /* Логика выхода */
-          },
+          onTap: () => _showLogoutDialog(context),
         ),
       ],
     );
@@ -86,6 +87,52 @@ class ProfileMenuSection extends StatelessWidget {
               )
               : null),
       onTap: onTap,
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            backgroundColor: AppColors.primaryWhite,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: const Text(
+              AppStrings.exitHeader,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            content: const Text(AppStrings.confirmationExit),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text(
+                  AppStrings.cancel,
+                  style: TextStyle(color: AppColors.primaryBlackHint),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginScreen(),
+                    ),
+                    (route) => false,
+                  );
+                },
+                child: const Text(
+                  AppStrings.exit,
+                  style: TextStyle(
+                    color: AppColors.primaryRed,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+            ],
+          ),
     );
   }
 }

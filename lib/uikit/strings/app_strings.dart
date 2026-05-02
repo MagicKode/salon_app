@@ -130,16 +130,21 @@ class AppStrings {
   static const String labelDuration = "Длительность";
 
   // Profile
-  static const String serviceHistory = "История посещений";
+  static const String serviceHistory = "История бронирований";
   static const String notifications = "Уведомления";
   static const String payment =  "Способы оплаты";
   static const String exitFromAccount =  "Выйти из аккаунта";
   static const String profileEmail =  "email: ";
   static const String recentBooking =  "Моя ближайшая запись";
   static const String cash =   "НАЛИЧНЫМИ";
+  static const String exitHeader =   "Выход";
+  static const String exit =   "Выход";
+  static const String cancel =   "Отмена";
+  static const String confirmationExit =   "Вы уверены, что хотите выйти из аккаунта?";
+
 
   // History of services
-  static const String historyIsEmpty =   "История посещений пуста";
+  static const String historyIsEmpty =   "История бронирований пуста";
 
   // Тестовые данные для примера (можно оставить здесь или в domain)
   static const String dummyServiceTitle = "Мужская стрижка";
