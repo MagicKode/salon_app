@@ -138,6 +138,9 @@ class AppStrings {
   static const String recentBooking =  "Моя ближайшая запись";
   static const String cash =   "НАЛИЧНЫМИ";
 
+  // History of services
+  static const String historyIsEmpty =   "История посещений пуста";
+
   // Тестовые данные для примера (можно оставить здесь или в domain)
   static const String dummyServiceTitle = "Мужская стрижка";
   static const String dummyServiceDescription =

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 import '../../../../uikit/colors/app_colors.dart';
+import '../../historyscreen/history_screen.dart';
 
 class ProfileMenuSection extends StatelessWidget {
   const ProfileMenuSection({super.key});
@@ -14,7 +15,10 @@ class ProfileMenuSection extends StatelessWidget {
           icon: Icons.history,
           title: AppStrings.serviceHistory,
           onTap: () {
-            /* Твоя логика */
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const HistoryScreen()),
+            );
           },
         ),
         _buildMenuTile(
