@@ -24,12 +24,16 @@ class BookingServiceScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.primaryWhite,
       appBar: AppBar(
-        title: const Text(AppStrings.bookingTitle,
-            style: TextStyle(color: AppColors.primaryBlack, fontWeight: FontWeight.bold)),
+        title: const Text(
+          AppStrings.bookingTitle,
+          style: TextStyle(
+            color: AppColors.primaryBlack,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         centerTitle: true,
         backgroundColor: AppColors.primaryWhite,
         elevation: 0,
-        leading: const BackButton(color: AppColors.primaryBlack),
       ),
       body: const BookingServiceBody(),
       bottomNavigationBar: BookingBottomBar(
@@ -38,4 +42,3 @@ class BookingServiceScreen extends StatelessWidget {
     );
   }
 }
-

@@ -129,6 +129,15 @@ class AppStrings {
   static const String labelMaster = "Мастер";
   static const String labelDuration = "Длительность";
 
+  // Profile
+  static const String serviceHistory = "История посещений";
+  static const String notifications = "Уведомления";
+  static const String payment =  "Способы оплаты";
+  static const String exitFromAccount =  "Выйти из аккаунта";
+  static const String profileEmail =  "email: ";
+  static const String recentBooking =  "Моя ближайшая запись";
+  static const String cash =   "НАЛИЧНЫМИ";
+
   // Тестовые данные для примера (можно оставить здесь или в domain)
   static const String dummyServiceTitle = "Мужская стрижка";
   static const String dummyServiceDescription =
