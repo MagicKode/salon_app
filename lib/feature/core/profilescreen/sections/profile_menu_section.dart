@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:salon_flutter/feature/core/notificationscreen/notifications_screen.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 import '../../../../uikit/colors/app_colors.dart';
@@ -25,7 +26,10 @@ class ProfileMenuSection extends StatelessWidget {
           icon: Icons.notifications_none_rounded,
           title: AppStrings.notifications,
           onTap: () {
-            /* Твоя логика */
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const NotificationsScreen()),
+            );
           },
         ),
         _buildMenuTile(
