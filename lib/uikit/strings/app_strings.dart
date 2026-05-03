@@ -142,9 +142,14 @@ class AppStrings {
   static const String cancel =   "Отмена";
   static const String confirmationExit =   "Вы уверены, что хотите выйти из аккаунта?";
 
-
   // History of services
   static const String historyIsEmpty =   "История бронирований пуста";
+
+  // BottomNavigation bar
+  static const String navHome =   "Главная";
+  static const String navBooking =  "Бронировать" ;
+  static const String navHistory =   "Мои записи";
+  static const String navProfile =   "Профиль";
 
   // Тестовые данные для примера (можно оставить здесь или в domain)
   static const String dummyServiceTitle = "Мужская стрижка";

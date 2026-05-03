@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:salon_flutter/feature/core/historyscreen/history_screen.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/home_page_screen.dart';
 
 import '../core/bookingservicescreen/booking_service_screen.dart';
@@ -20,8 +21,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   final List<Widget> _pages = [
     const HomePageScreen(),
     const BookingServiceScreen(),
+    const HistoryScreen(),
     const ProfileScreen(),
-    // const ServiceDetailScreen(),
   ];
 
   void _onTabTapped(int index) {

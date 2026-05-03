@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../uikit/colors/app_colors.dart';
+import '../../../../uikit/strings/app_strings.dart';
 import '../domain/bottom_nav_item.dart';
 import '../domain/nav_item_model.dart';
 
@@ -15,9 +16,26 @@ class BottomNavBarSection extends StatelessWidget {
 
   // Список можно вынести даже в отдельный конфиг-файл
   static const List<NavItemModel> _navItems = [
-    NavItemModel(icon: Icons.home_outlined, activeIcon: Icons.home),
-    NavItemModel(icon: Icons.event_note_outlined, activeIcon: Icons.event_note),
-    NavItemModel(icon: Icons.person_outlined, activeIcon: Icons.person),
+    NavItemModel(
+      icon: Icons.home_outlined,
+      activeIcon: Icons.home,
+      label: AppStrings.navHome,
+    ),
+    NavItemModel(
+      icon: Icons.add_task,
+      activeIcon: Icons.add_task,
+      label: AppStrings.navBooking,
+    ),
+    NavItemModel(
+      icon: Icons.menu_book_outlined,
+      activeIcon: Icons.menu_book,
+      label: AppStrings.navHistory,
+    ),
+    NavItemModel(
+      icon: Icons.person_outlined,
+      activeIcon: Icons.person,
+      label: AppStrings.navProfile,
+    ),
   ];
 
   @override
@@ -45,6 +63,7 @@ class BottomNavBarSection extends StatelessWidget {
               currentIndex: currentIndex,
               icon: item.icon,
               activeIcon: item.activeIcon,
+              label: item.label,
               onTap: onTap,
             );
           }),

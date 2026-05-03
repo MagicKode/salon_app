@@ -6,6 +6,7 @@ class BottomNavItem extends StatelessWidget {
   final int currentIndex;
   final IconData icon;
   final IconData activeIcon;
+  final String label;
   final Function(int) onTap;
 
   const BottomNavItem({
@@ -14,6 +15,7 @@ class BottomNavItem extends StatelessWidget {
     required this.currentIndex,
     required this.icon,
     required this.activeIcon,
+    required this.label,
     required this.onTap,
   });
 
@@ -31,7 +33,16 @@ class BottomNavItem extends StatelessWidget {
             Icon(
               _isSelected ? activeIcon : icon,
               color: _isSelected ? AppColors.primaryBlue : AppColors.primaryGrey,
-              size: 26,
+              size: 24,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: _isSelected ? FontWeight.bold : FontWeight.normal,
+                color: _isSelected ? AppColors.primaryBlue : AppColors.primaryGrey,
+              ),
             ),
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
