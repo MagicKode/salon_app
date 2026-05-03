@@ -5,7 +5,8 @@ class AppStrings {
 
   // Экран Login
   static const String loginTitle = "С возвращением,";
-  static const String loginSubtitle = "Рады видеть вас снова! Пожалуйста, войдите в аккаунт, чтобы продолжить.";
+  static const String loginSubtitle =
+      "Рады видеть вас снова! Пожалуйста, войдите в аккаунт, чтобы продолжить.";
   static const String loginButton = "Войти";
   static const String dontHaveAccount = "Нет аккаунта? ";
   static const String forgotPassword = "Забыли пароль? ";
@@ -13,14 +14,16 @@ class AppStrings {
 
   // Экран Create Account
   static const String registerTitle = "Создать аккаунт,";
-  static const String registerSubtitle = "Пожалуйста, заполните данные, чтобы зарегистрироваться и начать работу";
+  static const String registerSubtitle =
+      "Пожалуйста, заполните данные, чтобы зарегистрироваться и начать работу";
   static const String registerButton = "Зарегистрироваться";
   static const String alreadyHaveAccount = "Уже есть аккаунт? ";
   static const String signIn = "Войти";
 
   // Экран New Password
   static const String newPassTitle = "Новый пароль,";
-  static const String newPassSubtitle = "Теперь вы можете создать новый пароль и подтвердить его";
+  static const String newPassSubtitle =
+      "Теперь вы можете создать новый пароль и подтвердить его";
   static const String confirmButton = "Подтвердить";
   static const String differentPasswords = "Пароли не совпадают";
   static const String passwordSuccessfullyChanged = "Пароль успешно изменен";
@@ -44,13 +47,15 @@ class AppStrings {
 
   // Email verification
   static const String verificationTitle = "Email верификация,";
-  static const String verificationSubtitle = "Укажите свой OTP код, который вы получили";
+  static const String verificationSubtitle =
+      "Укажите свой OTP код, который вы получили";
   static const String verifyButton = "Подтвердить Email";
   static const String resendCodeIn = "Повторная отправка через ";
   static const String resendCodeAction = "Отправить код повторно";
 
   // Forgot password
-  static const String forgotPassSubtitle = "Пожалуйста, укажите свой email для получения OTP кода";
+  static const String forgotPassSubtitle =
+      "Пожалуйста, укажите свой email для получения OTP кода";
   static const String sendCodeButton = "Отправить код";
   static const String usePhoneNumber = "Номер телефона?";
 
@@ -113,11 +118,13 @@ class AppStrings {
   static const String toHomePage = "На главную";
   static const String cancelBooking = "Отменить бронь";
   static const String cancellingBooking = "Отмена брони";
-  static const String confirmationOfCancellingBooking = "Вы уверены, что хотите отменить запись? Это действие нельзя будет отменить.";
+  static const String confirmationOfCancellingBooking =
+      "Вы уверены, что хотите отменить запись? Это действие нельзя будет отменить.";
   static const String bookingIsCanceled = "Бронирование отменено";
   static const String confirmCancelling = "Да, отменить";
   static const String back = "Назад";
-  static const String serviceWelcomeMessage = "Мы ждем вас в нашей студии.\nДетали записи доступны в профиле.";
+  static const String serviceWelcomeMessage =
+      "Мы ждем вас в нашей студии.\nДетали записи доступны в профиле.";
 
   //BookingserviceScreen
   static const String yourMasterPavel = "Ваш мастер: Павел";
@@ -132,24 +139,29 @@ class AppStrings {
   // Profile
   static const String serviceHistory = "История бронирований";
   static const String notifications = "Уведомления";
-  static const String payment =  "Способы оплаты";
-  static const String exitFromAccount =  "Выйти из аккаунта";
-  static const String profileEmail =  "email: ";
-  static const String recentBooking =  "Моя ближайшая запись";
-  static const String cash =   "НАЛИЧНЫМИ";
-  static const String exitHeader =   "Выход";
-  static const String exit =   "Выход";
-  static const String cancel =   "Отмена";
-  static const String confirmationExit =   "Вы уверены, что хотите выйти из аккаунта?";
+  static const String payment = "Способы оплаты";
+  static const String exitFromAccount = "Выйти из аккаунта";
+  static const String profileEmail = "email: ";
+  static const String recentBooking = "Моя ближайшая запись";
+  static const String cash = "НАЛИЧНЫМИ";
+  static const String exitHeader = "Выход";
+  static const String exit = "Выход";
+  static const String cancel = "Отмена";
+  static const String confirmationExit =
+      "Вы уверены, что хотите выйти из аккаунта?";
 
   // History of services
-  static const String historyIsEmpty =   "История бронирований пуста";
+  static const String historyIsEmpty = "История бронирований пуста";
 
   // BottomNavigation bar
-  static const String navHome =   "Главная";
-  static const String navBooking =  "Бронировать" ;
-  static const String navHistory =   "Мои записи";
-  static const String navProfile =   "Профиль";
+  static const String navHome = "Главная";
+  static const String navBooking = "Бронировать";
+
+  static const String navHistory = "Мои записи";
+  static const String navProfile = "Профиль";
+
+  // HomeSearchBar
+  static const String hintServiceMasterSearch = "Поиск услуг или мастеров...";
 
   // Тестовые данные для примера (можно оставить здесь или в domain)
   static const String dummyServiceTitle = "Мужская стрижка";
@@ -158,13 +170,16 @@ class AppStrings {
       "Включает в себя мытье головы, подбор формы и укладку профессиональными средствами.";
 
   static const String titleFirst = 'Лучший Стилист Для Вас';
-  static const String descriptionFirst = 'Создай свой стиль согласно твоему образу жизни';
+  static const String descriptionFirst =
+      'Создай свой стиль согласно твоему образу жизни';
   static const String titleSecond = 'Наши Специалисты';
   static const String descriptionSecond = 'Только лучшие мастера своего дела';
   static const String titleThird = 'Подбери Лучший Сервис';
-  static const String descriptionThird = 'Предоставляем только лучшие услуги нашего салона';
+  static const String descriptionThird =
+      'Предоставляем только лучшие услуги нашего салона';
   static const String titleFourth = 'Присоединяйся к Нам';
-  static const String descriptionFourth = 'Подбери и забронируй наиболее удобное для тебя время, мастера и услугу в любой момент';
+  static const String descriptionFourth =
+      'Подбери и забронируй наиболее удобное для тебя время, мастера и услугу в любой момент';
 
   static const String next = 'Следующий';
   static const String getStarted = 'Приступим';

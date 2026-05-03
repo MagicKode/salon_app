@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:salon_flutter/feature/core/notificationscreen/notifications_screen.dart';
 
 import '../../../../uikit/colors/app_colors.dart';
 import '../../../../uikit/strings/app_strings.dart';
-import '../../../../uikit/widgets/search_button.dart';
+import '../../../../uikit/widgets/notifications_button.dart';
 
 class AppBarSection extends StatelessWidget {
   const AppBarSection({super.key});
@@ -27,10 +28,16 @@ class AppBarSection extends StatelessWidget {
               ),
             ],
           ),
-          SearchButton(
-            onPressed: () {
-              // Логика поиска
+          NotificationsButton(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const NotificationsScreen(),
+                ),
+              );
             },
+            hasUnread: true,
           ),
         ],
       ),

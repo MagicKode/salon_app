@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/feature/core/notificationscreen/notifications_screen.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 import '../../../../uikit/colors/app_colors.dart';
 import '../../../auth/loginscreen/login_screen.dart';
-import '../../historyscreen/history_screen.dart';
 
 class ProfileMenuSection extends StatelessWidget {
   const ProfileMenuSection({super.key});
@@ -13,28 +11,6 @@ class ProfileMenuSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _buildMenuTile(
-          icon: Icons.history,
-          title: AppStrings.serviceHistory,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const HistoryScreen()),
-            );
-          },
-        ),
-        _buildMenuTile(
-          icon: Icons.notifications_none_rounded,
-          title: AppStrings.notifications,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const NotificationsScreen(),
-              ),
-            );
-          },
-        ),
         _buildMenuTile(
           icon: Icons.payments_outlined,
           title: AppStrings.payment,
@@ -109,7 +85,7 @@ class ProfileMenuSection extends StatelessWidget {
                 onPressed: () => Navigator.pop(context),
                 child: const Text(
                   AppStrings.cancel,
-                  style: TextStyle(color: AppColors.primaryBlackHint),
+                  style: TextStyle(color: AppColors.primaryGrey),
                 ),
               ),
               TextButton(
