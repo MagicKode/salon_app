@@ -20,7 +20,7 @@ class _LoginBodyState extends State<LoginBody> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _isPasswordVisible = ValueNotifier<bool>(false);
-  bool _isLoading = false;
+  final bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {

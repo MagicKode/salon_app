@@ -5,7 +5,6 @@ import 'package:salon_flutter/feature/core/homepagescreen/home_page_screen.dart'
 import '../core/bookingservicescreen/booking_service_screen.dart';
 import '../core/homepagescreen/sections/bottom_nav_bar_section.dart';
 import '../core/profilescreen/profile_screen.dart';
-import '../core/servicedetailscreen/sevice_detail_screen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});

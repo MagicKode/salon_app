@@ -5,11 +5,11 @@ class AppColors {
   static const Color lightBlue = Color(0xFF3498DB);
   static const Color primaryButtonColor = Color(0x9D093882);
   static const Color primaryBackgroundColor = Color(0x10093882);
-  static const Color boxDecorationColor = Color(0xD093882);
+  static const Color boxDecorationColor = Color(0x0d093882);
 
   static const Color primaryBlack = Color(0xFF000000);
-  static const Color primaryBlackHint = Color(0xD000000);
-  static const Color primaryBlackShadow = Color(0x5000000);
+  static const Color primaryBlackHint = Color(0x0d000000);
+  static const Color primaryBlackShadow = Color(0x05000000);
   static const Color primaryGrey = Color(0xFF9E9E9E);
   static const Color primaryWhite = Color(0xFFFFFFFF);
   static const Color primaryRed = Color(0xFFF44336);

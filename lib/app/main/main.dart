@@ -3,8 +3,6 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:salon_flutter/feature/auth/splashscreen/splash_screen.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
-import '../../feature/core/profilescreen/profile_screen.dart';
-import '../../feature/core/servicedetailscreen/sevice_detail_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -141,6 +141,7 @@ class AppStrings {
   static const String notifications = "Уведомления";
   static const String payment = "Способы оплаты";
   static const String exitFromAccount = "Выйти из аккаунта";
+  static const String loginAccount = "Войти в аккаунт";
   static const String profileEmail = "email: ";
   static const String recentBooking = "Моя ближайшая запись";
   static const String cash = "НАЛИЧНЫМИ";
@@ -149,6 +150,16 @@ class AppStrings {
   static const String cancel = "Отмена";
   static const String confirmationExit =
       "Вы уверены, что хотите выйти из аккаунта?";
+  static const String shareApp = "Поделиться приложением";
+  static const String supportTeam = "Служба поддержки";
+  static const String useSystemTheme = "Использовать системную тему";
+  static const String systemThemeDescription = "Тема приложения будет переключаться автоматически при изменении системной темы";
+  static const String lightTheme = "Светлая";
+  static const String darkTheme = "Темная";
+  static const String privacyPolicy = "Политика конфиденциальности";
+
+
+
 
   // History of services
   static const String historyIsEmpty = "История бронирований пуста";
