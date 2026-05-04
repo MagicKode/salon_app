@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
+import '../domain/booking_entity.dart';
 import 'booking_info_grid.dart';
 import 'price_calculation_section.dart';
 
 class BookingSummaryCard extends StatelessWidget {
-  const BookingSummaryCard({super.key});
+  // 1. Добавляем поле для данных
+  final BookingEntity booking;
+
+  const BookingSummaryCard({super.key, required this.booking,});
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +23,7 @@ class BookingSummaryCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+
           const BookingInfoGrid(),
           const SizedBox(height: 20),
           const Divider(color: AppColors.primaryWhite, thickness: 1.5),

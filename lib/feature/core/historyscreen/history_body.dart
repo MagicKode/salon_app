@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:salon_flutter/feature/core/historyscreen/sections/active_booking_section.dart';
+
+import '../../checkout/domain/booking_entity.dart';
+import 'domain/booking_mock_data.dart';
 import 'sections/history_list_section.dart';
 
 class HistoryBody extends StatelessWidget {
@@ -6,10 +10,24 @@ class HistoryBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final allBookings = BookingMockData.history;
+
+    final nearestBooking = allBookings.isNotEmpty ? allBookings.first : null;
+
+    final List<BookingEntity> otherBookings = allBookings.isNotEmpty
+        ? allBookings.skip(1).toList().cast<BookingEntity>()
+        : [];
+
     return ListView(
       padding: const EdgeInsets.all(20),
-      children: const [
-        HistoryListSection(),
+      children: [
+        if (nearestBooking != null)
+          ActiveBookingSection(booking: nearestBooking),
+
+        const SizedBox(height: 24),
+
+        if (otherBookings.isNotEmpty)
+          HistoryListSection(bookings: otherBookings),
       ],
     );
   }

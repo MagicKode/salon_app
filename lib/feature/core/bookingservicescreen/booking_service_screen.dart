@@ -4,7 +4,7 @@ import 'package:salon_flutter/feature/core/bookingservicescreen/sections/booking
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
 import '../../../uikit/strings/app_strings.dart';
-import '../../bookingcard/bookinghistory/feature/my_booking_checkout_screen.dart';
+import '../../checkout/checkout_screen.dart';
 
 class BookingServiceScreen extends StatelessWidget {
   const BookingServiceScreen({super.key});
@@ -15,7 +15,7 @@ class BookingServiceScreen extends StatelessWidget {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       barrierColor: Colors.black.withOpacity(0.5),
-      builder: (context) => const MyBookingCheckoutScreen(),
+      builder: (context) => const CheckoutScreen(),
     );
   }
 

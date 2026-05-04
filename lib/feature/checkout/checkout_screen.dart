@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:salon_flutter/feature/checkout/checkout_body.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
-import '../../booking_card_body.dart';
-class MyBookingCheckoutScreen extends StatelessWidget {
-  const MyBookingCheckoutScreen({super.key});
+class CheckoutScreen extends StatelessWidget {
+  const CheckoutScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,6 @@ class MyBookingCheckoutScreen extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Линия-индикатор (handle) сверху
             const SizedBox(height: 12),
             Container(
               width: 40,
@@ -31,7 +30,7 @@ class MyBookingCheckoutScreen extends StatelessWidget {
 
             const Flexible(
               child: SingleChildScrollView(
-                child: BookingCardBody(),
+                child: CheckoutBody(),
               ),
             ),
           ],

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/feature/bookingcard/bookinghistory/domain/booking_mock_data.dart';
+import 'package:salon_flutter/feature/checkout/sections/booking_summary_card.dart';
+import 'package:salon_flutter/feature/core/historyscreen/domain/booking_mock_data.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 import '../../uikit/colors/app_colors.dart';
 import '../../uikit/widgets/app_button.dart';
-import 'bookinghistory/feature/widgets/booking_card.dart';
-import 'feature/checkout/sections/booking_success_screen.dart';
+import 'booking_success_screen.dart';
 
-class BookingCardBody extends StatelessWidget {
-  const BookingCardBody({super.key});
+class CheckoutBody extends StatelessWidget {
+  const CheckoutBody({super.key});
 
   static const double _horizontalPadding = 24.0;
 
@@ -57,7 +57,7 @@ class BookingCardBody extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          BookingCard(booking: BookingMockData.history.first),
+          BookingSummaryCard(booking: BookingMockData.history.first),
 
           const SizedBox(height: 32),
 

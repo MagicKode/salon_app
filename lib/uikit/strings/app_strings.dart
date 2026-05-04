@@ -110,7 +110,6 @@ class AppStrings {
   static const String change = "Изменить";
   static const String yourService = "Ваш заказ";
   static const String cancelAndLeave = "Отменить и выйти";
-  static const String master = "Мастер:";
 
   //BookingSuccessScreen
   static const String bookingDetails = "Детали бронирования";
@@ -143,7 +142,6 @@ class AppStrings {
   static const String exitFromAccount = "Выйти из аккаунта";
   static const String loginAccount = "Войти в аккаунт";
   static const String profileEmail = "email: ";
-  static const String recentBooking = "Моя ближайшая запись";
   static const String cash = "НАЛИЧНЫМИ";
   static const String exitHeader = "Выход";
   static const String exit = "Выход";
@@ -158,11 +156,10 @@ class AppStrings {
   static const String darkTheme = "Темная";
   static const String privacyPolicy = "Политика конфиденциальности";
 
-
-
-
   // History of services
   static const String historyIsEmpty = "История бронирований пуста";
+  static const String pastBooking = "Прошедшие записи";
+  static const String recentBooking = "Моя ближайшая запись";
 
   // BottomNavigation bar
   static const String navHome = "Главная";

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
+import 'package:salon_flutter/uikit/widgets/history_booking_card.dart';
 
-import '../../../bookingcard/bookinghistory/domain/booking_mock_data.dart';
-import '../../../bookingcard/bookinghistory/feature/widgets/booking_card.dart';
+import '../../../checkout/domain/booking_entity.dart';
+import '../domain/booking_mock_data.dart';
 
 class ActiveBookingSection extends StatelessWidget {
-  const ActiveBookingSection({super.key});
+  final BookingEntity booking;
+
+  const ActiveBookingSection({super.key, required this.booking});
 
   @override
   Widget build(BuildContext context) {
@@ -14,10 +17,14 @@ class ActiveBookingSection extends StatelessWidget {
       children: [
         const Text(
           AppStrings.recentBooking,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
         ),
         const SizedBox(height: 12),
-        BookingCard(booking: BookingMockData.history.first),
+        HistoryBookingCard(booking: BookingMockData.history.first),
       ],
     );
   }
