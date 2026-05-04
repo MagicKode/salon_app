@@ -104,7 +104,7 @@ class HistoryBookingCard extends StatelessWidget {
               child: Text(
                 AppDateFormats.formatBookingDate(booking.dateTime),
                 style: const TextStyle(
-                  color: AppColors.primaryGrey,
+                  color: AppColors.primaryBlack,
                   fontSize: 10,
                   letterSpacing: 0.5,
                 ),

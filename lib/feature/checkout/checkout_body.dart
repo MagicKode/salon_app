@@ -5,6 +5,7 @@ import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 import '../../uikit/colors/app_colors.dart';
 import '../../uikit/widgets/app_button.dart';
+import '../../uikit/widgets/history_booking_card.dart';
 import 'booking_success_screen.dart';
 
 class CheckoutBody extends StatelessWidget {
@@ -18,8 +19,9 @@ class CheckoutBody extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(_horizontalPadding, 8, _horizontalPadding, 24),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Заголовок шторки
+          // 1. Заголовок шторки
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -57,15 +59,19 @@ class CheckoutBody extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          BookingSummaryCard(booking: BookingMockData.history.first),
+          // 2. Наша новая "красивая" карточка из Истории
+          HistoryBookingCard(
+            booking: BookingMockData.history.first,
+            isDimmed: false,
+          ),
 
-          const SizedBox(height: 32),
+          const SizedBox(height: 24), // Немного уменьшил отступ до кнопок
 
+          // 3. Блок кнопок (сгруппированы ближе)
           AppButton(
             text: AppStrings.bookingConfirmation,
             onPressed: () {
               Navigator.pop(context);
-
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -75,17 +81,19 @@ class CheckoutBody extends StatelessWidget {
             },
           ),
 
-          const SizedBox(height: 12),
+          const SizedBox(height: 8), // Совсем небольшой отступ между кнопками
 
-          // Отмена (просто закрывает шторку)
           TextButton(
             onPressed: () => Navigator.pop(context),
+            style: TextButton.styleFrom(
+              minimumSize: const Size(double.infinity, 44), // Увеличил область нажатия
+            ),
             child: const Text(
               AppStrings.cancelAndLeave,
               style: TextStyle(
                 color: AppColors.primaryRed,
                 fontWeight: FontWeight.w500,
-                fontSize: 15
+                fontSize: 15,
               ),
             ),
           ),

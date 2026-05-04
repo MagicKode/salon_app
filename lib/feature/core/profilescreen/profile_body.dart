@@ -32,8 +32,9 @@ class ProfileBody extends StatelessWidget {
     }
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 70, 20, 24),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       children: [
+        const SizedBox(height: 32),
         // 1. Секция: ВОЙТИ
         LoginSection(
           isVisible: !isAuthorized,
@@ -125,7 +126,7 @@ class ProfileBody extends StatelessWidget {
             onConfirm: () => _navigateToLogin(context)
         ),
 
-        const SizedBox(height: 8),
+        const SizedBox(height: 4),
 
         // 10. Версия
         const VersionSection(
@@ -135,9 +136,5 @@ class ProfileBody extends StatelessWidget {
         const SizedBox(height: 8),
       ],
     );
-  }
-
-  void _navigateToLogin(BuildContext context) {
-    // Твоя навигация
   }
 }
