@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../uikit/colors/app_colors.dart';
+import '../../../../../uikit/colors/app_colors.dart';
 
 class ThemeSelectionSection extends StatelessWidget {
   final String title;

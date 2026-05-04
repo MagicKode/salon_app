@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../uikit/colors/app_colors.dart';
-import '../domain/entities/app_version_entity.dart';
+import '../../../../../uikit/colors/app_colors.dart';
+import '../../domain/entities/app_version_entity.dart';
 
 class VersionSection extends StatelessWidget {
   final AppVersionEntity versionInfo;

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/feature/core/profilescreen/sections/login_section.dart';
-import 'package:salon_flutter/feature/core/profilescreen/sections/logout_section.dart';
-import 'package:salon_flutter/feature/core/profilescreen/sections/privacy_policy_section.dart';
-import 'package:salon_flutter/feature/core/profilescreen/sections/share_section.dart';
-import 'package:salon_flutter/feature/core/profilescreen/sections/support_section.dart';
-import 'package:salon_flutter/feature/core/profilescreen/sections/theme_selection_section.dart';
-import 'package:salon_flutter/feature/core/profilescreen/sections/theme_system_section.dart';
-import 'package:salon_flutter/feature/core/profilescreen/sections/user_info_section.dart';
-import 'package:salon_flutter/feature/core/profilescreen/sections/version_section.dart';
+import 'package:salon_flutter/feature/core/profilescreen/sections/appinfo/version_section.dart';
+import 'package:salon_flutter/feature/core/profilescreen/sections/auth/login_section.dart';
+import 'package:salon_flutter/feature/core/profilescreen/sections/auth/logout_section.dart';
+import 'package:salon_flutter/feature/core/profilescreen/sections/legal/privacy_policy_section.dart';
+import 'package:salon_flutter/feature/core/profilescreen/sections/support/share_section.dart';
+import 'package:salon_flutter/feature/core/profilescreen/sections/support/support_section.dart';
+import 'package:salon_flutter/feature/core/profilescreen/sections/theme/theme_selection_section.dart';
+import 'package:salon_flutter/feature/core/profilescreen/sections/theme/theme_system_section.dart';
+import 'package:salon_flutter/feature/core/profilescreen/sections/userinfo/user_info_section.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 import '../../auth/loginscreen/login_screen.dart';
@@ -121,7 +121,9 @@ class ProfileBody extends StatelessWidget {
         const SizedBox(height: 8),
 
         //9. Секция Выход из аккаунта
-        LogoutSection(onTap: () => _navigateToLogin(context)),
+        LogoutSection(
+            onConfirm: () => _navigateToLogin(context)
+        ),
 
         const SizedBox(height: 8),
 

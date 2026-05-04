@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../../../uikit/widgets/profile_menu_tile.dart';
-import '../domain/entities/profile_action_entity.dart';
+import '../../../../../uikit/widgets/profile_menu_tile.dart';
+import '../../domain/entities/profile_action_entity.dart';
 
-class SupportSection extends StatelessWidget {
+class PrivacyPolicySection extends StatelessWidget {
   final ProfileActionEntity action;
 
-  const SupportSection({
+  const PrivacyPolicySection({
     super.key,
     required this.action,
   });

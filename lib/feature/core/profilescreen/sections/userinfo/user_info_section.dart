@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../../uikit/colors/app_colors.dart';
-import '../../../../uikit/assets/app_assets.dart'; // Путь к твоим ассетам
-import '../domain/entities/user_entity.dart';
+import '../../../../../uikit/colors/app_colors.dart';
+import '../../../../../uikit/assets/app_assets.dart'; // Путь к твоим ассетам
+import '../../domain/entities/user_entity.dart';
 
 class UserInfoSection extends StatelessWidget {
   final UserEntity user;

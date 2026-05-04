@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
-import '../../../../uikit/colors/app_colors.dart';
+import '../../../../../uikit/colors/app_colors.dart';
 
 class ThemeSystemSection extends StatelessWidget {
   final bool isActive;
