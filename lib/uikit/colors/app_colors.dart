@@ -22,6 +22,9 @@ class AppColors {
 
   static const Color starsYellow = Color(0xFFFFC107);
 
+  // В AppColors.dart добавь:
+  static const Color cardBackground = Color(0xFFF8F9FA);     // светлый фон
+  static const Color lightBorder = Color(0xFFE0E0E0);        // светлая граница
 
 
 

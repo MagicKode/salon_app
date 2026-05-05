@@ -1,66 +1,150 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/feature/core/bookingservicescreen/sections/date_selection_section.dart';
+import 'package:salon_flutter/feature/core/bookingservicescreen/sections/booking_bottom_bar.dart';
+
+import 'package:salon_flutter/feature/core/bookingservicescreen/sections/calendar/date_selection_section.dart';
 import 'package:salon_flutter/feature/core/bookingservicescreen/sections/notes_section.dart';
 import 'package:salon_flutter/feature/core/bookingservicescreen/sections/order_summary_section.dart';
+import 'package:salon_flutter/feature/core/bookingservicescreen/sections/service_selection_bottom_sheet.dart';
+import 'package:salon_flutter/feature/core/bookingservicescreen/sections/specialist/specialist_selector_section.dart';
 import 'package:salon_flutter/feature/core/bookingservicescreen/sections/time_selection_section.dart';
 
-import '../../../uikit/assets/app_assets.dart';
-import '../../../uikit/strings/app_strings.dart';
+import '../../../../uikit/strings/app_strings.dart';
+import '../../checkout/domain/booking_entity.dart';
+import 'domain/add_service_data.dart';
 
 class BookingServiceBody extends StatefulWidget {
-  const BookingServiceBody({super.key});
+  final Function(BookingEntity booking, List<AddServiceData> services)?
+  onBookPressed;
+
+  const BookingServiceBody({super.key, this.onBookPressed});
 
   @override
   State<BookingServiceBody> createState() => _BookingServiceBodyState();
 }
 
 class _BookingServiceBodyState extends State<BookingServiceBody> {
+  List<AddServiceData> _selectedServices = [];
+  String _selectedMaster = "Pavel";
+  String _masterTitle = "Топ-стилист";
+  DateTime? _selectedDate;
+  TimeOfDay? _selectedTime;
+
+  double get _totalPrice =>
+      _selectedServices.fold(0.0, (sum, service) => sum + service.price);
+
+  @override
+  void initState() {
+    super.initState();
+    // Можно задать дату по умолчанию — сегодня
+    _selectedDate = DateTime.now();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const OrderSummarySection(services: ["Woman Blunt Cut"]),
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                OrderSummarySection(
+                  selectedServices: _selectedServices,
+                  onAddMoreServices: _showServiceSelection,
+                  onRemoveService: _removeService,
+                ),
 
-          const SizedBox(height: 10),
+                const SizedBox(height: 32),
 
-          _buildMasterTile(),
+                SpecialistSelectorSection(
+                  onMasterSelected: (masterName, title) {
+                    setState(() {
+                      _selectedMaster = masterName;
+                      _masterTitle = title;
+                    });
+                  },
+                ),
 
-          const SizedBox(height: 24),
+                const SizedBox(height: 24),
 
-          DateSelectionSection(),
+                DateSelectionSection(
+                  onDateSelected: (date) {
+                    setState(() => _selectedDate = date);
+                  },
+                ),
 
-          const SizedBox(height: 24),
+                const SizedBox(height: 24),
 
-          TimeSelectionSection(
-            onTimeChanged: (time) {
-              debugPrint("Выбрано время: ${time?.format(context)}");
-            },
+                TimeSelectionSection(
+                  onTimeChanged: (time) {
+                    setState(() => _selectedTime = time);
+                  },
+                ),
+
+                const SizedBox(height: 24),
+
+                const NotesSection(),
+              ],
+            ),
           ),
+        ),
 
-          const SizedBox(height: 24),
-
-          const NotesSection(),
-        ],
-      ),
+        // Нижняя панель
+        BookingBottomBar(totalPrice: _totalPrice, onTap: _onBookPressed),
+      ],
     );
   }
 
-  Widget _buildMasterTile() {
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      leading: const CircleAvatar(
-        radius: 30,
-        backgroundImage: AssetImage(AppAssets.pavelImg),
-      ),
-      title: const Text(
-        AppStrings.yourMasterPavel,
-        style: TextStyle(fontWeight: FontWeight.bold),
-      ),
-      subtitle: const Text(AppStrings.topMaster),
+  void _showServiceSelection() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder:
+          (context) => ServiceSelectionBottomSheet(
+            alreadySelected: _selectedServices,
+            onServicesConfirmed: (services) {
+              setState(() => _selectedServices = services);
+            },
+          ),
     );
+  }
+
+  void _removeService(AddServiceData service) {
+    setState(() {
+      _selectedServices.removeWhere((s) => s.id == service.id);
+    });
+  }
+
+  void _onBookPressed() {
+    if (_selectedServices.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(AppStrings.chooseAnyService)));
+      return;
+    }
+
+    if (_selectedDate == null || _selectedTime == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Пожалуйста, выберите дату и время')),
+      );
+      return;
+    }
+
+    final booking = BookingEntity(
+      serviceName: _selectedServices.map((s) => s.name).join(", "),
+      masterName: _selectedMaster,
+      dateTime: DateTime(
+        _selectedDate!.year,
+        _selectedDate!.month,
+        _selectedDate!.day,
+        _selectedTime!.hour,
+        _selectedTime!.minute,
+      ),
+      price: _totalPrice,
+      durationMinutes: 60, // TODO: сделать динамическим из услуг
+    );
+
+    widget.onBookPressed?.call(booking, _selectedServices);
   }
 }

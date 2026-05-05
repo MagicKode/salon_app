@@ -5,9 +5,14 @@ import '../../../../uikit/strings/app_strings.dart';
 import '../../../../uikit/widgets/app_button.dart';
 
 class BookingBottomBar extends StatelessWidget {
+  final double totalPrice;
   final VoidCallback onTap;
 
-  const BookingBottomBar({super.key, required this.onTap});
+  const BookingBottomBar({
+    super.key,
+    required this.totalPrice,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +34,12 @@ class BookingBottomBar extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                AppStrings.totalPrice,
-                style: TextStyle(color: AppColors.primaryGrey, fontSize: 14),
+              Text(
+                AppStrings.totalPrice, // "Итоговая цена"
+                style: const TextStyle(color: AppColors.primaryGrey, fontSize: 14),
               ),
               Text(
-                "30 ${AppStrings.currency}",
+                '${totalPrice.toStringAsFixed(0)} ${AppStrings.currency}',
                 style: const TextStyle(
                   color: AppColors.primaryBlue,
                   fontSize: 22,
@@ -45,7 +50,10 @@ class BookingBottomBar extends StatelessWidget {
           ),
           const SizedBox(width: 24),
           Expanded(
-            child: AppButton(text: AppStrings.bookNow, onPressed: onTap),
+            child: AppButton(
+              text: AppStrings.bookNow,
+              onPressed: onTap,
+            ),
           ),
         ],
       ),

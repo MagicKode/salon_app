@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/feature/checkout/checkout_body.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
+import 'checkout_body.dart';
+import 'domain/booking_entity.dart';
+
 class CheckoutScreen extends StatelessWidget {
-  const CheckoutScreen({super.key});
+  final BookingEntity booking;
+
+  const CheckoutScreen({super.key, required this.booking});
 
   @override
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
       child: Container(
-        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 20),
         decoration: const BoxDecoration(
           color: AppColors.primaryWhite,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
@@ -19,18 +22,13 @@ class CheckoutScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(height: 12),
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: AppColors.primaryGrey,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-
-            const Flexible(
+            Container(width: 40, height: 4, decoration: BoxDecoration(
+              color: AppColors.primaryGrey,
+              borderRadius: BorderRadius.circular(2),
+            )),
+            Flexible(
               child: SingleChildScrollView(
-                child: CheckoutBody(),
+                child: CheckoutBody(booking: booking),
               ),
             ),
           ],

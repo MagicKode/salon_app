@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
-import 'calendar/app_calendar_section.dart';
+import 'app_calendar_section.dart';
 
 class DateSelectionSection extends StatefulWidget {
-  const DateSelectionSection({super.key});
+  final Function(DateTime date)? onDateSelected;
+
+  const DateSelectionSection({
+    super.key,
+    this.onDateSelected,
+  });
 
   @override
   State<DateSelectionSection> createState() => _DateSelectionSectionState();
 }
 
 class _DateSelectionSectionState extends State<DateSelectionSection> {
-  // Состояние выбранной даты храним здесь, чтобы передавать его дальше (например, в API)
   DateTime _selectedDate = DateTime.now();
 
   @override
@@ -20,8 +24,9 @@ class _DateSelectionSectionState extends State<DateSelectionSection> {
         setState(() {
           _selectedDate = date;
         });
-        // Здесь можно добавить лог или вызов функции загрузки свободного времени для этой даты
-        print("Выбранная дата: $_selectedDate");
+
+        // Передаём выбранную дату наверх
+        widget.onDateSelected?.call(date);
       },
     );
   }

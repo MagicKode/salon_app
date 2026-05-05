@@ -21,7 +21,7 @@ class TimeSlotCard extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primaryBlue : Colors.grey.shade100,
+          color: isSelected ? AppColors.primaryBlue : AppColors.boxDecorationColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected ? AppColors.primaryBlue : Colors.grey.shade300,

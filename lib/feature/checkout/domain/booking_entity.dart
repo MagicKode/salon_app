@@ -4,15 +4,19 @@ class BookingEntity {
   final String serviceName;
   final String masterName;
   final DateTime dateTime;
-  final String price;
+  final double price;
+  final int durationMinutes; // добавили для гибкости
 
   BookingEntity({
     required this.serviceName,
     required this.masterName,
     required this.dateTime,
     required this.price,
+    this.durationMinutes = 60,
   });
 
-  String get formattedDate =>
-      DateFormat('MMM d, yyyy - HH:mm', 'ru').format(dateTime);
+  String get formattedDateTime =>
+      DateFormat('d MMMM, yyyy - HH:mm', 'ru').format(dateTime);
+
+  String get formattedPrice => '${price.toStringAsFixed(0)} BYN';
 }

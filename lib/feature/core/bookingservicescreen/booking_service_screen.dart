@@ -5,17 +5,18 @@ import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
 import '../../../uikit/strings/app_strings.dart';
 import '../../checkout/checkout_screen.dart';
+import '../../checkout/domain/booking_entity.dart';
+import 'domain/add_service_data.dart';
 
 class BookingServiceScreen extends StatelessWidget {
   const BookingServiceScreen({super.key});
 
-  void _showBookingBottomSheet(BuildContext context) {
+  void _showCheckoutBottomSheet(BuildContext context, BookingEntity booking) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      barrierColor: Colors.black.withOpacity(0.5),
-      builder: (context) => const CheckoutScreen(),
+      builder: (context) => CheckoutScreen(booking: booking),
     );
   }
 
@@ -35,9 +36,10 @@ class BookingServiceScreen extends StatelessWidget {
         backgroundColor: AppColors.primaryWhite,
         elevation: 0,
       ),
-      body: const BookingServiceBody(),
-      bottomNavigationBar: BookingBottomBar(
-        onTap: () => _showBookingBottomSheet(context),
+      body: BookingServiceBody(
+        onBookPressed: (booking, services) {
+          _showCheckoutBottomSheet(context, booking);
+        },
       ),
     );
   }
