@@ -1,25 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
 import '../../../../uikit/strings/app_strings.dart';
+import '../../../../uikit/widgets/time_slots_grid.dart';
 import '../utils/date_helper.dart';
 
 class TimeSelectionSection extends StatefulWidget {
-  const TimeSelectionSection({super.key});
+  final Function(TimeOfDay?) onTimeChanged;
+
+  const TimeSelectionSection({super.key, required this.onTimeChanged});
 
   @override
   State<TimeSelectionSection> createState() => _TimeSelectionSectionState();
 }
 
 class _TimeSelectionSectionState extends State<TimeSelectionSection> {
-  // Генерируем слоты с 9:00 до 20:00 каждые 60 минут
-  final List<TimeOfDay> _slots = DateHelper.generateTimeSlots(
-    startHour: 9,
-    endHour: 20,
-    intervalMinutes: 60,
-  );
-
+  late final List<TimeOfDay> _slots;
   TimeOfDay? _selectedTime;
+
+  @override
+  void initState() {
+    super.initState();
+    _slots = DateHelper.generateTimeSlots(
+      startHour: 9,
+      endHour: 20,
+      intervalMinutes: 60,
+    );
+  }
+
+  void _handleTimeTap(TimeOfDay time) {
+    setState(() => _selectedTime = time);
+    widget.onTimeChanged(time);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,58 +42,13 @@ class _TimeSelectionSectionState extends State<TimeSelectionSection> {
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
-        Wrap(
-          spacing: 10,
-          runSpacing: 10,
-          children:
-              _slots.map((time) {
-                final isSelected = _selectedTime == time;
-                return TimeSlotChip(
-                  time: DateHelper.formatTime(context, time),
-                  isSelected: isSelected,
-                  onTap: () => setState(() => _selectedTime = time),
-                );
-              }).toList(),
+        TimeSlotsGrid(
+          slots: _slots,
+          selectedTime: _selectedTime,
+          onTimeSelected: _handleTimeTap,
+          formatLabel: (ctx, time) => DateHelper.formatTime(ctx, time),
         ),
       ],
-    );
-  }
-}
-
-class TimeSlotChip extends StatelessWidget {
-  final String time;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const TimeSlotChip({
-    super.key,
-    required this.time,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          color: isSelected ? AppColors.primaryBlue : AppColors.primaryBackgroundColor,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isSelected ? Colors.transparent : Colors.grey.shade300,
-          ),
-        ),
-        child: Text(
-          time,
-          style: TextStyle(
-            color: isSelected ? AppColors.primaryWhite : AppColors.primaryBlack,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-          ),
-        ),
-      ),
     );
   }
 }

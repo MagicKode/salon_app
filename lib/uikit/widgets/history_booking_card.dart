@@ -23,7 +23,7 @@ class HistoryBookingCard extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: AppColors.boxDecorationColor,
-          border: Border.all(color: AppColors.primaryBlue.withOpacity(0.5)),
+          border: Border.all(color: AppColors.primaryBlue.withOpacity(0.2)),
           borderRadius: BorderRadius.circular(14),
         ),
         child: Column(
