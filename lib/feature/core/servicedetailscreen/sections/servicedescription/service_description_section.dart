@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
+import '../../../../../uikit/colors/app_colors.dart';
+
 class ServiceDescriptionSection extends StatelessWidget {
   final String description;
 
@@ -20,7 +22,7 @@ class ServiceDescriptionSection extends StatelessWidget {
           description,
           style: const TextStyle(
             fontSize: 16,
-            color: Colors.black87,
+            color: AppColors.primaryBlack,
             height: 1.5,
           ),
         ),

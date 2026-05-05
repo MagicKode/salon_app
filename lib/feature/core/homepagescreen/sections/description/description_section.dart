@@ -1,8 +1,8 @@
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../uikit/colors/app_colors.dart';
-import '../../../../uikit/strings/app_strings.dart';
+import '../../../../../uikit/colors/app_colors.dart';
+import '../../../../../uikit/strings/app_strings.dart';
 
 class DescriptionSection extends StatelessWidget {
   const DescriptionSection({super.key});
@@ -18,7 +18,9 @@ class DescriptionSection extends StatelessWidget {
             AppStrings.sectionAbout,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
+
           const SizedBox(height: 8),
+
           ExpandableText(
             AppStrings.aboutFullDescription,
             expandText: AppStrings.moreDetails,

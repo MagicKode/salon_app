@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 import 'package:salon_flutter/uikit/widgets/history_booking_card.dart';
 
-import '../../../checkout/domain/booking_entity.dart';
-import '../domain/booking_mock_data.dart';
+import '../../../../checkout/domain/booking_entity.dart';
+import '../../domain/booking_mock_data.dart';
 
 class ActiveBookingSection extends StatelessWidget {
   final BookingEntity booking;

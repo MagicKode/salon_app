@@ -18,14 +18,13 @@ class NotificationsButton extends StatelessWidget {
       children: [
         Container(
           decoration: const BoxDecoration(
-            color: AppColors.boxDecorationColor,
             shape: BoxShape.circle,
           ),
           child: IconButton(
             icon: const Icon(
               Icons.notifications_none_rounded,
               color: AppColors.primaryBlue,
-              size: 26,
+              size: 30,
             ),
             onPressed: onTap,
           ),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../../uikit/colors/app_colors.dart';
-import '../../../../uikit/strings/app_strings.dart';
-import '../domain/bottom_nav_item.dart';
-import '../domain/nav_item_model.dart';
+import '../../../../../uikit/colors/app_colors.dart';
+import '../../../../../uikit/strings/app_strings.dart';
+import '../../domain/bottom_nav_item.dart';
+import '../../domain/nav_item_model.dart';
 
 class BottomNavBarSection extends StatelessWidget {
   final int currentIndex;

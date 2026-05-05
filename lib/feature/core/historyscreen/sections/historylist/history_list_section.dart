@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
-import '../../../../uikit/widgets/history_booking_card.dart';
-import '../../../checkout/domain/booking_entity.dart';
+import '../../../../../uikit/widgets/history_booking_card.dart';
+import '../../../../checkout/domain/booking_entity.dart';
 
 class HistoryListSection extends StatelessWidget {
   final List<BookingEntity> bookings;

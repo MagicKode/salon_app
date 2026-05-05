@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../assets/app_assets.dart';
+import '../colors/app_colors.dart';
 
 class GoogleButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -21,11 +22,11 @@ class GoogleButton extends StatelessWidget {
         child: OutlinedButton(
           onPressed: isLoading ? null : onPressed,
           style: OutlinedButton.styleFrom(
-            side: const BorderSide(color: Color(0xFFE0E0E0)),
+            side: const BorderSide(color: AppColors.primaryWhite),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(50.0),
             ),
-            foregroundColor: Colors.black,
+            foregroundColor: AppColors.primaryBlack,
           ),
           child: isLoading
               ? const SizedBox(
@@ -42,7 +43,7 @@ class GoogleButton extends StatelessWidget {
                 height: 24,
                 errorBuilder: (context, error, stackTrace) => const Icon(
                   Icons.g_mobiledata,
-                  color: Colors.red,
+                  color: AppColors.primaryRed,
                   size: 24,
                 ),
               ),
@@ -52,7 +53,7 @@ class GoogleButton extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.w600,
-                  color: Colors.black87,
+                  color: AppColors.primaryBlack,
                 ),
               ),
             ],

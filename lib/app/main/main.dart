@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:salon_flutter/feature/auth/splashscreen/splash_screen.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
+import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 
 void main() async {
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Salon App',
+      title: AppStrings.appTitle,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primaryBlue),
         scaffoldBackgroundColor: AppColors.primaryWhite,
@@ -27,18 +28,6 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Montserrat',
       ),
       home: const SplashScreen(),
-      // home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      // home: const SplashScreen(),
-      // home: LoginScreen(),
-      // home: CreateAccountScreen(),
-      // home: ForgotPasswordScreen(),
-      // home: EmailVerificationScreen(),
-      // home: CreateNewPassScreen(),
-      // home: HomePageScreen(),
-      // home: ServiceDetailScreen(),
-      // home: BookingServiceScreen(),
-      // home: MyBookingCheckoutScreen(),
-      // home: ProfileScreen(),
     );
   }
 }

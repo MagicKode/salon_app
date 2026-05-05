@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../uikit/colors/app_colors.dart';
-import '../domain/service_detail_data.dart';
+import '../../../../../uikit/colors/app_colors.dart';
+import '../../domain/service_detail_data.dart';
 
 class ServiceImageHeaderSection extends StatelessWidget {
   final ServiceDetail service;
@@ -23,6 +23,7 @@ class ServiceImageHeaderSection extends StatelessWidget {
       ),
       child: Stack(
         children: [
+
           // 2. Градиент поверх картинки
           Container(
             decoration: BoxDecoration(
@@ -36,6 +37,7 @@ class ServiceImageHeaderSection extends StatelessWidget {
               ),
             ),
           ),
+
           // 3. Текст заголовка
           Align(
             alignment: Alignment.bottomCenter,
@@ -51,6 +53,7 @@ class ServiceImageHeaderSection extends StatelessWidget {
               ),
             ),
           ),
+
           // Кнопка "закрыть"
           Positioned(
             top: 12,

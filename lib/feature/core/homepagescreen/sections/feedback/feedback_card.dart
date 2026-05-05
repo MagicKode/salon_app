@@ -1,52 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
+import '../../domain/home_models.dart';
 
-import '../../../../uikit/strings/app_strings.dart';
-import '../domain/home_models.dart';
-
-class FeedbackSection extends StatelessWidget {
-  final List<FeedbackItem> feedbacks;
-
-  const FeedbackSection({super.key, required this.feedbacks});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0),
-          child: Text(
-            AppStrings.sectionFeedback,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-        ),
-        const SizedBox(height: 12),
-        SizedBox(
-          height: 160, // Высота секции отзывов
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            itemCount: feedbacks.length,
-            itemBuilder: (context, index) {
-              return _FeedbackCard(item: feedbacks[index]);
-            },
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _FeedbackCard extends StatelessWidget {
+class FeedbackCard extends StatelessWidget {
   final FeedbackItem item;
 
-  const _FeedbackCard({required this.item});
+  const FeedbackCard({
+    super.key,
+    required this.item,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 280, // Оптимальная ширина для отзывов
+      width: 280,
       margin: const EdgeInsets.only(right: 12, bottom: 8, top: 4),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -77,7 +44,8 @@ class _FeedbackCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          // Ряд со звездами
+
+          // Звёзды
           Row(
             children: List.generate(5, (index) {
               return Icon(
@@ -87,7 +55,9 @@ class _FeedbackCard extends StatelessWidget {
               );
             }),
           ),
+
           const SizedBox(height: 8),
+
           Expanded(
             child: Text(
               item.comment,

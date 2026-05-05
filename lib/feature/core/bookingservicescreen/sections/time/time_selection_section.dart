@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../uikit/strings/app_strings.dart';
-import '../../../../uikit/widgets/time_slots_grid.dart';
-import '../utils/date_helper.dart';
+import '../../../../../uikit/strings/app_strings.dart';
+import '../../../../../uikit/widgets/time_slots_grid.dart';
+import '../../utils/date_helper.dart';
 
 class TimeSelectionSection extends StatefulWidget {
   final Function(TimeOfDay?) onTimeChanged;

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../colors/app_colors.dart';
+
 class WelcomeSection extends StatelessWidget {
   final String title;
   final String subtitle;
@@ -22,7 +24,7 @@ class WelcomeSection extends StatelessWidget {
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 32.0,
-              color: Colors.black,
+              color: AppColors.primaryBlack,
             ),
           ),
           const SizedBox(height: 12.0),
@@ -30,7 +32,7 @@ class WelcomeSection extends StatelessWidget {
             subtitle,
             style: TextStyle(
               fontSize: 16.0,
-              color: Colors.grey[600],
+              color: AppColors.primaryGrey,
               height: 1.4,
             ),
           ),

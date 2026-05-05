@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../../uikit/strings/app_strings.dart';
-import '../../../../uikit/colors/app_colors.dart';
-import '../../../../uikit/widgets/app_button.dart';
-import '../domain/add_service_data.dart';
+import '../../../../../uikit/strings/app_strings.dart';
+import '../../../../../uikit/colors/app_colors.dart';
+import '../../../../../uikit/widgets/app_button.dart';
+import '../../domain/add_service_data.dart';
 
 class ServiceSelectionBottomSheet extends StatefulWidget {
   final List<AddServiceData> alreadySelected;

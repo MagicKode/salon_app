@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
-import '../../../../uikit/strings/app_strings.dart';
-import '../../../../uikit/widgets/app_button.dart';
+import '../../../../../uikit/strings/app_strings.dart';
+import '../../../../../uikit/widgets/app_button.dart';
 
 class BookingBottomBar extends StatelessWidget {
   final double totalPrice;
@@ -17,7 +17,7 @@ class BookingBottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
+      padding: const EdgeInsets.fromLTRB(24, 16, 24, 10),
       decoration: BoxDecoration(
         color: AppColors.primaryWhite,
         boxShadow: [
@@ -35,7 +35,7 @@ class BookingBottomBar extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                AppStrings.totalPrice, // "Итоговая цена"
+                AppStrings.totalPrice,
                 style: const TextStyle(color: AppColors.primaryGrey, fontSize: 14),
               ),
               Text(

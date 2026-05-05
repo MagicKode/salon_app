@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../uikit/colors/app_colors.dart';
-import '../../servicedetailscreen/sevice_detail_screen.dart';
-import '../domain/home_models.dart';
+import '../../../../../uikit/colors/app_colors.dart';
+import '../../../servicedetailscreen/sevice_detail_screen.dart';
+import '../../domain/home_models.dart';
 
 class ServiceItem extends StatelessWidget {
   final ServiceCategory category;

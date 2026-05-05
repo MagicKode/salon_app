@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/feature/core/homepagescreen/sections/service_item.dart';
+import 'package:salon_flutter/feature/core/homepagescreen/sections/servicesgrid/service_item.dart';
 
-import '../../../../uikit/colors/app_colors.dart';
-import '../../servicedetailscreen/sevice_detail_screen.dart';
-import '../domain/home_models.dart';
+import '../../../../../uikit/colors/app_colors.dart';
+import '../../../servicedetailscreen/sevice_detail_screen.dart';
+import '../../domain/home_models.dart';
 
 class ServiceGridSection extends StatelessWidget {
   const ServiceGridSection({super.key});

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/feature/core/servicedetailscreen/sections/service_description_section.dart';
-import 'package:salon_flutter/feature/core/servicedetailscreen/sections/service_image_header_section.dart';
-import 'package:salon_flutter/feature/core/servicedetailscreen/sections/service_info_section.dart';
+import 'package:salon_flutter/feature/core/servicedetailscreen/sections/servicedescription/service_description_section.dart';
+import 'package:salon_flutter/feature/core/servicedetailscreen/sections/serviceimageheader/service_image_header_section.dart';
+import 'package:salon_flutter/feature/core/servicedetailscreen/sections/serviceinfo/service_info_section.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 import '../../../uikit/colors/app_colors.dart';

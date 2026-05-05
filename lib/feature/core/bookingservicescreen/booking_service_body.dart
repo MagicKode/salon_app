@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/feature/core/bookingservicescreen/sections/booking_bottom_bar.dart';
+import 'package:salon_flutter/feature/core/bookingservicescreen/sections/bookingbottombar/booking_bottom_bar.dart';
 
 import 'package:salon_flutter/feature/core/bookingservicescreen/sections/calendar/date_selection_section.dart';
-import 'package:salon_flutter/feature/core/bookingservicescreen/sections/notes_section.dart';
-import 'package:salon_flutter/feature/core/bookingservicescreen/sections/order_summary_section.dart';
-import 'package:salon_flutter/feature/core/bookingservicescreen/sections/service_selection_bottom_sheet.dart';
+import 'package:salon_flutter/feature/core/bookingservicescreen/sections/notes/notes_section.dart';
+import 'package:salon_flutter/feature/core/bookingservicescreen/sections/order/order_summary_section.dart';
+import 'package:salon_flutter/feature/core/bookingservicescreen/sections/serviceselection/service_selection_bottom_sheet.dart';
 import 'package:salon_flutter/feature/core/bookingservicescreen/sections/specialist/specialist_selector_section.dart';
-import 'package:salon_flutter/feature/core/bookingservicescreen/sections/time_selection_section.dart';
+import 'package:salon_flutter/feature/core/bookingservicescreen/sections/time/time_selection_section.dart';
 
 import '../../../../uikit/strings/app_strings.dart';
 import '../../checkout/domain/booking_entity.dart';
@@ -90,7 +90,6 @@ class _BookingServiceBodyState extends State<BookingServiceBody> {
           ),
         ),
 
-        // Нижняя панель
         BookingBottomBar(totalPrice: _totalPrice, onTap: _onBookPressed),
       ],
     );

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../colors/app_colors.dart';
+
 class OrDivider extends StatelessWidget {
   final String text;
   final Color? textColor;
@@ -22,7 +24,7 @@ class OrDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textColor = this.textColor ?? Colors.black;
+    final textColor = this.textColor ?? AppColors.primaryBlack;
     final lineColor = this.lineColor ?? Colors.grey[300];
 
     return Padding(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
-import '../../../../uikit/colors/app_colors.dart';
+import '../../../../../uikit/colors/app_colors.dart';
 
 class HomeSearchBar extends StatelessWidget {
   const HomeSearchBar({super.key});
@@ -18,7 +18,7 @@ class HomeSearchBar extends StatelessWidget {
             fontSize: 14,
             fontWeight: FontWeight.w400,
           ),
-          prefixIcon: const Icon(Icons.search, color: AppColors.primaryGrey),
+          prefixIcon: const Icon(Icons.search, color: AppColors.primaryButtonColor),
           filled: true,
           fillColor: AppColors.boxDecorationColor,
           border: OutlineInputBorder(

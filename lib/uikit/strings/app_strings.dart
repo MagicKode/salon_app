@@ -2,6 +2,7 @@ class AppStrings {
   // Общие элементы
   static const String or = "или";
   static const String loading = "Загрузка...";
+  static const String appTitle = "Salon App";
 
   // Экран Login
   static const String loginTitle = "С возвращением,";
@@ -64,7 +65,7 @@ class AppStrings {
   static const String homeSubtitle = "Выберите желаемый сервис";
   static const String sectionServices = "Выберите услугу";
   static const String sectionAbout = "О нас";
-  static const String sectionFeedback = "Отзывы клиентов";
+  static const String sectionFeedback = "Оценки и отзывы";
   static const String hideDetails = "Свернуть";
   static const String aboutFullDescription =
       "Наша парикмахерская работает с 2010 года. За это время мы заслужили "
@@ -161,6 +162,12 @@ class AppStrings {
   static const String lightTheme = "Светлая";
   static const String darkTheme = "Темная";
   static const String privacyPolicy = "Политика конфиденциальности";
+
+  // Feedback screen
+  static const String leaveFeedback = "Напишите отзыв";
+  static const String sendFeedback = "Отправить отзыв";
+  static const String writeYourFeedback = "Оставиьте свой отзыв";
+  static const String reviews = "Отзывы";
 
   // History of services
   static const String historyIsEmpty = "История бронирований пуста";
