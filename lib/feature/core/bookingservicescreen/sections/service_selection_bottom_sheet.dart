@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../uikit/strings/app_strings.dart';
 import '../../../../uikit/colors/app_colors.dart';
+import '../../../../uikit/widgets/app_button.dart';
 import '../domain/add_service_data.dart';
 
 class ServiceSelectionBottomSheet extends StatefulWidget {
@@ -80,16 +81,12 @@ class _ServiceSelectionBottomSheetState
           ),
           Padding(
             padding: const EdgeInsets.all(16),
-            child: ElevatedButton(
+            child: AppButton(
+              text: AppStrings.addToServices,
               onPressed: () {
                 widget.onServicesConfirmed(_selected);
                 Navigator.pop(context);
               },
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 50),
-                backgroundColor: AppColors.primaryBlue,
-              ),
-              child: const Text(AppStrings.addToServices),
             ),
           ),
         ],

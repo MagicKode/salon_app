@@ -127,6 +127,7 @@ class AppStrings {
   static const String confirmCancelling = "Да, отменить";
   static const String back = "Назад";
   static const String chooseAnyService = "Выберите хотя бы одну услугу";
+  static const String pleaseChooseData = "Пожалуйста, выберите дату и время";
   static const String serviceWelcomeMessage =
       "Мы ждем вас в нашей студии.\nДетали записи доступны в профиле.";
 

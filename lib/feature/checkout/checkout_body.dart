@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:salon_flutter/uikit/strings/app_strings.dart';
+
 import '../../uikit/colors/app_colors.dart';
-import '../../uikit/strings/app_strings.dart';
 import '../../uikit/widgets/app_button.dart';
 import 'booking_success_screen.dart';
 import 'domain/booking_entity.dart';
@@ -22,11 +23,14 @@ class CheckoutBody extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text("Ваш заказ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              const Text(
+                AppStrings.yourService,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
               TextButton.icon(
                 onPressed: () => Navigator.pop(context),
                 icon: const Icon(Icons.edit_outlined, size: 18),
-                label: const Text("Изменить"),
+                label: const Text(AppStrings.change),
               ),
             ],
           ),
@@ -39,7 +43,7 @@ class CheckoutBody extends StatelessWidget {
           const SizedBox(height: 32),
 
           AppButton(
-            text: "Подтвердить бронирование",
+            text: AppStrings.bookingConfirmation,
             onPressed: () => _onConfirm(context),
           ),
           const SizedBox(height: 12),
@@ -47,7 +51,7 @@ class CheckoutBody extends StatelessWidget {
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
-              "Отменить и выйти",
+              AppStrings.cancelAndLeave,
               style: TextStyle(color: AppColors.primaryRed, fontSize: 16),
             ),
           ),
@@ -57,7 +61,7 @@ class CheckoutBody extends StatelessWidget {
   }
 
   void _onConfirm(BuildContext context) {
-    Navigator.pop(context); // закрываем checkout
+    Navigator.pop(context);
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const BookingSuccessScreen()),

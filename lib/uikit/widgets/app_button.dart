@@ -21,14 +21,14 @@ class AppButton extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: SizedBox(
         width: double.infinity,
-        height: 54, // Стандартная высота из твоего дизайна
+        height: 54,
         child: ElevatedButton(
           onPressed: isLoading ? null : onPressed,
           style: ElevatedButton.styleFrom(
             backgroundColor: backgroundColor ?? AppColors.primaryBlue,
             foregroundColor: Colors.white,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(50.0), // Твой радиус 50px
+              borderRadius: BorderRadius.circular(50.0),
             ),
             elevation: 0,
           ),

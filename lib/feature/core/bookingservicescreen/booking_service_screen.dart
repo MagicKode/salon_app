@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/feature/core/bookingservicescreen/booking_service_body.dart';
-import 'package:salon_flutter/feature/core/bookingservicescreen/sections/booking_bottom_bar.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
 import '../../../uikit/strings/app_strings.dart';
 import '../../checkout/checkout_screen.dart';
 import '../../checkout/domain/booking_entity.dart';
-import 'domain/add_service_data.dart';
 
 class BookingServiceScreen extends StatelessWidget {
   const BookingServiceScreen({super.key});

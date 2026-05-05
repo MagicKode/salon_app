@@ -126,7 +126,7 @@ class _BookingServiceBodyState extends State<BookingServiceBody> {
 
     if (_selectedDate == null || _selectedTime == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Пожалуйста, выберите дату и время')),
+        const SnackBar(content: Text(AppStrings.pleaseChooseData)),
       );
       return;
     }
