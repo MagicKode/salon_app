@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/feature/auth/forgotpasswordscreen/sections/use_phone_number_sections.dart';
 
+import '../../../uikit/colors/app_colors.dart';
 import '../../../uikit/strings/app_strings.dart';
 import '../../../uikit/widgets/app_button.dart';
 import '../../../uikit/widgets/app_text_field.dart';
@@ -38,6 +39,14 @@ class _ForgotPasswordBodyState extends State<ForgotPasswordBody> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.primaryBlack, size: 20),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(vertical: 24.0),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:salon_flutter/uikit/colors/app_colors.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 class NotesSection extends StatelessWidget {
@@ -11,7 +12,7 @@ class NotesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color fieldColor = Colors.grey.shade100;
+    final Color fieldColor = AppColors.primaryBackgroundColor;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,7 +32,7 @@ class NotesSection extends StatelessWidget {
           decoration: InputDecoration(
             hintText: AppStrings.notesHint,
             hintStyle: const TextStyle(
-              color: Colors.grey,
+              color: AppColors.primaryGrey,
               fontSize: 14,
             ),
             filled: true,

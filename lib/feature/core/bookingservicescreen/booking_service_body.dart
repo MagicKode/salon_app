@@ -18,12 +18,12 @@ class BookingServiceBody extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const OrderSummarySection(services: ["Woman Blunt Cut"]),
-          const SizedBox(height: 24),
+          const SizedBox(height: 10),
 
           ListTile(
             contentPadding: EdgeInsets.zero,
             leading: const CircleAvatar(
-              radius: 25,
+              radius: 30,
               backgroundImage: AssetImage(AppAssets.pavelImg),
             ),
             title: Text(
@@ -39,7 +39,6 @@ class BookingServiceBody extends StatelessWidget {
           const TimeSelectionSection(),
           const SizedBox(height: 24),
           const NotesSection(),
-          const SizedBox(height: 30),
         ],
       ),
     );

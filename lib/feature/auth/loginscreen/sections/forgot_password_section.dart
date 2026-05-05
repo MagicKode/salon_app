@@ -3,7 +3,12 @@ import 'package:salon_flutter/uikit/strings/app_strings.dart';
 import '../../../../uikit/colors/app_colors.dart';
 
 class ForgotPasswordSection extends StatelessWidget {
-  const ForgotPasswordSection({super.key});
+  final VoidCallback onPressed;
+
+  const ForgotPasswordSection({
+    super.key,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +17,12 @@ class ForgotPasswordSection extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: TextButton(
-          onPressed: () => print(AppStrings.forgotPassword),
+          onPressed: onPressed, // Используем переданную функцию
+          style: TextButton.styleFrom(
+            padding: EdgeInsets.zero,
+            minimumSize: const Size(0, 0),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
           child: const Text(
             AppStrings.forgotPassword,
             style: TextStyle(

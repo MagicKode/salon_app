@@ -11,6 +11,7 @@ class AppColors {
   static const Color primaryBlackHint = Color(0x0d000000);
   static const Color primaryBlackShadow = Color(0x05000000);
   static const Color primaryGrey = Color(0xFF9E9E9E);
+  static const Color dateGrey = Color(0xFF444444);
   static const Color primaryWhite = Color(0xFFFFFFFF);
   static const Color primaryRed = Color(0xFFF44336);
   static const Color primaryGreen = Color(0xFF36C742);

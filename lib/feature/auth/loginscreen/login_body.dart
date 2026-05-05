@@ -3,11 +3,14 @@ import 'package:salon_flutter/feature/auth/loginscreen/sections/forgot_password_
 import 'package:salon_flutter/feature/auth/loginscreen/sections/login_form_section.dart';
 import 'package:salon_flutter/feature/auth/loginscreen/sections/sign_up_section.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
+import '../../../uikit/colors/app_colors.dart';
 import '../../../uikit/widgets/app_button.dart';
 import '../../../uikit/widgets/google_button.dart';
 import '../../../uikit/widgets/welcome_section.dart';
 import '../../../uikit/widgets/or_divider.dart';
 import '../../navigation/main_navigation_screen.dart';
+import '../createaccountscreen/create_acc_screen.dart';
+import '../forgotpasswordscreen/forgot_password_screen.dart';
 
 class LoginBody extends StatefulWidget {
   const LoginBody({super.key});
@@ -25,7 +28,7 @@ class _LoginBodyState extends State<LoginBody> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.primaryWhite,
       body: SafeArea(
         child: SingleChildScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -46,7 +49,16 @@ class _LoginBodyState extends State<LoginBody> {
                 isPasswordVisible: _isPasswordVisible,
               ),
 
-              const ForgotPasswordSection(),
+              ForgotPasswordSection(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ForgotPasswordScreen(),
+                    ),
+                  );
+                },
+              ),
 
               const SizedBox(height: 100.0),
 
@@ -60,7 +72,16 @@ class _LoginBodyState extends State<LoginBody> {
 
               GoogleButton(onPressed: _signInWithGoogle),
 
-              SignUpSection(onJoinNowPressed: () => Navigator.pop(context)),
+              SignUpSection(
+                onJoinNowPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CreateAccountScreen(),
+                    ),
+                  );
+                },
+              ),
             ],
           ),
         ),

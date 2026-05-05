@@ -10,7 +10,7 @@ class AppStrings {
   static const String loginButton = "Войти";
   static const String dontHaveAccount = "Нет аккаунта? ";
   static const String forgotPassword = "Забыли пароль? ";
-  static const String joinNow = "Присоединиться";
+  static const String joinNow = "Регистрация";
 
   // Экран Create Account
   static const String registerTitle = "Создать аккаунт,";

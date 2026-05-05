@@ -12,7 +12,7 @@ class TimeSelectionSection extends StatefulWidget {
 }
 
 class _TimeSelectionSectionState extends State<TimeSelectionSection> {
-  // Генерируем слоты с 9:00 до 20:00 каждые 30 минут
+  // Генерируем слоты с 9:00 до 20:00 каждые 60 минут
   final List<TimeOfDay> _slots = DateHelper.generateTimeSlots(
     startHour: 9,
     endHour: 20,
@@ -69,7 +69,7 @@ class TimeSlotChip extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primaryBlue : AppColors.primaryWhite,
+          color: isSelected ? AppColors.primaryBlue : AppColors.primaryBackgroundColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected ? Colors.transparent : Colors.grey.shade300,

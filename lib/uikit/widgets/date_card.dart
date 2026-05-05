@@ -1,52 +1,50 @@
 import 'package:flutter/material.dart';
-
-import '../../feature/core/bookingservicescreen/utils/date_helper.dart';
+import 'package:intl/intl.dart';
+import '../colors/app_colors.dart';
 
 class DateCard extends StatelessWidget {
   final DateTime date;
   final bool isSelected;
-  final VoidCallback onTap;
+  final bool isToday;
 
   const DateCard({
     super.key,
     required this.date,
     required this.isSelected,
-    required this.onTap,
+    this.isToday = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        width: 65,
-        margin: const EdgeInsets.only(right: 12),
-        decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF1D4D4F) : Colors.grey[100],
-          borderRadius: BorderRadius.circular(18),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              DateHelper.toWeekday(date),
-              style: TextStyle(
-                color: isSelected ? Colors.white70 : Colors.grey,
-                fontSize: 11,
-              ),
+    return Container(
+      width: 60,
+      decoration: BoxDecoration(
+        color: isSelected ? AppColors.primaryBlue : AppColors.primaryBackgroundColor,
+        borderRadius: BorderRadius.circular(40),
+        border: isToday && !isSelected
+            ? Border.all(color: AppColors.primaryBlue.withOpacity(0.5))
+            : null,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            DateFormat.E('ru_RU').format(date),
+            style: TextStyle(
+              fontSize: 14,
+              color: isSelected ? AppColors.primaryWhite : AppColors.primaryBlack,
             ),
-            const SizedBox(height: 6),
-            Text(
-              '${date.day}',
-              style: TextStyle(
-                color: isSelected ? Colors.white : Colors.black,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            date.day.toString(),
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: isSelected ? AppColors.primaryWhite : AppColors.primaryBlack,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
