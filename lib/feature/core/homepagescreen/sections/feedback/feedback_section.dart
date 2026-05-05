@@ -29,6 +29,8 @@ class FeedbackSection extends StatelessWidget {
           ),
         ),
 
+        const SizedBox(height: 10),
+
         // 1. Большая карточка с общей оценкой (как на скрине)
         const RatingSummaryCard(),
 
