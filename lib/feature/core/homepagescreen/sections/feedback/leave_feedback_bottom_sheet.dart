@@ -7,7 +7,8 @@ class LeaveFeedbackBottomSheet extends StatefulWidget {
   const LeaveFeedbackBottomSheet({super.key});
 
   @override
-  State<LeaveFeedbackBottomSheet> createState() => _LeaveFeedbackBottomSheetState();
+  State<LeaveFeedbackBottomSheet> createState() =>
+      _LeaveFeedbackBottomSheetState();
 }
 
 class _LeaveFeedbackBottomSheetState extends State<LeaveFeedbackBottomSheet> {
@@ -36,22 +37,22 @@ class _LeaveFeedbackBottomSheetState extends State<LeaveFeedbackBottomSheet> {
             ),
           ),
 
-          // Звёзды
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(5, (index) {
-              return IconButton(
-                icon: Icon(
-                  index < _rating ? Icons.star : Icons.star_border,
-                  color: AppColors.starsYellow,
-                  size: 40,
+                // Звёзды
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(5, (index) {
+                    return IconButton(
+                      icon: Icon(
+                        index < _rating ? Icons.star : Icons.star_border,
+                        color: AppColors.starsYellow,
+                        size: 40,
+                      ),
+                      onPressed: () {
+                        setState(() => _rating = index + 1);
+                      },
+                    );
+                  }),
                 ),
-                onPressed: () {
-                  setState(() => _rating = index + 1);
-                },
-              );
-            }),
-          ),
 
           const SizedBox(height: 16),
 
@@ -83,7 +84,7 @@ class _LeaveFeedbackBottomSheetState extends State<LeaveFeedbackBottomSheet> {
                 // TODO: Отправка отзыва на сервер
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Спасибо за ваш отзыв!')),
+                  const SnackBar(content: Text(AppStrings.thanksForYourFeedback)),
                 );
               },
             ),

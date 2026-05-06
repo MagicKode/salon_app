@@ -6,6 +6,7 @@ import '../../../uikit/strings/app_strings.dart';
 import '../../../uikit/widgets/app_button.dart';
 import '../../../uikit/widgets/app_text_field.dart';
 import '../../../uikit/widgets/welcome_section.dart';
+import '../emailverificationscreen/email_verification_screen.dart';
 
 class ForgotPasswordBody extends StatefulWidget {
   const ForgotPasswordBody({super.key});
@@ -38,9 +39,9 @@ class _ForgotPasswordBodyState extends State<ForgotPasswordBody> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.primaryWhite,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.primaryWhite,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.primaryBlack, size: 20),
@@ -74,7 +75,14 @@ class _ForgotPasswordBodyState extends State<ForgotPasswordBody> {
 
               AppButton(
                 text: AppStrings.sendCodeButton,
-                onPressed: _sendCode,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const EmailVerificationScreen(),
+                    ),
+                  );
+                },
                 isLoading: _isLoading,
               ),
             ],

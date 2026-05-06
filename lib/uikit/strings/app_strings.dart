@@ -166,8 +166,9 @@ class AppStrings {
   // Feedback screen
   static const String leaveFeedback = "Напишите отзыв";
   static const String sendFeedback = "Отправить отзыв";
-  static const String writeYourFeedback = "Оставиьте свой отзыв";
+  static const String writeYourFeedback = "Оставьте свой отзыв";
   static const String reviews = "Отзывы";
+  static const String thanksForYourFeedback = "Спасибо за ваш отзыв!";
 
   // History of services
   static const String historyIsEmpty = "История бронирований пуста";

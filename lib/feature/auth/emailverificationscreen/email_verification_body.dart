@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/feature/auth/emailverificationscreen/sections/otp_input_section.dart';
 import 'package:salon_flutter/feature/auth/emailverificationscreen/sections/resend_on_time.dart';
+import '../../../uikit/colors/app_colors.dart';
 import '../../../uikit/strings/app_strings.dart';
 import '../../../uikit/widgets/app_button.dart';
 import '../../../uikit/widgets/welcome_section.dart';
@@ -41,7 +42,14 @@ class _EmailVerificationBodyState extends State<EmailVerificationBody> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: AppColors.primaryWhite,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.primaryBlack, size: 20),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.only(bottom: 24.0),
