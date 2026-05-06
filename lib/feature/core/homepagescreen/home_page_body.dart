@@ -6,6 +6,7 @@ import 'package:salon_flutter/feature/core/homepagescreen/sections/searchbar/hom
 import 'package:salon_flutter/feature/core/homepagescreen/sections/servicesgrid/service_grid_section.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
+import '../nearbymapscreen/nearby_map_screen.dart';
 import 'domain/home_models.dart';
 
 class HomePageBody extends StatefulWidget {
@@ -16,6 +17,12 @@ class HomePageBody extends StatefulWidget {
 }
 
 class _HomePageBodyState extends State<HomePageBody> {
+  void _navigateToNearbyMap() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const NearbyMapScreen()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,20 +33,13 @@ class _HomePageBodyState extends State<HomePageBody> {
           child: Column(
             children: [
               const AppBarSection(),
-
               const SizedBox(height: 16),
-
-              HomeSearchBar(),
-
+              HomeSearchBar(onLocationTap: _navigateToNearbyMap),
               const SizedBox(height: 16),
-
               ServiceGridSection(),
               DescriptionSection(),
-
               const SizedBox(height: 20),
-
               FeedbackSection(feedbacks: FeedbackData.items),
-
               const SizedBox(height: 5),
             ],
           ),

@@ -185,6 +185,9 @@ class AppStrings {
   // HomeSearchBar
   static const String hintServiceMasterSearch = "Поиск услуг или мастеров...";
 
+  // NearbyMap screen
+  static const String howToFind = "Как добраться";
+
   // Тестовые данные для примера (можно оставить здесь или в domain)
   static const String dummyServiceTitle = "Мужская стрижка";
   static const String dummyServiceDescription =
