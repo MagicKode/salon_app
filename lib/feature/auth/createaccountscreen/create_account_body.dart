@@ -4,10 +4,10 @@ import 'package:salon_flutter/feature/auth/createaccountscreen/sections/sign_in_
 import 'package:salon_flutter/feature/auth/createaccountscreen/sections/term_and_privacy.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
-import '../../../uikit/widgets/app_button.dart';
-import '../../../uikit/widgets/google_button.dart';
-import '../../../uikit/widgets/welcome_section.dart';
-import '../../../uikit/widgets/or_divider.dart';
+import '../../../uikit/widgets/buttons/app_button.dart';
+import '../../../uikit/widgets/buttons/google_button.dart';
+import '../../../uikit/widgets/welcome/welcome_section.dart';
+import '../../../uikit/widgets/or/or_divider.dart';
 
 class CreateAccountBody extends StatefulWidget {
   const CreateAccountBody({super.key});

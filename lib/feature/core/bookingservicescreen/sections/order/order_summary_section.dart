@@ -3,7 +3,7 @@ import 'package:salon_flutter/feature/core/bookingservicescreen/domain/add_servi
 
 import '../../../../../uikit/colors/app_colors.dart';
 import '../../../../../uikit/strings/app_strings.dart';
-import '../../../../../uikit/widgets/order_service_item.dart';
+import '../../../../../uikit/widgets/order/order_service_item.dart';
 
 class OrderSummarySection extends StatelessWidget {
   final List<AddServiceData> selectedServices;

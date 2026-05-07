@@ -66,6 +66,8 @@ class _OtpInputSectionState extends State<OtpInputSection> {
               FilteringTextInputFormatter.digitsOnly,
             ],
             decoration: InputDecoration(
+              filled: true,
+              fillColor: AppColors.primaryBackgroundColor,
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(color: Colors.grey.shade300),

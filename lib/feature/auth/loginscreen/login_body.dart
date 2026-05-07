@@ -4,10 +4,10 @@ import 'package:salon_flutter/feature/auth/loginscreen/sections/login_form_secti
 import 'package:salon_flutter/feature/auth/loginscreen/sections/sign_up_section.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 import '../../../uikit/colors/app_colors.dart';
-import '../../../uikit/widgets/app_button.dart';
-import '../../../uikit/widgets/google_button.dart';
-import '../../../uikit/widgets/welcome_section.dart';
-import '../../../uikit/widgets/or_divider.dart';
+import '../../../uikit/widgets/buttons/app_button.dart';
+import '../../../uikit/widgets/buttons/google_button.dart';
+import '../../../uikit/widgets/welcome/welcome_section.dart';
+import '../../../uikit/widgets/or/or_divider.dart';
 import '../../navigation/main_navigation_screen.dart';
 import '../createaccountscreen/create_acc_screen.dart';
 import '../forgotpasswordscreen/forgot_password_screen.dart';

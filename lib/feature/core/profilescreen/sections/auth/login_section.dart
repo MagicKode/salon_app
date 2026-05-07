@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 import '../../../../../uikit/colors/app_colors.dart';
-import '../../../../../uikit/widgets/profile_menu_tile.dart';
+import '../../../../../uikit/widgets/profile/profile_menu_tile.dart';
 
 class LoginSection extends StatelessWidget {
   final bool isVisible;

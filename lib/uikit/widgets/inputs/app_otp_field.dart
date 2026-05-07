@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../colors/app_colors.dart';
+import '../../colors/app_colors.dart';
 
 class AppOtpField extends StatelessWidget {
   final int length;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../../uikit/widgets/date_card.dart';
+import '../../../../../uikit/widgets/cards/date_card.dart';
 
 class CalendarList extends StatelessWidget {
   final ScrollController controller;

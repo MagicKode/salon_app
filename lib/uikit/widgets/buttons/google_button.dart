@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../assets/app_assets.dart';
-import '../colors/app_colors.dart';
+import '../../assets/app_assets.dart';
+import '../../colors/app_colors.dart';
 
 class GoogleButton extends StatelessWidget {
   final VoidCallback onPressed;

@@ -1,33 +1,26 @@
 import 'dart:ui';
 
-class AppColors {
+abstract class AppColors {
+  // Общие цвета (используются в обеих темах)
   static const Color primaryBlue = Color(0xFF093882);
   static const Color lightBlue = Color(0xFF3498DB);
-  static const Color primaryButtonColor = Color(0x9D093882);
-  static const Color primaryBackgroundColor = Color(0x10093882);
-  static const Color boxDecorationColor = Color(0x0d093882);
-
-  static const Color primaryBlack = Color(0xFF000000);
-  static const Color primaryBlackHint = Color(0x0d000000);
-  static const Color primaryBlackShadow = Color(0x05000000);
-  static const Color primaryGrey = Color(0xFF9E9E9E);
-  static const Color dateGrey = Color(0xFF444444);
-  static const Color primaryWhite = Color(0xFFFFFFFF);
   static const Color primaryRed = Color(0xFFF44336);
   static const Color primaryGreen = Color(0xFF36C742);
-
-
-  static const Color textWhite = Color(0xFFFFFFFF);
-  static const Color textOrange = Color(0xCCF98600);
-
   static const Color starsYellow = Color(0xFFFFC107);
 
-  // В AppColors.dart добавь:
-  static const Color cardBackground = Color(0xFFF8F9FA);     // светлый фон
-  static const Color lightBorder = Color(0xFFE0E0E0);        // светлая граница
+  // Светлая тема
+  static const Color lightBackground = Color(0xFFFFFFFF);
+  static const Color lightSurface = Color(0xFFF8F9FA);
+  static const Color lightCard = Color(0xFFF8F9FA);
+  static const Color lightBorder = Color(0xFFE0E0E0);
+  static const Color lightTextPrimary = Color(0xFF000000);
+  static const Color lightTextSecondary = Color(0xFF9E9E9E);
 
-
-
-
-
+  // Тёмная тема
+  static const Color darkBackground = Color(0xFF121212);
+  static const Color darkSurface = Color(0xFF1E1E1E);
+  static const Color darkCard = Color(0xFF2A2A2A);
+  static const Color darkBorder = Color(0xFF333333);
+  static const Color darkTextPrimary = Color(0xFFFFFFFF);
+  static const Color darkTextSecondary = Color(0xFFB0B0B0);
 }

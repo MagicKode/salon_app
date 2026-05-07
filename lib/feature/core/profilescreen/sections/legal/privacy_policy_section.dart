@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../../uikit/widgets/profile_menu_tile.dart';
+import '../../../../../uikit/widgets/profile/profile_menu_tile.dart';
 import '../../domain/entities/profile_action_entity.dart';
 
 class PrivacyPolicySection extends StatelessWidget {

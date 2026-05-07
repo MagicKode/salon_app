@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../colors/app_colors.dart';
+import '../../colors/app_colors.dart';
 
 class DateCard extends StatelessWidget {
   final DateTime date;

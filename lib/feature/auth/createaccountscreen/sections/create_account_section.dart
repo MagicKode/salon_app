@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
-import '../../../../uikit/widgets/app_text_field.dart';
+import '../../../../uikit/widgets/inputs/app_text_field.dart';
 
 class CreateAccountSection extends StatelessWidget {
   final TextEditingController nameController;

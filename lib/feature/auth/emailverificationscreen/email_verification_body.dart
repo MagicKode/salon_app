@@ -3,8 +3,8 @@ import 'package:salon_flutter/feature/auth/emailverificationscreen/sections/otp_
 import 'package:salon_flutter/feature/auth/emailverificationscreen/sections/resend_on_time.dart';
 import '../../../uikit/colors/app_colors.dart';
 import '../../../uikit/strings/app_strings.dart';
-import '../../../uikit/widgets/app_button.dart';
-import '../../../uikit/widgets/welcome_section.dart';
+import '../../../uikit/widgets/buttons/app_button.dart';
+import '../../../uikit/widgets/welcome/welcome_section.dart';
 
 class EmailVerificationBody extends StatefulWidget {
   const EmailVerificationBody({super.key});

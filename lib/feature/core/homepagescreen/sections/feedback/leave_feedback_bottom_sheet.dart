@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
-import 'package:salon_flutter/uikit/widgets/app_button.dart';
+import 'package:salon_flutter/uikit/widgets/buttons/app_button.dart';
 
 class LeaveFeedbackBottomSheet extends StatefulWidget {
   const LeaveFeedbackBottomSheet({super.key});

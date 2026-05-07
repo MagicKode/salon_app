@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 import '../../../../uikit/colors/app_colors.dart';
-import '../../../../uikit/widgets/app_button.dart';
+import '../../../../uikit/widgets/buttons/app_button.dart';
 
 class MenuBottomBar extends StatelessWidget {
   const MenuBottomBar({super.key});

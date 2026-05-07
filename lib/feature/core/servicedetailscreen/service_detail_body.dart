@@ -5,7 +5,7 @@ import 'package:salon_flutter/feature/core/servicedetailscreen/sections/servicei
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 import '../../../uikit/colors/app_colors.dart';
-import '../../../uikit/widgets/app_button.dart';
+import '../../../uikit/widgets/buttons/app_button.dart';
 import 'domain/service_detail_data.dart';
 
 class ServiceDetailBody extends StatelessWidget {
