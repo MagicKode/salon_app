@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 import '../../uikit/colors/app_colors.dart';
-import '../../uikit/widgets/app_button.dart';
+import '../../uikit/widgets/button/app_button.dart';
 import 'booking_success_screen.dart';
 import 'domain/booking_entity.dart';
 import 'sections/booking_summary_card.dart';

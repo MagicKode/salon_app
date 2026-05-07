@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/uikit/widgets/time_slot_card.dart';
+import 'package:salon_flutter/uikit/widgets/card/time_slot_card.dart';
 
 class TimeSlotsGrid extends StatelessWidget {
   final List<TimeOfDay> slots;

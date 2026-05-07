@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../uikit/colors/app_colors.dart';
-import '../../feature/checkout/domain/booking_entity.dart';
-import '../strings/app_strings.dart';
-import '../utils/app_date_formats.dart';
+import '../../../../../../uikit/colors/app_colors.dart';
+import '../../../feature/checkout/domain/booking_entity.dart';
+import '../../strings/app_strings.dart';
+import '../../utils/app_date_formats.dart';
 
 class HistoryBookingCard extends StatelessWidget {
   final BookingEntity booking;

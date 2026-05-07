@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../../uikit/colors/app_colors.dart';
 import '../../../../../uikit/strings/app_strings.dart';
-import '../../../../../uikit/widgets/app_button.dart';
+import '../../../../../uikit/widgets/button/app_button.dart';
 import '../../domain/home_models.dart';
 import 'feedback_card.dart';
 import 'leave_feedback_bottom_sheet.dart';

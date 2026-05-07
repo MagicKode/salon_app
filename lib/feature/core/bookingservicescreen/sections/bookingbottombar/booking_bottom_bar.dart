@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
 import '../../../../../uikit/strings/app_strings.dart';
-import '../../../../../uikit/widgets/app_button.dart';
+import '../../../../../uikit/widgets/button/app_button.dart';
 
 class BookingBottomBar extends StatelessWidget {
   final double totalPrice;

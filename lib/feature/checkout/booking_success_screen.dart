@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:salon_flutter/feature/navigation/main_navigation_screen.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
-import 'package:salon_flutter/uikit/widgets/app_button.dart';
+import 'package:salon_flutter/uikit/widgets/button/app_button.dart';
 
 class BookingSuccessScreen extends StatelessWidget {
   const BookingSuccessScreen({super.key});

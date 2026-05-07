@@ -3,7 +3,7 @@ import 'package:salon_flutter/feature/core/notificationscreen/notifications_scre
 
 import '../../../../../uikit/colors/app_colors.dart';
 import '../../../../../uikit/strings/app_strings.dart';
-import '../../../../../uikit/widgets/notifications_button.dart';
+import '../../../../../uikit/widgets/button/notifications_button.dart';
 
 class AppBarSection extends StatelessWidget {
   const AppBarSection({super.key});

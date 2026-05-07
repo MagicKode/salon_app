@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/feature/core/bookingservicescreen/domain/add_service_data.dart';
-import '../colors/app_colors.dart';
-import '../strings/app_strings.dart';
+import '../../colors/app_colors.dart';
+import '../../strings/app_strings.dart';
 
 class OrderServiceItem extends StatelessWidget {
   final AddServiceData service;
