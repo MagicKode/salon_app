@@ -5,7 +5,8 @@ class BookingEntity {
   final String masterName;
   final DateTime dateTime;
   final double price;
-  final int durationMinutes; // добавили для гибкости
+  final int durationMinutes;
+  final String? notes;
 
   BookingEntity({
     required this.serviceName,
@@ -13,6 +14,7 @@ class BookingEntity {
     required this.dateTime,
     required this.price,
     this.durationMinutes = 60,
+    this.notes,
   });
 
   String get formattedDateTime =>

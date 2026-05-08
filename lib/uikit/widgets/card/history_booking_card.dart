@@ -4,6 +4,7 @@ import '../../../../../../uikit/colors/app_colors.dart';
 import '../../../feature/checkout/domain/booking_entity.dart';
 import '../../strings/app_strings.dart';
 import '../../utils/app_date_formats.dart';
+import 'expandable_note.dart';
 
 class HistoryBookingCard extends StatelessWidget {
   final BookingEntity booking;
@@ -110,6 +111,10 @@ class HistoryBookingCard extends StatelessWidget {
                 ),
               ),
             ),
+            if (booking.notes != null && booking.notes!.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              ExpandableNote(note: booking.notes!),
+            ],
           ],
         ),
       ),

@@ -17,6 +17,7 @@ extension ServiceListExtension on List<AddServiceData> {
     required String masterName,
     required DateTime date,
     required TimeOfDay time,
+    String? notes
   }) {
     return BookingEntity(
       serviceName: map((s) => s.name).join(", "),
@@ -30,6 +31,7 @@ extension ServiceListExtension on List<AddServiceData> {
       ),
       price: totalPrice,
       durationMinutes: totalDuration,
+      notes: notes,
     );
   }
 }

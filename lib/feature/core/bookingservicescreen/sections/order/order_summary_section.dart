@@ -20,8 +20,6 @@ class OrderSummarySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Вызываем геттеры из extension (booking_logic.dart)
-    // Если они красные: нажми Alt+Enter на них и выбери "Import library"
     final totalPriceValue = selectedServices.totalPrice;
     final totalDurationValue = selectedServices.totalDuration;
 

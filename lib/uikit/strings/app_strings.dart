@@ -145,7 +145,7 @@ class AppStrings {
   static const String labelDuration = "Длительность";
 
   // Profile
-  static const String serviceHistory = "История бронирований";
+  static const String serviceHistory = "История записей";
   static const String notifications = "Уведомления";
   static const String payment = "Способы оплаты";
   static const String exitFromAccount = "Выйти из аккаунта";
