@@ -173,9 +173,11 @@ class AppStrings {
   static const String thanksForYourFeedback = "Спасибо за ваш отзыв!";
 
   // History of services
-  static const String historyIsEmpty = "История бронирований пуста";
+  static const String historyIsEmpty = "У вас пока нет записей";
+  static const String hereWillBeYourBookingStory = "Здесь будет отображаться история ваших визитов";
   static const String pastBooking = "Прошедшие записи";
   static const String recentBooking = "Моя ближайшая запись";
+
 
   // BottomNavigation bar
   static const String navHome = "Главная";
