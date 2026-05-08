@@ -5,10 +5,7 @@ import 'package:salon_flutter/uikit/strings/app_strings.dart';
 class NotesSection extends StatelessWidget {
   final TextEditingController? controller;
 
-  const NotesSection({
-    super.key,
-    this.controller,
-  });
+  const NotesSection({super.key, this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +16,7 @@ class NotesSection extends StatelessWidget {
       children: [
         const Text(
           AppStrings.notesHeader,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),
         TextField(

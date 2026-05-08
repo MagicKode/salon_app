@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:salon_flutter/feature/checkout/domain/booking_entity.dart';
 import 'package:salon_flutter/feature/core/bookingservicescreen/domain/add_service_data.dart';
 
 import '../../../../../uikit/colors/app_colors.dart';
 import '../../../../../uikit/strings/app_strings.dart';
 import '../../../../../uikit/widgets/order/order_service_item.dart';
-import 'package:salon_flutter/feature/core/bookingservicescreen/domain/booking_logic.dart';
 
 class OrderSummarySection extends StatelessWidget {
   final List<AddServiceData> selectedServices;
   final VoidCallback onAddMoreServices;
   final Function(AddServiceData) onRemoveService;
+  final String notes;
+
 
   const OrderSummarySection({
     super.key,
     required this.selectedServices,
     required this.onAddMoreServices,
     required this.onRemoveService,
+    required this.notes,
   });
 
   @override
@@ -40,6 +43,8 @@ class OrderSummarySection extends StatelessWidget {
           ),
           child: Column(
             children: [
+
+              // --- СПИСОК УСЛУГ ---
               if (selectedServices.isEmpty)
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 5),
@@ -58,6 +63,7 @@ class OrderSummarySection extends StatelessWidget {
 
               const Divider(height: 24),
 
+              // --- ИТОГО И ДЛИТЕЛЬНОСТЬ ---
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -102,6 +108,34 @@ class OrderSummarySection extends StatelessWidget {
                   ),
                 ],
               ),
+
+              if (notes.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                const Divider(height: 1),
+                const SizedBox(height: 12),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppColors.boxDecorationColor,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        AppStrings.notesHeader,
+                        style: TextStyle(fontSize: 12, color: AppColors.primaryGrey),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        notes,
+                        style: const TextStyle(fontSize: 14, color: AppColors.primaryBlack),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
 
               const SizedBox(height: 16),
               const Divider(height: 1),

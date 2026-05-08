@@ -57,16 +57,15 @@ class _TimeSlotTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Определяем цвета один раз для чистоты разметки
     final backgroundColor = isHighlighted
         ? AppColors.primaryBlue
-        : AppColors.boxDecorationColor;
+        : AppColors.primaryBackgroundColor;
 
     final textColor = isHighlighted
         ? AppColors.primaryWhite
         : AppColors.primaryBlack;
 
-    return InkWell( // Используем InkWell для визуального отклика (ripple effect)
+    return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
       child: Ink(

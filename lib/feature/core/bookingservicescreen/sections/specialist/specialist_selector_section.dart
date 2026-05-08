@@ -6,10 +6,7 @@ import '../../../../../uikit/strings/app_strings.dart';
 class SpecialistSelectorSection extends StatelessWidget {
   final Function(String masterName, String title)? onMasterSelected;
 
-  const SpecialistSelectorSection({
-    super.key,
-    this.onMasterSelected,
-  });
+  const SpecialistSelectorSection({super.key, this.onMasterSelected});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +28,7 @@ class SpecialistSelectorSection extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: AppColors.cardBackground,
+              color: AppColors.primaryBackgroundColor,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: AppColors.lightBorder),
             ),
@@ -62,11 +59,6 @@ class SpecialistSelectorSection extends StatelessWidget {
                       ),
                     ),
                   ],
-                ),
-                const Spacer(),
-                const Icon(
-                  Icons.chevron_right,
-                  color: AppColors.primaryGrey,
                 ),
               ],
             ),

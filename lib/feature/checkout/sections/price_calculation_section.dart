@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:salon_flutter/uikit/strings/app_strings.dart';
 import 'price_details_row.dart';
 
 class PriceCalculationSection extends StatelessWidget {
@@ -8,19 +9,13 @@ class PriceCalculationSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        PriceDetailsRow(label: "Женская стрижка", value: "${totalPrice.toStringAsFixed(0)} BYN"),
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 12),
-          child: Divider(thickness: 1),
-        ),
-        PriceDetailsRow(
-          label: "Итого",
-          value: "${totalPrice.toStringAsFixed(0)} BYN",
-          isTotal: true,
-        ),
-      ],
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 12),
+      child: PriceDetailsRow(
+        label: AppStrings.finalSum,
+        value: "${totalPrice.toStringAsFixed(0)} BYN",
+        isTotal: true,
+      ),
     );
   }
 }

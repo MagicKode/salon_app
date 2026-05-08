@@ -5,22 +5,27 @@ import '../../strings/app_strings.dart';
 
 class ExpandableNote extends StatefulWidget {
   final String note;
+  final bool isInitialExpanded;
 
-  const ExpandableNote({required this.note});
+  const ExpandableNote({
+    super.key,
+    required this.note,
+    this.isInitialExpanded = false,
+  });
 
   @override
   State<ExpandableNote> createState() => _ExpandableNoteState();
 }
 
 class _ExpandableNoteState extends State<ExpandableNote> {
-  bool _isExpanded = false;
+  late bool _isExpanded = widget.isInitialExpanded;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => setState(() => _isExpanded = !_isExpanded),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
+      child: Container(
+        // duration: const Duration(milliseconds: 300),
         padding: const EdgeInsets.all(12),
         width: double.infinity,
         decoration: BoxDecoration(

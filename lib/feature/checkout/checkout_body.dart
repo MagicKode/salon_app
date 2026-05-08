@@ -35,12 +35,15 @@ class CheckoutBody extends StatelessWidget {
             ],
           ),
 
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
+
           BookingSummaryCard(booking: booking),
-          const SizedBox(height: 24),
+
+          const SizedBox(height: 12),
 
           const CashPaymentInfo(),
-          const SizedBox(height: 32),
+
+          const SizedBox(height: 12),
 
           AppButton(
             text: AppStrings.bookingConfirmation,

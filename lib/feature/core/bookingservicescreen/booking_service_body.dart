@@ -10,7 +10,6 @@ import 'package:salon_flutter/feature/core/bookingservicescreen/sections/time/ti
 import '../../../../uikit/strings/app_strings.dart';
 import '../../checkout/domain/booking_entity.dart';
 import 'domain/add_service_data.dart';
-import 'domain/booking_logic.dart';
 
 class BookingServiceBody extends StatefulWidget {
   final Function(BookingEntity booking, List<AddServiceData> services)? onBookPressed;
@@ -29,13 +28,24 @@ class _BookingServiceBodyState extends State<BookingServiceBody> {
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
 
+  final TextEditingController _notesController = TextEditingController();
+
   double get _totalPrice => _selectedServices.totalPrice;
   int get _requiredSlots => _selectedServices.requiredSlots;
+
+  @override
+  void dispose() {
+    _notesController.dispose(); // Не забываем очищать память
+    super.dispose();
+  }
 
   @override
   void initState() {
     super.initState();
     _selectedDate = DateTime.now();
+    _notesController.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
@@ -52,6 +62,7 @@ class _BookingServiceBodyState extends State<BookingServiceBody> {
                   selectedServices: _selectedServices,
                   onAddMoreServices: _showServiceSelection,
                   onRemoveService: _removeService,
+                  notes: _notesController.text,
                 ),
                 const SizedBox(height: 32),
 
@@ -72,7 +83,7 @@ class _BookingServiceBodyState extends State<BookingServiceBody> {
                 ),
                 const SizedBox(height: 24),
 
-                const NotesSection(),
+                NotesSection(controller: _notesController),
               ],
             ),
           ),
@@ -119,6 +130,7 @@ class _BookingServiceBodyState extends State<BookingServiceBody> {
       masterName: _selectedMaster,
       date: _selectedDate!,
       time: _selectedTime!,
+      notes: _notesController.text,
     );
 
     widget.onBookPressed?.call(booking, _selectedServices);

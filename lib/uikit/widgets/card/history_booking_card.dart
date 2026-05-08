@@ -51,7 +51,7 @@ class HistoryBookingCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        booking.serviceName,
+                        booking.serviceNames,
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
