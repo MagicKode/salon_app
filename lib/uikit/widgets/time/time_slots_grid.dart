@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/uikit/widgets/card/time_slot_card.dart';
+import '../../colors/app_colors.dart';
 
 class TimeSlotsGrid extends StatelessWidget {
   final List<TimeOfDay> slots;
   final TimeOfDay? selectedTime;
-  final Function(TimeOfDay) onTimeSelected;
+  final List<TimeOfDay> selectedSlots;
+  final ValueChanged<TimeOfDay> onTimeSelected;
   final String Function(BuildContext, TimeOfDay) formatLabel;
 
   const TimeSlotsGrid({
     super.key,
     required this.slots,
-    required this.selectedTime,
+    this.selectedTime,
+    this.selectedSlots = const [],
     required this.onTimeSelected,
     required this.formatLabel,
   });
@@ -20,21 +22,72 @@ class TimeSlotsGrid extends StatelessWidget {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: slots.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3, // 3 колонки
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-        childAspectRatio: 2.5, // Пропорции кнопки
+        crossAxisCount: 3,
+        mainAxisSpacing: 12,
+        crossAxisSpacing: 12,
+        childAspectRatio: 2.5,
       ),
+      itemCount: slots.length,
       itemBuilder: (context, index) {
         final time = slots[index];
-        return TimeSlotCard(
-          time: formatLabel(context, time),
-          isSelected: selectedTime == time,
+        final isHighlighted = selectedSlots.contains(time);
+
+        return _TimeSlotTile(
+          label: formatLabel(context, time),
+          isHighlighted: isHighlighted,
           onTap: () => onTimeSelected(time),
         );
       },
+    );
+  }
+}
+
+/// Приватный виджет для отрисовки одной ячейки (SRP)
+class _TimeSlotTile extends StatelessWidget {
+  final String label;
+  final bool isHighlighted;
+  final VoidCallback onTap;
+
+  const _TimeSlotTile({
+    required this.label,
+    required this.isHighlighted,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    // Определяем цвета один раз для чистоты разметки
+    final backgroundColor = isHighlighted
+        ? AppColors.primaryBlue
+        : AppColors.boxDecorationColor;
+
+    final textColor = isHighlighted
+        ? AppColors.primaryWhite
+        : AppColors.primaryBlack;
+
+    return InkWell( // Используем InkWell для визуального отклика (ripple effect)
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Ink(
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(12),
+          border: isHighlighted
+              ? null
+              : Border.all(color: AppColors.primaryBlackShadow),
+        ),
+        child: Center(
+          child: Text(
+            label,
+            style: TextStyle(
+              color: textColor,
+              fontSize: 14,
+              fontWeight: isHighlighted ? FontWeight.bold : FontWeight.w500,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

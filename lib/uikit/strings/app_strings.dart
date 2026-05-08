@@ -135,6 +135,8 @@ class AppStrings {
   //BookingserviceScreen
   static const String yourMasterPavel = "Ваш мастер";
   static const String topMaster = "Топ-стилист";
+  static const String notEnoughTimeForService =  "На это время нельзя записаться: не хватает свободных часов.";
+
 
   // Метки для Grid
   static const String labelDate = "Дата";

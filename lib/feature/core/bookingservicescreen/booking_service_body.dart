@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/feature/core/bookingservicescreen/sections/bookingbottombar/booking_bottom_bar.dart';
-
 import 'package:salon_flutter/feature/core/bookingservicescreen/sections/calendar/date_selection_section.dart';
 import 'package:salon_flutter/feature/core/bookingservicescreen/sections/notes/notes_section.dart';
 import 'package:salon_flutter/feature/core/bookingservicescreen/sections/order/order_summary_section.dart';
@@ -11,10 +10,10 @@ import 'package:salon_flutter/feature/core/bookingservicescreen/sections/time/ti
 import '../../../../uikit/strings/app_strings.dart';
 import '../../checkout/domain/booking_entity.dart';
 import 'domain/add_service_data.dart';
+import 'domain/booking_logic.dart';
 
 class BookingServiceBody extends StatefulWidget {
-  final Function(BookingEntity booking, List<AddServiceData> services)?
-  onBookPressed;
+  final Function(BookingEntity booking, List<AddServiceData> services)? onBookPressed;
 
   const BookingServiceBody({super.key, this.onBookPressed});
 
@@ -23,19 +22,19 @@ class BookingServiceBody extends StatefulWidget {
 }
 
 class _BookingServiceBodyState extends State<BookingServiceBody> {
+  // Состояние экрана
   List<AddServiceData> _selectedServices = [];
   String _selectedMaster = "Pavel";
   String _masterTitle = "Топ-стилист";
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
 
-  double get _totalPrice =>
-      _selectedServices.fold(0.0, (sum, service) => sum + service.price);
+  double get _totalPrice => _selectedServices.totalPrice;
+  int get _requiredSlots => _selectedServices.requiredSlots;
 
   @override
   void initState() {
     super.initState();
-    // Можно задать дату по умолчанию — сегодня
     _selectedDate = DateTime.now();
   }
 
@@ -54,34 +53,23 @@ class _BookingServiceBodyState extends State<BookingServiceBody> {
                   onAddMoreServices: _showServiceSelection,
                   onRemoveService: _removeService,
                 ),
-
                 const SizedBox(height: 32),
 
                 SpecialistSelectorSection(
-                  onMasterSelected: (masterName, title) {
-                    setState(() {
-                      _selectedMaster = masterName;
-                      _masterTitle = title;
-                    });
-                  },
+                  onMasterSelected: _updateMaster,
                 ),
-
                 const SizedBox(height: 24),
 
                 DateSelectionSection(
-                  onDateSelected: (date) {
-                    setState(() => _selectedDate = date);
-                  },
+                  onDateSelected: (date) => setState(() => _selectedDate = date),
                 ),
-
                 const SizedBox(height: 24),
 
                 TimeSelectionSection(
-                  onTimeChanged: (time) {
-                    setState(() => _selectedTime = time);
-                  },
+                  // Передаем динамически вычисленное кол-во слотов
+                  requiredSlots: _requiredSlots,
+                  onTimeChanged: (time) => setState(() => _selectedTime = time),
                 ),
-
                 const SizedBox(height: 24),
 
                 const NotesSection(),
@@ -89,61 +77,68 @@ class _BookingServiceBodyState extends State<BookingServiceBody> {
             ),
           ),
         ),
-
-        BookingBottomBar(totalPrice: _totalPrice, onTap: _onBookPressed),
+        BookingBottomBar(
+          totalPrice: _totalPrice,
+          onTap: _handleBookingProcess,
+        ),
       ],
     );
+  }
+
+  // --- Методы обновления состояния (State Management) ---
+  void _updateMaster(String name, String title) {
+    setState(() {
+      _selectedMaster = name;
+      _masterTitle = title;
+    });
   }
 
   void _showServiceSelection() {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      builder:
-          (context) => ServiceSelectionBottomSheet(
-            alreadySelected: _selectedServices,
-            onServicesConfirmed: (services) {
-              setState(() => _selectedServices = services);
-            },
-          ),
+      builder: (context) => ServiceSelectionBottomSheet(
+        alreadySelected: _selectedServices,
+        onServicesConfirmed: (services) => setState(() => _selectedServices = services),
+      ),
     );
   }
 
   void _removeService(AddServiceData service) {
     setState(() {
       _selectedServices.removeWhere((s) => s.id == service.id);
+      _selectedTime = null;
     });
   }
 
-  void _onBookPressed() {
-    if (_selectedServices.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(AppStrings.chooseAnyService)));
-      return;
-    }
+  // --- Бизнес-логика (Action Logic) ---
+  void _handleBookingProcess() {
+    if (!_isInputValid()) return;
 
-    if (_selectedDate == null || _selectedTime == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text(AppStrings.pleaseChooseData)),
-      );
-      return;
-    }
-
-    final booking = BookingEntity(
-      serviceName: _selectedServices.map((s) => s.name).join(", "),
+    final booking = _selectedServices.toEntity(
       masterName: _selectedMaster,
-      dateTime: DateTime(
-        _selectedDate!.year,
-        _selectedDate!.month,
-        _selectedDate!.day,
-        _selectedTime!.hour,
-        _selectedTime!.minute,
-      ),
-      price: _totalPrice,
-      durationMinutes: 60, // TODO: сделать динамическим из услуг
+      date: _selectedDate!,
+      time: _selectedTime!,
     );
 
     widget.onBookPressed?.call(booking, _selectedServices);
+  }
+
+  bool _isInputValid() {
+    if (_selectedServices.isEmpty) {
+      _showError(AppStrings.chooseAnyService);
+      return false;
+    }
+    if (_selectedDate == null || _selectedTime == null) {
+      _showError(AppStrings.pleaseChooseData);
+      return false;
+    }
+    return true;
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
   }
 }
