@@ -5,8 +5,6 @@ import 'package:salon_flutter/feature/core/profilescreen/sections/auth/logout_se
 import 'package:salon_flutter/feature/core/profilescreen/sections/legal/privacy_policy_section.dart';
 import 'package:salon_flutter/feature/core/profilescreen/sections/support/share_section.dart';
 import 'package:salon_flutter/feature/core/profilescreen/sections/support/support_section.dart';
-import 'package:salon_flutter/feature/core/profilescreen/sections/theme/theme_selection_section.dart';
-import 'package:salon_flutter/feature/core/profilescreen/sections/theme/theme_system_section.dart';
 import 'package:salon_flutter/feature/core/profilescreen/sections/userinfo/user_info_section.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
@@ -34,7 +32,7 @@ class ProfileBody extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       children: [
-        const SizedBox(height: 32),
+        const SizedBox(height: 16),
         // 1. Секция: ВОЙТИ
         LoginSection(
           isVisible: !isAuthorized,
@@ -83,29 +81,29 @@ class ProfileBody extends StatelessWidget {
 
         const SizedBox(height: 8),
 
-        // 5. СИСТЕМНАЯ ТЕМА
-        ThemeSystemSection(
-          isActive: true, // Демо
-          onChanged: (val) => print("Системная тема: $val"),
-        ),
+        // // 5. СИСТЕМНАЯ ТЕМА
+        // ThemeSystemSection(
+        //   isActive: true, // Демо
+        //   onChanged: (val) => print("Системная тема: $val"),
+        // ),
+        //
+        // const SizedBox(height: 8),
+        //
+        // // 6. СВЕТЛАЯ ТЕМА
+        // ThemeSelectionSection(
+        //   title: AppStrings.lightTheme,
+        //   isSelected: false, // Демо
+        //   onTap: () => print("Выбрана светлая тема"),
+        // ),
+        //
+        // // 7. ТЕМНАЯ ТЕМА
+        // ThemeSelectionSection(
+        //   title: AppStrings.darkTheme,
+        //   isSelected: true, // Демо
+        //   onTap: () => print("Выбрана темная тема"),
+        // ),
 
-        const SizedBox(height: 8),
-
-        // 6. СВЕТЛАЯ ТЕМА
-        ThemeSelectionSection(
-          title: AppStrings.lightTheme,
-          isSelected: false, // Демо
-          onTap: () => print("Выбрана светлая тема"),
-        ),
-
-        // 7. ТЕМНАЯ ТЕМА
-        ThemeSelectionSection(
-          title: AppStrings.darkTheme,
-          isSelected: true, // Демо
-          onTap: () => print("Выбрана темная тема"),
-        ),
-
-        const SizedBox(height: 8),
+        // const SizedBox(height: 8),
 
         // 8. СЕКЦИЯ ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ
         PrivacyPolicySection(
@@ -119,14 +117,14 @@ class ProfileBody extends StatelessWidget {
           ),
         ),
 
-        const SizedBox(height: 8),
+        const SizedBox(height: 50),
 
         //9. Секция Выход из аккаунта
         LogoutSection(
             onConfirm: () => _navigateToLogin(context)
         ),
 
-        const SizedBox(height: 4),
+        const SizedBox(height: 16),
 
         // 10. Версия
         const VersionSection(
