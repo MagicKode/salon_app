@@ -32,7 +32,7 @@ class ProfileBody extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       children: [
-        const SizedBox(height: 16),
+        const SizedBox(height: 8),
         // 1. Секция: ВОЙТИ
         LoginSection(
           isVisible: !isAuthorized,
@@ -51,7 +51,7 @@ class ProfileBody extends StatelessWidget {
           ),
         ),
 
-        const SizedBox(height: 8),
+        const SizedBox(height: 25),
 
         // 3. Секция Поделиться приложением (всегда видна для демо)
         ShareSection(
@@ -124,7 +124,7 @@ class ProfileBody extends StatelessWidget {
             onConfirm: () => _navigateToLogin(context)
         ),
 
-        const SizedBox(height: 16),
+        const SizedBox(height: 8),
 
         // 10. Версия
         const VersionSection(

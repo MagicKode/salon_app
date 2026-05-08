@@ -19,7 +19,7 @@ class UserInfoSection extends StatelessWidget {
         children: [
           // ФОТО ПО ЦЕНТРУ
           CircleAvatar(
-            radius: 50,
+            radius: 70,
             backgroundColor: AppColors.primaryGrey.withOpacity(0.2),
             backgroundImage: user.avatarUrl != null
                 ? NetworkImage(user.avatarUrl!) as ImageProvider
