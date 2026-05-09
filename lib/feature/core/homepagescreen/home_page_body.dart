@@ -28,12 +28,11 @@ class _HomePageBodyState extends State<HomePageBody> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primaryWhite,
+      appBar: const AppBarSection(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const AppBarSection(),
-              const SizedBox(height: 16),
               HomeSearchBar(onLocationTap: _navigateToNearbyMap),
               const SizedBox(height: 16),
               ServiceGridSection(),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/uikit/strings/app_strings.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
+import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 class HomeSearchBar extends StatelessWidget {
   final VoidCallback? onLocationTap;
@@ -32,6 +32,7 @@ class HomeSearchBar extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
+
           GestureDetector(
             onTap: onLocationTap,
             child: Container(
@@ -40,13 +41,6 @@ class HomeSearchBar extends StatelessWidget {
               decoration: BoxDecoration(
                 color: AppColors.primaryWhite,
                 borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
               ),
               child: const Icon(
                 Icons.location_on_outlined,

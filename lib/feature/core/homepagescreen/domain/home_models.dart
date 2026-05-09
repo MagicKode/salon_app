@@ -47,29 +47,3 @@ class ServiceData {
     ServiceCategory(title: 'Массаж', icon: Icons.self_improvement, backgroundColor: Color(0xFFFFF8E1), iconColor: Colors.amber),
   ];
 }
-
-// Одна модель для Промо
-// class PromoItem {
-//   final String title;
-//   final String description;
-//   final String imageUrl;
-//   final Color backgroundColor;
-//   const PromoItem({required this.title, required this.description, required this.imageUrl, required this.backgroundColor});
-// }
-
-// class PromoData {
-//   static const List<PromoItem> items = [
-//     PromoItem(
-//       title: 'Скидка 20%',
-//       description: 'На все услуги салона красоты',
-//       imageUrl: 'https://via.placeholder.com/100x118',
-//       backgroundColor: Color(0xFFFFE4E6),
-//     ),
-//     PromoItem(
-//       title: 'Новый клиент',
-//       description: 'Первое посещение со скидкой 30%',
-//       imageUrl: 'https://via.placeholder.com/100x118',
-//       backgroundColor: Color(0xFFE0F2FE),
-//     ),
-//   ];
-// }

@@ -16,7 +16,7 @@ class CheckoutBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
+      padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

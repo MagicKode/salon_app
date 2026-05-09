@@ -52,7 +52,7 @@ class ServiceGridSection extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4,
-        mainAxisSpacing: 16,
+        mainAxisSpacing: 8,
         crossAxisSpacing: 12,
         childAspectRatio: 0.8,
       ),
