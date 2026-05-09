@@ -15,7 +15,12 @@ class BookingSummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.only(
+        left: 20,
+        right: 20,
+        top: 20,
+        bottom: 5,
+      ),
       decoration: BoxDecoration(
         color: AppColors.boxDecorationColor,
         borderRadius: BorderRadius.circular(24),
@@ -23,6 +28,8 @@ class BookingSummaryCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+
+          // --- ИНФОРМАЦИОННАЯ СЕТКА (Дата, Время и т.д.) ---
           BookingInfoGrid(
             date: booking.formattedDateTime.split(' - ')[0],
             time: booking.formattedDateTime.split(' - ')[1],
@@ -34,6 +41,7 @@ class BookingSummaryCard extends StatelessWidget {
           const Divider(thickness: 1.5),
           const SizedBox(height: 5),
 
+          // --- ЗАГОЛОВОК СПИСКА УСЛУГ ---
           const Text(
             AppStrings.serviceMenuTitle,
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
@@ -73,17 +81,16 @@ class BookingSummaryCard extends StatelessWidget {
           // --- НОВАЯ СЕКЦИЯ: ЗАМЕТКИ ---
           if (booking.notes != null && booking.notes!.trim().isNotEmpty) ...[
             const SizedBox(height: 16),
-
             ExpandableNote(
               note: booking.notes!,
-              isInitialExpanded:
-                  false, // В окне подтверждения лучше сразу показать текст
+              isInitialExpanded:false,
             ),
           ],
 
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
           const Divider(thickness: 1.5),
 
+          // --- СЕКЦИЯ РАСЧЕТА СТОИМОСТИ (ИТОГО) ---
           PriceCalculationSection(totalPrice: booking.price),
         ],
       ),
