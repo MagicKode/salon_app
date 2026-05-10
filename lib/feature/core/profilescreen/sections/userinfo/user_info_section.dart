@@ -21,10 +21,20 @@ class UserInfoSection extends StatelessWidget {
           CircleAvatar(
             radius: 70,
             backgroundColor: AppColors.primaryGrey.withOpacity(0.2),
-            backgroundImage: user.avatarUrl != null
-                ? NetworkImage(user.avatarUrl!) as ImageProvider
-                : const AssetImage(AppAssets.pavelImg), // Твоя заглушка
+            // ЛОГИКА: Если есть avatarUrl (у мастера), берем его.
+            // Если нет (у клиента), показываем иконку.
+            backgroundImage: (user.avatarUrl != null && user.avatarUrl!.isNotEmpty)
+                ? AssetImage(user.avatarUrl!) as ImageProvider
+                : const AssetImage(AppAssets.pavelImg),
+            child: (user.avatarUrl == null || user.avatarUrl!.isEmpty)
+                ? const Icon(
+              Icons.person_outline,
+              size: 70,
+              color: AppColors.primaryGrey,
+            )
+                : null,
           ),
+
           const SizedBox(height: 16),
 
           // ИМЯ ФАМИЛИЯ

@@ -4,6 +4,7 @@ import 'package:salon_flutter/feature/core/notificationscreen/notifications_scre
 import '../../../../../uikit/colors/app_colors.dart';
 import '../../../../../uikit/strings/app_strings.dart';
 import '../../../../../uikit/widgets/button/notifications_button.dart';
+import '../../../../auth/fakeauth/authservice/auth_service.dart';
 
 class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
   const AppBarSection({super.key});
@@ -13,6 +14,9 @@ class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Получаем имя текущего пользователя или "Гость", если данных нет
+    final userName = AuthService.currentUser?.name ?? AppStrings.homeGuest;
+
     return AppBar(
       backgroundColor: AppColors.primaryWhite,
       elevation: 0,
@@ -25,9 +29,9 @@ class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Text(
-                    AppStrings.homeWelcome,
+                    "${AppStrings.homeWelcome}$userName",
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   Text(

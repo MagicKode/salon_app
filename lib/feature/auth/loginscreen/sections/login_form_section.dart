@@ -3,13 +3,13 @@ import 'package:salon_flutter/uikit/strings/app_strings.dart';
 import '../../../../uikit/widgets/field/app_text_field.dart';
 
 class LoginFormSection extends StatelessWidget {
-  final TextEditingController emailController;
+  final TextEditingController phoneController;
   final TextEditingController passwordController;
   final ValueNotifier<bool> isPasswordVisible;
 
   const LoginFormSection({
     super.key,
-    required this.emailController,
+    required this.phoneController,
     required this.passwordController,
     required this.isPasswordVisible,
   });
@@ -19,9 +19,10 @@ class LoginFormSection extends StatelessWidget {
     return Column(
       children: [
         AppTextField(
-          controller: emailController,
-          hintText: AppStrings.emailHint,
-          prefixIcon: Icons.email_outlined,
+          controller: phoneController,
+          hintText: "Номер телефона",
+          prefixIcon: Icons.phone_outlined,
+          keyboardType: TextInputType.phone, // Чтобы сразу открывалась цифровая клавиатура
         ),
         const SizedBox(height: 16.0),
         AppTextField(

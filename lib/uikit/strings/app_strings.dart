@@ -11,7 +11,7 @@ class AppStrings {
   static const String loginButton = "Войти";
   static const String dontHaveAccount = "Нет аккаунта? ";
   static const String forgotPassword = "Забыли пароль? ";
-  static const String joinNow = "Регистрация";
+  static const String register = "Регистрация";
 
   // Экран Create Account
   static const String registerTitle = "Создать аккаунт,";
@@ -61,7 +61,8 @@ class AppStrings {
   static const String usePhoneNumber = "Номер телефона?";
 
   // home screen
-  static const String homeWelcome = "Привет, Гость";
+  static const String homeWelcome = "Привет, ";
+  static const String homeGuest = "Дмитрий";
   static const String homeSubtitle = "Выберите желаемый сервис";
   static const String sectionServices = "Выберите услугу";
   static const String sectionAbout = "О нас";

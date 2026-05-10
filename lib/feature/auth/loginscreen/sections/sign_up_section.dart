@@ -32,7 +32,7 @@ class SignUpSection extends StatelessWidget {
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
             child: const Text(
-              AppStrings.joinNow,
+              AppStrings.register,
               style: TextStyle(
                 color: AppColors.primaryBlue,
                 fontSize: 14.0,

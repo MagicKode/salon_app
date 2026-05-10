@@ -10,6 +10,7 @@ import '../../../uikit/widgets/welcome/welcome_section.dart';
 import '../../../uikit/widgets/or/or_divider.dart';
 import '../../navigation/main_navigation_screen.dart';
 import '../createaccountscreen/create_acc_screen.dart';
+import '../fakeauth/authservice/auth_service.dart';
 import '../forgotpasswordscreen/forgot_password_screen.dart';
 
 class LoginBody extends StatefulWidget {
@@ -20,10 +21,10 @@ class LoginBody extends StatefulWidget {
 }
 
 class _LoginBodyState extends State<LoginBody> {
-  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _isPasswordVisible = ValueNotifier<bool>(false);
-  final bool _isLoading = false;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +45,7 @@ class _LoginBodyState extends State<LoginBody> {
               const SizedBox(height: 118.0),
 
               LoginFormSection(
-                emailController: _emailController,
+                phoneController: _phoneController,
                 passwordController: _passwordController,
                 isPasswordVisible: _isPasswordVisible,
               ),
@@ -89,20 +90,71 @@ class _LoginBodyState extends State<LoginBody> {
     );
   }
 
-  void _signIn() async {  //ВРЕМЕННАЯ ЛОГИКА ДЛЯ ДЕМОНСТРАЦИИ !!!!
+  // --- ЭТАП 3: ЛОГИКА АВТОРИЗАЦИИ ---
+  void _signIn() async {
+    setState(() => _isLoading = true);
+
+    // Имитируем небольшую задержку сети для солидности демо
+    await Future.delayed(const Duration(milliseconds: 800));
+
+    final success = AuthService.login(
+      _phoneController.text.trim(),
+      _passwordController.text.trim(),
+    );
+
+    setState(() => _isLoading = false);
+
+    if (success && mounted) {
+      // Логика перенаправления в зависимости от роли
+      final user = AuthService.currentUser;
+
+      if (user?.role == 'master') {
+        // Здесь в будущем будет переход на экран Павла
+        _showDemoMessage("Вход как Мастер: ${user?.name}");
+        _navigateToMain();
+      } else {
+        _navigateToMain();
+      }
+    } else if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "Неверный телефон или пароль. Попробуйте (1234567 / 123)",
+          ),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+    }
+
+    // void _signIn() async {  //ВРЕМЕННАЯ ЛОГИКА ДЛЯ ДЕМОНСТРАЦИИ !!!!
+    //   Navigator.pushReplacement(
+    //     context,
+    //     MaterialPageRoute(
+    //       builder: (context) => const MainNavigationScreen(),
+    //     ),
+    //   );
+  }
+
+  void _navigateToMain() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(
-        builder: (context) => const MainNavigationScreen(),
-      ),
+      MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
     );
   }
 
-  void _signInWithGoogle() { /* логика */ }
+  void _showDemoMessage(String message) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  void _signInWithGoogle() {
+    /* логика */
+  }
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _phoneController.dispose();
     _passwordController.dispose();
     _isPasswordVisible.dispose();
     super.dispose();

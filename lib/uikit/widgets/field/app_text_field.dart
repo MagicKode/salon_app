@@ -7,6 +7,7 @@ class AppTextField extends StatefulWidget {
   final IconData prefixIcon;
   final bool isPassword;
   final ValueNotifier<bool>? passwordVisibility;
+  final TextInputType? keyboardType;
 
   const AppTextField({
     super.key,
@@ -15,6 +16,7 @@ class AppTextField extends StatefulWidget {
     required this.prefixIcon,
     this.isPassword = false,
     this.passwordVisibility,
+    this.keyboardType,
   });
 
   @override
@@ -54,6 +56,7 @@ class _AppTextFieldState extends State<AppTextField> {
               controller: widget.controller,
               focusNode: _focusNode,
               obscureText: widget.isPassword ? !isVisible : false,
+              keyboardType: widget.keyboardType,
               decoration: InputDecoration(
                 prefixIcon: Icon(widget.prefixIcon, color: hasFocus ? primary : inactive),
                 suffixIcon: widget.isPassword ? _buildPasswordToggle(isVisible, hasFocus) : null,
@@ -80,6 +83,10 @@ class _AppTextFieldState extends State<AppTextField> {
       isVisible ? Icons.visibility : Icons.visibility_off,
       color: hasFocus ? AppColors.primaryBlue : Colors.grey[400],
     ),
-    onPressed: () => widget.passwordVisibility!.value = !widget.passwordVisibility!.value,
+    onPressed: () {
+      if (widget.passwordVisibility != null) {
+        widget.passwordVisibility!.value = !widget.passwordVisibility!.value;
+      }
+    },
   );
 }

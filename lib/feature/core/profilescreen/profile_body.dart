@@ -8,31 +8,45 @@ import 'package:salon_flutter/feature/core/profilescreen/sections/support/suppor
 import 'package:salon_flutter/feature/core/profilescreen/sections/userinfo/user_info_section.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
+import '../../auth/fakeauth/authservice/auth_service.dart';
 import '../../auth/loginscreen/login_screen.dart';
 import 'domain/entities/app_version_entity.dart';
 import 'domain/entities/profile_action_entity.dart';
 import 'domain/entities/user_entity.dart';
 
-class ProfileBody extends StatelessWidget {
+class ProfileBody extends StatefulWidget {
   const ProfileBody({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // Имитируем данные из домена (позже придет из Bloc/Provider)
-    const bool isAuthorized = false;
+  State<ProfileBody> createState() => _ProfileBodyState();
+}
 
-    // Метод навигации вынесен отдельно
-    void _navigateToLogin(BuildContext context) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
-      );
-    }
+class _ProfileBodyState extends State<ProfileBody> {
+  void _navigateToLogin(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginScreen()),
+    ).then(
+      (_) => setState(() {}),
+    ); // Обновляем профиль после возврата с экрана логина
+  }
+
+  void _handleLogout() {
+    AuthService.currentUser = null; // Очищаем пользователя в мок-сервисе
+    setState(() {}); // Перерисовываем экран
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Получаем текущего пользователя из нашего AuthService
+    final currentUser = AuthService.currentUser;
+    final bool isAuthorized = currentUser != null;
 
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       children: [
         const SizedBox(height: 8),
+
         // 1. Секция: ВОЙТИ
         LoginSection(
           isVisible: !isAuthorized,
@@ -42,16 +56,18 @@ class ProfileBody extends StatelessWidget {
         const SizedBox(height: 8),
 
         // 2. Секция ИНФО (всегда видна для демо)
-        const UserInfoSection(
-          user: UserEntity(
-            firstName: 'Павел',
-            lastName: 'Ярошенко',
-            phone: '+375 (29) 123-45-67',
-            email: 'pavel.yaroshenko@example.com',
+        if (isAuthorized)
+          UserInfoSection(
+            user: UserEntity(
+              firstName: currentUser.name,
+              lastName: currentUser.role == 'master' ? 'Ярошенко' : '',
+              phone: currentUser.phone,
+              email: currentUser.email,
+              avatarUrl: currentUser.avatarUrl, // Передаем аву из MockUser
+            ),
           ),
-        ),
 
-        const SizedBox(height: 25),
+        const SizedBox(height: 50),
 
         // 3. Секция Поделиться приложением (всегда видна для демо)
         ShareSection(
@@ -65,7 +81,7 @@ class ProfileBody extends StatelessWidget {
           ),
         ),
 
-        const SizedBox(height: 8),
+        const SizedBox(height: 4),
 
         // 4. СЕКЦИЯ СЛУЖБА ПОДДЕРЖКИ
         SupportSection(
@@ -79,33 +95,9 @@ class ProfileBody extends StatelessWidget {
           ),
         ),
 
-        const SizedBox(height: 8),
+        const SizedBox(height: 4),
 
-        // // 5. СИСТЕМНАЯ ТЕМА
-        // ThemeSystemSection(
-        //   isActive: true, // Демо
-        //   onChanged: (val) => print("Системная тема: $val"),
-        // ),
-        //
-        // const SizedBox(height: 8),
-        //
-        // // 6. СВЕТЛАЯ ТЕМА
-        // ThemeSelectionSection(
-        //   title: AppStrings.lightTheme,
-        //   isSelected: false, // Демо
-        //   onTap: () => print("Выбрана светлая тема"),
-        // ),
-        //
-        // // 7. ТЕМНАЯ ТЕМА
-        // ThemeSelectionSection(
-        //   title: AppStrings.darkTheme,
-        //   isSelected: true, // Демо
-        //   onTap: () => print("Выбрана темная тема"),
-        // ),
-
-        // const SizedBox(height: 8),
-
-        // 8. СЕКЦИЯ ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ
+        // 5. СЕКЦИЯ ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ
         PrivacyPolicySection(
           action: ProfileActionEntity(
             icon: Icons.description_outlined,
@@ -119,14 +111,12 @@ class ProfileBody extends StatelessWidget {
 
         const SizedBox(height: 50),
 
-        //9. Секция Выход из аккаунта
-        LogoutSection(
-            onConfirm: () => _navigateToLogin(context)
-        ),
+        // 6. Секция Выход из аккаунта
+        if (isAuthorized) LogoutSection(onConfirm: _handleLogout),
 
         const SizedBox(height: 8),
 
-        // 10. Версия
+        // 7. Версия
         const VersionSection(
           versionInfo: AppVersionEntity(version: '1.0.1', buildNumber: '27'),
         ),
