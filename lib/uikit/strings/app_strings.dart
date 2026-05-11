@@ -193,6 +193,11 @@ class AppStrings {
   // NearbyMap screen
   static const String howToFind = "Как добраться";
 
+  // MasterCalendar screen
+  static const String titleMasterCalendar = "Ваше расписание";
+  static const String client = "Клиент: ";
+  static const String noClientsForToday = "На сегодня записей нет";
+
   // Тестовые данные для примера (можно оставить здесь или в domain)
   static const String dummyServiceTitle = "Мужская стрижка";
   static const String dummyServiceDescription =

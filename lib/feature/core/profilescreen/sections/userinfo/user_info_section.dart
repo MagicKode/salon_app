@@ -6,10 +6,7 @@ import '../../domain/entities/user_entity.dart';
 class UserInfoSection extends StatelessWidget {
   final UserEntity user;
 
-  const UserInfoSection({
-    super.key,
-    required this.user,
-  });
+  const UserInfoSection({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -23,16 +20,18 @@ class UserInfoSection extends StatelessWidget {
             backgroundColor: AppColors.primaryGrey.withOpacity(0.2),
             // ЛОГИКА: Если есть avatarUrl (у мастера), берем его.
             // Если нет (у клиента), показываем иконку.
-            backgroundImage: (user.avatarUrl != null && user.avatarUrl!.isNotEmpty)
-                ? AssetImage(user.avatarUrl!) as ImageProvider
-                : const AssetImage(AppAssets.pavelImg),
-            child: (user.avatarUrl == null || user.avatarUrl!.isEmpty)
-                ? const Icon(
-              Icons.person_outline,
-              size: 70,
-              color: AppColors.primaryGrey,
-            )
-                : null,
+            backgroundImage:
+                (user.avatarUrl != null && user.avatarUrl!.isNotEmpty)
+                    ? AssetImage(user.avatarUrl!) as ImageProvider
+                    : null,
+            child:
+                (user.avatarUrl == null || user.avatarUrl!.isEmpty)
+                    ? const Icon(
+                      Icons.person_outline,
+                      size: 70,
+                      color: AppColors.primaryGrey,
+                    )
+                    : null,
           ),
 
           const SizedBox(height: 16),
@@ -51,20 +50,14 @@ class UserInfoSection extends StatelessWidget {
           // ТЕЛЕФОН
           Text(
             user.phone,
-            style: const TextStyle(
-              fontSize: 14,
-              color: AppColors.primaryGrey,
-            ),
+            style: const TextStyle(fontSize: 14, color: AppColors.primaryGrey),
           ),
           const SizedBox(height: 4),
 
           // EMAIL
           Text(
             user.email,
-            style: const TextStyle(
-              fontSize: 14,
-              color: AppColors.primaryGrey,
-            ),
+            style: const TextStyle(fontSize: 14, color: AppColors.primaryGrey),
           ),
         ],
       ),

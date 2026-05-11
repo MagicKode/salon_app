@@ -16,30 +16,6 @@ class BottomNavBarSection extends StatelessWidget {
     this.isMaster = false,
   });
 
-  // // Список можно вынести даже в отдельный конфиг-файл
-  // static const List<NavItemModel> _navItems = [
-  //   NavItemModel(
-  //     icon: Icons.home_outlined,
-  //     activeIcon: Icons.home,
-  //     label: AppStrings.navHome,
-  //   ),
-  //   NavItemModel(
-  //     icon: isMaster ? Icons.calendar_today_outlined : Icons.add_task,
-  //     activeIcon: isMaster ? Icons.calendar_today : Icons.add_task,
-  //     label: isMaster ? "Календарь" : AppStrings.navBooking,
-  //   ),
-  //   NavItemModel(
-  //     icon: Icons.menu_book_outlined,
-  //     activeIcon: Icons.menu_book,
-  //     label: AppStrings.navHistory,
-  //   ),
-  //   NavItemModel(
-  //     icon: Icons.person_outlined,
-  //     activeIcon: Icons.person,
-  //     label: AppStrings.navProfile,
-  //   ),
-  // ];
-
   @override
   @override
   Widget build(BuildContext context) {
@@ -52,9 +28,9 @@ class BottomNavBarSection extends StatelessWidget {
       ),
       // УСЛОВИЕ ДЛЯ ВТОРОЙ ВКЛАДКИ
       NavItemModel(
-        icon: isMaster ? Icons.calendar_today_outlined : Icons.add_task,
-        activeIcon: isMaster ? Icons.calendar_today : Icons.add_task,
-        label: isMaster ? "Календарь" : AppStrings.navBooking,
+        icon: isMaster ? Icons.list_alt_outlined : Icons.add_task,
+        activeIcon: isMaster ? Icons.list_alt_outlined : Icons.add_task,
+        label: isMaster ? "Записи" : AppStrings.navBooking,
       ),
       const NavItemModel(
         icon: Icons.menu_book_outlined,
