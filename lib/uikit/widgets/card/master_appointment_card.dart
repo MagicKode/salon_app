@@ -84,14 +84,14 @@ class _MasterAppointmentCardState extends State<MasterAppointmentCard> {
           const Divider(),
           const SizedBox(height: 8),
           if (appointment.servicesNames.length > 1) ...[
-            _headerText("Все услуги:"),
+            _headerText(AppStrings.allServices),
             ...appointment.servicesNames.map(
               (s) => Text("• $s", style: const TextStyle(fontSize: 13)),
             ),
             const SizedBox(height: 12),
           ],
           if (appointment.notes != null) ...[
-            _headerText("Заметки мастера:"),
+            _headerText(AppStrings.detailsForMaster),
             _buildNotesBox(appointment.notes!),
           ],
         ],
