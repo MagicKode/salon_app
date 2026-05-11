@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
+
 import '../../../../uikit/colors/app_colors.dart';
+import '../../../../uikit/utils/masterCalendarDateFormater/calendar_date_formater.dart';
 
 class CalendarHeaderSection extends StatelessWidget
     implements PreferredSizeWidget {
@@ -10,6 +13,9 @@ class CalendarHeaderSection extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
+    // Инициализируем локализацию (обычно это делают один раз в main.dart,
+    initializeDateFormatting('ru', null);
+
     return AppBar(
       backgroundColor: AppColors.primaryWhite,
       elevation: 0,
@@ -39,7 +45,7 @@ class CalendarHeaderSection extends StatelessWidget
                   const SizedBox(width: 8),
 
                   Text(
-                    "Воскресенье, 10 Мая",
+                    CalendarDateFormater.formatFullDate(selectedDate),
                     style: const TextStyle(
                       fontSize: 15,
                       color: AppColors.primaryBlue,

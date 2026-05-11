@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../../../uikit/colors/app_colors.dart';
 import '../../../feature/checkout/domain/booking_entity.dart';
 import '../../strings/app_strings.dart';
-import '../../utils/app_date_formats.dart';
+import '../../utils/clientsCardsDateFormater/app_date_formats.dart';
 import 'expandable_note.dart';
 
 class HistoryBookingCard extends StatelessWidget {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 import '../../../uikit/colors/app_colors.dart';
-import '../../../uikit/widgets/mastercalendar/master_appointment_card.dart';
+import '../../../uikit/widgets/card/master_appointment_card.dart';
 import 'domain/master_calendar_repository.dart';
 
 class MasterCalendarBody extends StatelessWidget {

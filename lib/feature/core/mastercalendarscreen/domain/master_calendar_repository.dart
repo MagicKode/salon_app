@@ -1,33 +1,64 @@
 import 'appointment_model.dart';
 
 class MasterCalendarRepository {
-  // Статический метод, имитирующий получение данных с сервера
   static List<AppointmentModel> getMockAppointments() {
     return [
       AppointmentModel(
         id: '1',
         clientName: "Иван Иванов",
-        serviceName: "Мужская стрижка",
+        servicesNames: ["Мужская стрижка", "Стрижка бороды"],
         startTime: DateTime.now().add(const Duration(hours: 1)),
         endTime: DateTime.now().add(const Duration(hours: 2)),
+        notes: "Просил сделать покороче по бокам, переход 3мм.",
       ),
       AppointmentModel(
         id: '2',
         clientName: "Марина Сергеевна",
-        serviceName: "Окрашивание",
+        servicesNames: ["Окрашивание"],
         startTime: DateTime.now().add(const Duration(hours: 3)),
         endTime: DateTime.now().add(const Duration(hours: 5)),
       ),
       AppointmentModel(
         id: '3',
         clientName: "Дмитрий Волков",
-        serviceName: "Стрижка бороды",
+        servicesNames: ["Стрижка бороды"],
         startTime: DateTime.now().add(const Duration(hours: 6)),
         endTime: DateTime.now().add(const Duration(hours: 7)),
+        notes: "Просил сделать покороче по бокам, переход 3мм.",
+      ),
+      AppointmentModel(
+        id: '4',
+        clientName: "Иван Иванов",
+        servicesNames: ["Мужская стрижка", "Стрижка бороды"],
+        startTime: DateTime.now().add(const Duration(hours: 1)),
+        endTime: DateTime.now().add(const Duration(hours: 2)),
+        notes: "Просил сделать покороче по бокам, переход 3мм.",
+      ),
+      AppointmentModel(
+        id: '5',
+        clientName: "Марина Сергеевна",
+        servicesNames: ["Окрашивание"],
+        startTime: DateTime.now().add(const Duration(hours: 3)),
+        endTime: DateTime.now().add(const Duration(hours: 5)),
+      ),
+      AppointmentModel(
+        id: '6',
+        clientName: "Дмитрий Волков",
+        servicesNames: ["Стрижка бороды"],
+        startTime: DateTime.now().add(const Duration(hours: 6)),
+        endTime: DateTime.now().add(const Duration(hours: 7)),
+        notes: "Просил сделать покороче по бокам, переход 3мм.",
+      ),
+      AppointmentModel(
+        id: '7',
+        clientName: "Дмитрий Волков",
+        servicesNames: ["Стрижка бороды"],
+        startTime: DateTime.now().add(const Duration(hours: 6)),
+        endTime: DateTime.now().add(const Duration(hours: 7)),
+        notes: "Просил сделать покороче по бокам, переход 3мм.",
       ),
     ];
   }
 
-  // Метод для получения пустого списка (для тестов заглушки с кофе)
   static List<AppointmentModel> getEmptyAppointments() => [];
 }

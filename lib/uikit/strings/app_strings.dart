@@ -197,6 +197,8 @@ class AppStrings {
   static const String titleMasterCalendar = "Ваше расписание";
   static const String client = "Клиент: ";
   static const String noClientsForToday = "На сегодня записей нет";
+  static const String details = "Детали";
+  static const String closeDetails = "Скрыть";
 
   // Тестовые данные для примера (можно оставить здесь или в domain)
   static const String dummyServiceTitle = "Мужская стрижка";
