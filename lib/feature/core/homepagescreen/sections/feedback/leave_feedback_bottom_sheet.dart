@@ -18,7 +18,7 @@ class _LeaveFeedbackBottomSheetState extends State<LeaveFeedbackBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.65,
+      height: MediaQuery.of(context).size.height * 0.75,
       decoration: const BoxDecoration(
         color: AppColors.primaryWhite,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
@@ -37,22 +37,22 @@ class _LeaveFeedbackBottomSheetState extends State<LeaveFeedbackBottomSheet> {
             ),
           ),
 
-                // Звёзды
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(5, (index) {
-                    return IconButton(
-                      icon: Icon(
-                        index < _rating ? Icons.star : Icons.star_border,
-                        color: AppColors.starsYellow,
-                        size: 40,
-                      ),
-                      onPressed: () {
-                        setState(() => _rating = index + 1);
-                      },
-                    );
-                  }),
+          // Звёзды рейтинга
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(5, (index) {
+              return IconButton(
+                icon: Icon(
+                  index < _rating ? Icons.star : Icons.star_border,
+                  color: AppColors.starsYellow,
+                  size: 40,
                 ),
+                onPressed: () {
+                  setState(() => _rating = index + 1);
+                },
+              );
+            }),
+          ),
 
           const SizedBox(height: 16),
 
@@ -73,15 +73,12 @@ class _LeaveFeedbackBottomSheetState extends State<LeaveFeedbackBottomSheet> {
             ),
           ),
 
-          const Spacer(),
-
-          // Кнопка отправить
           Padding(
             padding: const EdgeInsets.all(20),
             child: AppButton(
               text: AppStrings.sendFeedback,
               onPressed: () {
-                // TODO: Отправка отзыва на сервер
+                // TODO: Интеграция с API
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text(AppStrings.thanksForYourFeedback)),

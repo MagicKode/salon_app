@@ -32,7 +32,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
     // 2. Формируем список экранов динамически
     final List<Widget> screens = [
-      const HomePageScreen(),
+      HomePageScreen(isMaster: isMaster),
+
       isMaster ? const MasterCalendarScreen() : const BookingServiceScreen(),
       isMaster ? const MasterScheduleScreen() : const HistoryScreen(),
       // Меняем экран

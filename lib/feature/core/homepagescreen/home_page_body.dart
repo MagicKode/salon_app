@@ -9,15 +9,13 @@ import 'package:salon_flutter/uikit/colors/app_colors.dart';
 import '../nearbymapscreen/nearby_map_screen.dart';
 import 'domain/home_models.dart';
 
-class HomePageBody extends StatefulWidget {
-  const HomePageBody({super.key});
+class HomePageBody extends StatelessWidget {
+  final bool isMaster;
 
-  @override
-  State<HomePageBody> createState() => _HomePageBodyState();
-}
+  const HomePageBody({super.key, required this.isMaster});
 
-class _HomePageBodyState extends State<HomePageBody> {
-  void _navigateToNearbyMap() {
+  // Вынес навигацию в отдельный метод внутри StatelessWidget
+  void _navigateToNearbyMap(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const NearbyMapScreen()),
@@ -33,12 +31,15 @@ class _HomePageBodyState extends State<HomePageBody> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              HomeSearchBar(onLocationTap: _navigateToNearbyMap),
+              HomeSearchBar(onLocationTap: () => _navigateToNearbyMap(context)),
               const SizedBox(height: 16),
-              ServiceGridSection(),
-              DescriptionSection(),
+              const ServiceGridSection(),
+              const DescriptionSection(),
               const SizedBox(height: 20),
-              FeedbackSection(feedbacks: FeedbackData.items),
+              FeedbackSection(
+
+                  feedbacks: FeedbackData.items,
+                  isMaster: isMaster),
               const SizedBox(height: 5),
             ],
           ),

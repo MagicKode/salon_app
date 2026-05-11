@@ -9,10 +9,12 @@ import 'rating_summary_card.dart';
 
 class FeedbackSection extends StatelessWidget {
   final List<FeedbackItem> feedbacks;
+  final bool isMaster;
 
   const FeedbackSection({
     super.key,
     required this.feedbacks,
+    this.isMaster = false,
   });
 
   @override
@@ -35,26 +37,27 @@ class FeedbackSection extends StatelessWidget {
         const RatingSummaryCard(),
 
         // 2. Строка "Напишите отзыв" вместо кнопки
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              GestureDetector(
-                onTap: () => _showLeaveFeedbackSheet(context),
-                child: const Text(
-                  AppStrings.leaveFeedback,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.primaryBlue,
-                    decoration: TextDecoration.underline,
+        if (!isMaster)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                GestureDetector(
+                  onTap: () => _showLeaveFeedbackSheet(context),
+                  child: const Text(
+                    AppStrings.leaveFeedback,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.primaryBlue,
+                      decoration: TextDecoration.underline,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
 
         const SizedBox(height: 20),
 

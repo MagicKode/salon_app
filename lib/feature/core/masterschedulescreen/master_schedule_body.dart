@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/uikit/strings/app_strings.dart';
-import 'package:table_calendar/table_calendar.dart';
+
 import '../../../../uikit/colors/app_colors.dart';
-import '../../../uikit/widgets/button/app_button.dart';
 import '../../../uikit/widgets/card/calendar_view_card.dart';
 import '../../../uikit/widgets/card/day_summary_card.dart';
 import '../mastercalendarscreen/domain/appointment_model.dart';
@@ -52,10 +50,6 @@ class MasterScheduleBody extends StatelessWidget {
                   appointments: dayAppointments,
                   selectedDate: focusedDay,
                 ),
-
-                // // Если записи есть, покажем кнопку быстрого перехода
-                // if (dayAppointments.isNotEmpty)
-                //   _buildGoToDayButton(context),
               ],
             ),
           ),
