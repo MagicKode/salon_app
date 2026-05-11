@@ -201,6 +201,11 @@ class AppStrings {
   static const String closeDetails = "Скрыть";
   static const String allServices = "Все услуги:";
   static const String detailsForMaster = "Заметки для мастера:";
+  static const String scheduler = "Расписание";
+  static const String orders = "Записи";
+  static const String weeklyOrders = "На неделю";
+  static const String monthlyOrders = "На месяц";
+  static const String chooseServiceScheduleDay = "Выберите день для просмотра краткой сводки";
 
   // Тестовые данные для примера (можно оставить здесь или в domain)
   static const String dummyServiceTitle = "Мужская стрижка";

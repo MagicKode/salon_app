@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/feature/core/historyscreen/history_screen.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/home_page_screen.dart';
+import 'package:salon_flutter/feature/core/masterschedulescreen/master_schedule_screen.dart';
 
 import '../auth/fakeauth/authservice/auth_service.dart';
 import '../core/bookingservicescreen/booking_service_screen.dart';
@@ -33,8 +34,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     final List<Widget> screens = [
       const HomePageScreen(),
       isMaster ? const MasterCalendarScreen() : const BookingServiceScreen(),
+      isMaster ? const MasterScheduleScreen() : const HistoryScreen(),
       // Меняем экран
-      const HistoryScreen(),
       const ProfileScreen(),
     ];
 

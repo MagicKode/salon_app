@@ -30,12 +30,12 @@ class BottomNavBarSection extends StatelessWidget {
       NavItemModel(
         icon: isMaster ? Icons.list_alt_outlined : Icons.add_task,
         activeIcon: isMaster ? Icons.list_alt_outlined : Icons.add_task,
-        label: isMaster ? "Записи" : AppStrings.navBooking,
+        label: isMaster ? AppStrings.orders : AppStrings.navBooking,
       ),
-      const NavItemModel(
-        icon: Icons.menu_book_outlined,
-        activeIcon: Icons.menu_book,
-        label: AppStrings.navHistory,
+      NavItemModel(
+        icon: isMaster ? Icons.calendar_month_outlined : Icons.  menu_book_outlined,
+        activeIcon: isMaster ? Icons.calendar_month : Icons.menu_book,
+        label: isMaster ? AppStrings.scheduler : AppStrings.navHistory,
       ),
       const NavItemModel(
         icon: Icons.person_outlined,
