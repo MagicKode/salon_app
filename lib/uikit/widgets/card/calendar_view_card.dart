@@ -25,7 +25,7 @@ class CalendarViewCard extends StatelessWidget {
         color: AppColors.boxDecorationColor,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors.lightBorder.withOpacity(0.5),
+          color: AppColors.primaryBlue.withOpacity(0.5),
         ),
         boxShadow: const [
           BoxShadow(

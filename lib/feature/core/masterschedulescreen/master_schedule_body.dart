@@ -1,10 +1,12 @@
-// feature/core/schedule_screen/widgets/master_schedule_body.dart
-
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../../../../uikit/colors/app_colors.dart';
+import '../../../uikit/widgets/button/app_button.dart';
 import '../../../uikit/widgets/card/calendar_view_card.dart';
+import '../../../uikit/widgets/card/day_summary_card.dart';
+import '../mastercalendarscreen/domain/appointment_model.dart';
+import '../mastercalendarscreen/domain/master_calendar_repository.dart';
 import 'master_schedule_screen.dart';
 
 class MasterScheduleBody extends StatelessWidget {
@@ -21,9 +23,14 @@ class MasterScheduleBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 1. Получаем все записи (из репозитория-заглушки)
+    final allAppointments = MasterCalendarRepository.getMockAppointments();
+
+    // 2. Используем твой новый extension для фильтрации по выбранному дню
+    final dayAppointments = allAppointments.forDate(focusedDay);
+
     return Column(
       children: [
-        // Тот самый вынесенный виджет-карточка
         CalendarViewCard(
           focusedDay: focusedDay,
           viewMode: viewMode,
@@ -36,11 +43,20 @@ class MasterScheduleBody extends StatelessWidget {
         ),
 
         // Здесь можно добавить краткий список дел на выбранное число
-        const Expanded(
-          child: Center(
-            child: Text(
-              AppStrings.chooseServiceScheduleDay,
-              style: TextStyle(color: AppColors.primaryGrey),
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                // Передаем отфильтрованные данные в карточку сводки
+                DaySummaryCard(
+                  appointments: dayAppointments,
+                  selectedDate: focusedDay,
+                ),
+
+                // // Если записи есть, покажем кнопку быстрого перехода
+                // if (dayAppointments.isNotEmpty)
+                //   _buildGoToDayButton(context),
+              ],
             ),
           ),
         ),

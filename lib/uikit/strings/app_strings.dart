@@ -197,12 +197,16 @@ class AppStrings {
   static const String titleMasterCalendar = "Ваше расписание";
   static const String client = "Клиент: ";
   static const String noClientsForToday = "На сегодня записей нет";
+  static const String noClientsForThisDay = "На этот день записей нет";
   static const String details = "Детали";
   static const String closeDetails = "Скрыть";
   static const String allServices = "Все услуги:";
   static const String detailsForMaster = "Заметки для мастера:";
   static const String scheduler = "Расписание";
   static const String orders = "Записи";
+  static const String serviceHours = "Нагрузка";
+  static const String start = "Старт";
+  static const String daySchedule = "Сводка дня";
   static const String weeklyOrders = "На неделю";
   static const String monthlyOrders = "На месяц";
   static const String chooseServiceScheduleDay = "Выберите день для просмотра краткой сводки";

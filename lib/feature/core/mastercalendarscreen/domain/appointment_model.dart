@@ -32,3 +32,22 @@ extension AppointmentDisplayX on AppointmentModel {
     return "$start — $end";
   }
 }
+
+extension AppointmentStatsX on List<AppointmentModel> {
+  /// Фильтрует список, оставляя записи только за выбранный день
+  List<AppointmentModel> forDate(DateTime date) {
+    return where((a) =>
+    a.startTime.year == date.year &&
+        a.startTime.month == date.month &&
+        a.startTime.day == date.day
+    ).toList();
+  }
+
+  /// Считает суммарную нагрузку в часах для списка записей
+  int totalWorkHours() {
+    // Используем inMinutes, чтобы не терять точность при сложении разных услуг
+    final totalMinutes = fold(0, (sum, a) =>
+    sum + a.endTime.difference(a.startTime).inMinutes);
+    return (totalMinutes / 60).round();
+  }
+}
