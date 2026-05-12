@@ -3,16 +3,30 @@ import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 import '../../../uikit/colors/app_colors.dart';
 import '../../../uikit/widgets/card/master_appointment_card.dart';
+import 'domain/appointment_model.dart';
 import 'domain/master_calendar_repository.dart';
 
-class MasterCalendarBody extends StatelessWidget {
+class MasterCalendarBody extends StatefulWidget {
   const MasterCalendarBody({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final appointments = MasterCalendarRepository.getMockAppointments();
+  State<MasterCalendarBody> createState() => _MasterCalendarBodyState();
+}
 
-    if (appointments.isEmpty) {
+class _MasterCalendarBodyState extends State<MasterCalendarBody> {
+// 2. Храним список в состоянии экрана
+  late List<AppointmentModel> _appointments;
+
+  @override
+  void initState() {
+    super.initState();
+    // Инициализируем данные при старте экрана
+    _appointments = MasterCalendarRepository.getMockAppointments();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_appointments.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -46,10 +60,29 @@ class MasterCalendarBody extends StatelessWidget {
     // Если данные есть — показываем ListView (код остается прежним)
     return ListView.builder(
       padding: const EdgeInsets.only(top: 12, bottom: 20),
-      itemCount: appointments.length,
+      itemCount: _appointments.length,
       itemBuilder: (context, index) {
-        return MasterAppointmentCard(appointment: appointments[index]);
+        return MasterAppointmentCard(
+          appointment: _appointments[index],
+          onDelete: () {
+            // 1. Логика удаления из списка данных
+            setState(() {
+              // Удаляем элемент по индексу
+              _appointments.removeAt(index);
+            });
+
+            // 2. Опционально: показываем уведомление внизу
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(AppStrings.deletedSuccessfully),
+                duration: Duration(seconds: 2),
+                backgroundColor: AppColors.primaryRed,
+              ),
+            );
+          },
+        );
       },
     );
   }
 }
+

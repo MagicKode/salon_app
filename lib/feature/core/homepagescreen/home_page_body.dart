@@ -26,7 +26,7 @@ class HomePageBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primaryWhite,
-      appBar: const AppBarSection(),
+      appBar: AppBarSection(isMaster: isMaster),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(

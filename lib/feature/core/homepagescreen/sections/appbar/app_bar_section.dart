@@ -7,10 +7,9 @@ import '../../../../../uikit/widgets/button/notifications_button.dart';
 import '../../../../auth/fakeauth/authservice/auth_service.dart';
 
 class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
-  const AppBarSection({super.key});
+  final bool isMaster;
 
-  @override
-  Size get preferredSize => const Size.fromHeight(80);
+  const AppBarSection({super.key, required this.isMaster});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +31,7 @@ class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
                 children: [
                   Text(
                     "${AppStrings.homeWelcome}$userName",
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   Text(
                     AppStrings.homeSubtitle,
@@ -48,7 +47,8 @@ class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const NotificationsScreen(),
+                      builder:
+                          (context) => NotificationsScreen(isMaster: isMaster),
                     ),
                   );
                 },
@@ -60,4 +60,7 @@ class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
       ),
     );
   }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(80);
 }

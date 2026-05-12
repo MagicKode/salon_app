@@ -6,15 +6,20 @@ import '../../../feature/core/mastercalendarscreen/domain/appointment_model.dart
 
 class MasterAppointmentCard extends StatefulWidget {
   final AppointmentModel appointment;
+  final VoidCallback onDelete;
 
-  const MasterAppointmentCard({super.key, required this.appointment});
+  const MasterAppointmentCard({
+    super.key,
+    required this.appointment,
+    required this.onDelete,
+  });
 
   @override
   State<MasterAppointmentCard> createState() => _MasterAppointmentCardState();
 }
 
 class _MasterAppointmentCardState extends State<MasterAppointmentCard> {
-  bool _isExpanded = false; // Состояние раскрытия
+  bool _isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +73,38 @@ class _MasterAppointmentCardState extends State<MasterAppointmentCard> {
                 ),
               ],
             ),
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.delete_outline,
+              color: Colors.red.withOpacity(0.7),
+              size: 22,
+            ),
+            onPressed: () => _confirmDelete(context),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Метод подтверждения удаления
+  void _confirmDelete(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(AppStrings.deleteBooking),
+        content: Text("Вы действительно хотите отменить запись клиента ${widget.appointment.clientName}?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(AppStrings.cancel),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              widget.onDelete(); // Вызываем удаление из родителя
+            },
+            child: const Text(AppStrings.deleteBookedService, style: TextStyle(color: AppColors.primaryRed)),
           ),
         ],
       ),

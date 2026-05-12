@@ -6,17 +6,20 @@ class NotificationModel {
   final String body;
   final String time;
   final bool isRead;
+  final bool isUrgent;
 
   NotificationModel({
     required this.title,
     required this.body,
     required this.time,
     this.isRead = false,
+    this.isUrgent = false,
   });
 
-  Color get backgroundColor => isRead
-      ? AppColors.boxDecorationColor
-      : AppColors.primaryBackgroundColor;
+  // UI-свойства выносим сюда, чтобы Tile оставался "глупым"
+  Color get backgroundColor => isUrgent
+      ? AppColors.primaryBlue.withOpacity(0.05)
+      : (isRead ? AppColors.boxDecorationColor : AppColors.primaryBackgroundColor);
 
   Color get borderColor => isRead
       ? AppColors.primaryBlackShadow
