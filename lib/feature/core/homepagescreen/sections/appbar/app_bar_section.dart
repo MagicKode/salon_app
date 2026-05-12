@@ -31,7 +31,7 @@ class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
                 children: [
                   Text(
                     "${AppStrings.homeWelcome}$userName",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
                   ),
                   Text(
                     AppStrings.homeSubtitle,
