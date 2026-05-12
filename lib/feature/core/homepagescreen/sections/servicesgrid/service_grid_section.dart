@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/servicesgrid/service_item.dart';
+import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 import '../../../../../uikit/colors/app_colors.dart';
 import '../../../servicedetailscreen/sevice_detail_screen.dart';
@@ -21,20 +22,20 @@ class ServiceGridSection extends StatelessWidget {
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(height: 12),
+            // Полоска-индикатор закрытия
             Container(
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: AppColors.primaryBlackShadow,
+                color: AppColors.primaryBlackShadow.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
             Expanded(
               child: SizedBox(
-                width: MediaQuery.of(context).size.width,
+                // width: MediaQuery.of(context).size.width,
                 child: ServiceDetailScreen(category: category),
               ),
             ),
@@ -46,24 +47,40 @@ class ServiceGridSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 4,
-        mainAxisSpacing: 8,
-        crossAxisSpacing: 12,
-        childAspectRatio: 0.8,
-      ),
-      itemCount: ServiceData.categories.length,
-      itemBuilder: (context, index) {
-        final category = ServiceData.categories[index];
-        return GestureDetector(
-          onTap: () => _showServiceDetails(context, category),
-          child: ServiceItem(category: category),
-        );
-      },
+    // Высота секции должна вмещать 2 картинки + отступы
+    // Если одна картинка ~160px, то ставим около 340-350px
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.fromLTRB(16, 0, 16, 10),
+          child: Text(
+            AppStrings.ourServices,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+        ),
+        SizedBox(
+          height: 240,
+          child: GridView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, // 2 элемента в высоту (в колонке)
+              mainAxisSpacing: 10, // Отступ между колонками
+              crossAxisSpacing: 10, // Отступ между рядами
+              childAspectRatio: 0.75, // Квадратные плитки
+            ),
+            itemCount: ServiceData.categories.length,
+            itemBuilder: (context, index) {
+              final category = ServiceData.categories[index];
+              return GestureDetector(
+                onTap: () => _showServiceDetails(context, category),
+                child: ServiceItem(category: category),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

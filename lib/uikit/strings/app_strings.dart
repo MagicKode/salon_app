@@ -65,6 +65,7 @@ class AppStrings {
   static const String homeGuest = "Дмитрий";
   static const String homeSubtitle = "Выберите желаемый сервис";
   static const String sectionServices = "Выберите услугу";
+  static const String ourServices = "Наши услуги";
   static const String sectionAbout = "О нас";
   static const String sectionFeedback = "Оценки и отзывы";
   static const String hideDetails = "Свернуть";
@@ -245,7 +246,7 @@ class AppStrings {
   static const String signInWithEmail = 'Войти с помощью Email';
   static const String signInWithGoogle = 'Войти с помощью Google';
 
-  static const String imageAddressFirst = 'assets/images/onboarding1.jpg';
+  static const String imageAddressFirst = 'assets/images/man-barbershop.jpg';
   static const String imageAddressSecond = 'assets/images/onboarding2.jpg';
   static const String imageAddressThird = 'assets/images/onboarding3.jpg';
   static const String imageAddressFourth = 'assets/images/onboarding4.jpg';

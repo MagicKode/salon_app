@@ -65,10 +65,8 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
   assets:
-    - assets/images/onboarding1.jpg
-    - assets/images/onboarding2.jpg
-    - assets/images/onboarding3.jpg
-    - assets/images/onboarding4.jpg
+    - assets/images/services/man/
+    - assets/images/services/woman/
     - assets/images/pavel.jpeg
 
       # The following line ensures that the Material Icons font is

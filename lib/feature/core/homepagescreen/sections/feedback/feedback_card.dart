@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
-import '../../domain/home_models.dart';
+
+import '../../domain/feedback_item.dart';
 
 class FeedbackCard extends StatelessWidget {
   final FeedbackItem item;

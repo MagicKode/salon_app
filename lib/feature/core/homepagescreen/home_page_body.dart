@@ -7,7 +7,7 @@ import 'package:salon_flutter/feature/core/homepagescreen/sections/servicesgrid/
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
 import '../nearbymapscreen/nearby_map_screen.dart';
-import 'domain/home_models.dart';
+import 'domain/feedback_item.dart';
 
 class HomePageBody extends StatelessWidget {
   final bool isMaster;
@@ -34,6 +34,7 @@ class HomePageBody extends StatelessWidget {
               HomeSearchBar(onLocationTap: () => _navigateToNearbyMap(context)),
               const SizedBox(height: 16),
               const ServiceGridSection(),
+              const SizedBox(height: 16),
               const DescriptionSection(),
               const SizedBox(height: 20),
               FeedbackSection(
