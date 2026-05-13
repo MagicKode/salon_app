@@ -10,30 +10,38 @@ class ServiceImageHeaderSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 300,
+    return SizedBox(
+      height: 280,
       width: double.infinity,
-      // Оставляем скругление здесь
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-        image: DecorationImage(
-          image: NetworkImage(service.imageUrl),
-          fit: BoxFit.cover,
-        ),
-      ),
       child: Stack(
         children: [
-
-          // 2. Градиент поверх картинки
-          Container(
-            decoration: BoxDecoration(
+          // 1. Сама картинка с ClipRRect для соблюдения радиуса
+          Positioned.fill(
+            child: ClipRRect(
               borderRadius: const BorderRadius.vertical(
                 top: Radius.circular(20),
               ),
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
+              child: Image.network(service.imageUrl, fit: BoxFit.cover),
+            ),
+          ),
+
+          // 2. Градиент поверх картинки
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(20),
+                ),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    AppColors.primaryBlack.withOpacity(0.3),
+                    Colors.transparent,
+                    AppColors.primaryBlack.withOpacity(0.8),
+                  ],
+                  stops: const [0.0, 0.5, 1.0],
+                ),
               ),
             ),
           ),
@@ -65,6 +73,20 @@ class ServiceImageHeaderSection extends StatelessWidget {
                 size: 32,
               ),
               onPressed: () => Navigator.pop(context),
+            ),
+          ),
+
+          // 5. Тот самый серый индикатор (handle) по центру
+          Align(
+            alignment: Alignment.topCenter,
+            child: Container(
+              margin: const EdgeInsets.only(top: 10),
+              width: 36,
+              height: 4,
+              decoration: BoxDecoration(
+                color: AppColors.primaryWhite.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(2),
+              ),
             ),
           ),
         ],

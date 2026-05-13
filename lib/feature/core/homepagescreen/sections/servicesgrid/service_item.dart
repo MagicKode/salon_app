@@ -22,17 +22,16 @@ class ServiceItem extends StatelessWidget {
           ),
 
           // 2. ТЕМНЫЙ ОВЕРЛЕЙ (Вместо засвета)
-          // Накладываем легкое затемнение на всю картинку + сильное вниз
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.black.withOpacity(0.1), // Легкая дымка сверху
-                  Colors.black.withOpacity(0.8), // Плотный черный цвет внизу
+                  Colors.black.withOpacity(0.1),
+                  Colors.black.withOpacity(0.8),
                 ],
-                stops: const [0.0, 1.0], // Плавный переход от верха к низу
+                stops: const [0.0, 1.0],
               ),
             ),
           ),
@@ -43,10 +42,10 @@ class ServiceItem extends StatelessWidget {
             child: Align(
               alignment: Alignment.bottomLeft,
               child: Text(
-                category.title, // Можно убрать .toUpperCase() если хочешь строчными
+                category.title,
                 style: const TextStyle(
                   fontSize: 13,
-                  fontWeight: FontWeight.w500, // Средняя толщина, не жирный
+                  fontWeight: FontWeight.w500,
                   color: Colors.white,
                   letterSpacing: 0.3,
                   // Очень мягкая тень для отделения от фона

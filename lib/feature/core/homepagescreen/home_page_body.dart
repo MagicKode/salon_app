@@ -33,7 +33,7 @@ class HomePageBody extends StatelessWidget {
             children: [
               HomeSearchBar(onLocationTap: () => _navigateToNearbyMap(context)),
               const SizedBox(height: 16),
-              const ServiceGridSection(),
+              ServiceGridSection(isMaster: isMaster),
               const SizedBox(height: 16),
               const DescriptionSection(),
               const SizedBox(height: 20),

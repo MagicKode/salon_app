@@ -6,12 +6,18 @@ import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 import '../../../uikit/colors/app_colors.dart';
 import '../../../uikit/widgets/button/app_button.dart';
+import '../bookingservicescreen/booking_service_screen.dart';
 import 'domain/service_detail_data.dart';
 
 class ServiceDetailBody extends StatelessWidget {
   final ServiceDetail service;
+  final bool isMaster;
 
-  const ServiceDetailBody({super.key, required this.service});
+  const ServiceDetailBody({
+    super.key,
+    required this.service,
+    required this.isMaster,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,22 +30,33 @@ class ServiceDetailBody extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           ServiceImageHeaderSection(service: service),
-          Flexible(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ServiceInfoSection(service: service),
-                    const Divider(height: 24),
-                    ServiceDescriptionSection(description: service.description),
-                    const SizedBox(height: 16),
-                    AppButton(text: AppStrings.bookNow, onPressed: () {}),
-                    SizedBox(height: MediaQuery.of(context).padding.bottom + 10),
-                  ],
-                ),
-              ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 10),
+            // Убрал лишний нижний паддинг
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ServiceInfoSection(service: service),
+                const Divider(height: 24),
+                ServiceDescriptionSection(description: service.description),
+
+                if (!isMaster) ...[
+                  const SizedBox(height: 24),
+                  AppButton(
+                    text: AppStrings.bookNow,
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const BookingServiceScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+                SizedBox(height: MediaQuery.of(context).padding.bottom + 10),
+              ],
             ),
           ),
         ],

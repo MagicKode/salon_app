@@ -7,11 +7,13 @@ import 'service_detail_body.dart';
 class ServiceDetailScreen extends StatelessWidget {
   final ServiceCategory category;
   final bool isModal;
+  final bool isMaster;
 
   const ServiceDetailScreen({
     super.key,
     required this.category,
     this.isModal = true,
+    this.isMaster = false,
   });
 
   @override
@@ -23,7 +25,7 @@ class ServiceDetailScreen extends StatelessWidget {
     );
 
     // 2. Создаем контент напрямую
-    final Widget content = ServiceDetailBody(service: detail);
+    final Widget content = ServiceDetailBody(service: detail, isMaster: isMaster,);
 
     // 3. Возвращаем результат
     if (isModal) {

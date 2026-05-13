@@ -7,48 +7,23 @@ import '../../../servicedetailscreen/sevice_detail_screen.dart';
 import '../../domain/home_models.dart';
 
 class ServiceGridSection extends StatelessWidget {
-  const ServiceGridSection({super.key});
+  final bool isMaster;
+
+  const ServiceGridSection({super.key, required this.isMaster});
 
   void _showServiceDetails(BuildContext context, ServiceCategory category) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * 0.8,
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          color: AppColors.primaryWhite,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: Column(
-          children: [
-            const SizedBox(height: 12),
-            // Полоска-индикатор закрытия
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: AppColors.primaryBlackShadow.withOpacity(0.3),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            Expanded(
-              child: SizedBox(
-                // width: MediaQuery.of(context).size.width,
-                child: ServiceDetailScreen(category: category),
-              ),
-            ),
-          ],
-        ),
-      ),
+      builder:
+          (context) =>
+              ServiceDetailScreen(category: category, isMaster: isMaster),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    // Высота секции должна вмещать 2 картинки + отступы
-    // Если одна картинка ~160px, то ставим около 340-350px
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
