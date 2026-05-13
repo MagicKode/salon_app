@@ -15,7 +15,6 @@ class SpecialistCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.primaryBackgroundColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.lightBorder),
       ),
       child: Row(
         children: [
@@ -34,7 +33,7 @@ class SpecialistCard extends StatelessWidget {
               Text(
                 master.name,
                 style: const TextStyle(
-                  fontSize: 14,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: AppColors.primaryBlue,
                 ),
@@ -42,7 +41,7 @@ class SpecialistCard extends StatelessWidget {
               Text(
                 master.position,
                 style: const TextStyle(
-                  fontSize: 11,
+                  fontSize: 13,
                   color: AppColors.primaryBlack,
                 ),
               ),

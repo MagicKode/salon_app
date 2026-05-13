@@ -5,9 +5,9 @@ import 'master.dart';
 class MasterData {
   static const Master pavel = Master(
     id: '1',
-    name: "Pavel",
+    name: "Павел",
     position: AppStrings.topMaster,
-    description: "(8 лет опыта • Мастер международного класса.)",
+    description: "(20 лет опыта • Мастер международного класса.)",
     imagePath: AppAssets.pavelImg,
   );
 

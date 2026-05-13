@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/feature/core/bookingservicescreen/sections/specialist/specialist_selector_section.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/appbar/app_bar_section.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/description/description_section.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/feedback/feedback_section.dart';
+import 'package:salon_flutter/feature/core/homepagescreen/sections/gallery/sections/gallery_section.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/searchbar/home_search-bar.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/servicesgrid/service_grid_section.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/specialists/sections/specialists_section.dart';
@@ -38,6 +38,8 @@ class HomePageBody extends StatelessWidget {
               ServiceGridSection(isMaster: isMaster),
               const SizedBox(height: 16),
               const DescriptionSection(),
+              const SizedBox(height: 16),
+              const GallerySection(),
               const SizedBox(height: 16),
               const SpecialistsSection(),
               const SizedBox(height: 20),

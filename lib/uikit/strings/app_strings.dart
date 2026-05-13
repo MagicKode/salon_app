@@ -78,6 +78,9 @@ class AppStrings {
       "нашим клиентам!";
   static const String moreDetails = "Подробнее";
   static const String ourMasters = "Наш мастер";
+  static const String portfolio = "Примеры работ";
+  static const String portfolioGallery = "Примеры работ";
+  static const String seeAllGallery = "Посмотреть все работы";
   static const String studio = 'Студия';
   static const String pavlaYaroshenko = 'Павла Ярошенко';
   static const String alreadyHaveAnAccount = 'Уже есть аккаунт?';
