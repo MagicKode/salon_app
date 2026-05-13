@@ -76,9 +76,9 @@ class _MasterAppointmentCardState extends State<MasterAppointmentCard> {
           ),
           IconButton(
             icon: Icon(
-              Icons.delete,
+              Icons.delete_outline,
               color: Colors.red.withOpacity(0.7),
-              size: 22,
+              size: 30,
             ),
             onPressed: () => _confirmDelete(context),
           ),

@@ -6,66 +6,49 @@ import '../../domain/feedback_item.dart';
 class FeedbackCard extends StatelessWidget {
   final FeedbackItem item;
 
-  const FeedbackCard({
-    super.key,
-    required this.item,
-  });
+  const FeedbackCard({super.key, required this.item});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 280,
-      margin: const EdgeInsets.only(right: 12, bottom: 8, top: 4),
-      padding: const EdgeInsets.all(16),
+      width: 220,
+      margin: const EdgeInsets.only(right: 12, bottom: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        color: AppColors.primaryBackgroundColor,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.boxDecorationColor,
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        color: AppColors.primaryBlue.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 item.userName,
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
               ),
               Text(
                 item.date,
-                style: TextStyle(color: AppColors.primaryGrey, fontSize: 12),
+                style: TextStyle(color: AppColors.primaryGrey, fontSize: 10),
               ),
             ],
           ),
-          const SizedBox(height: 8),
-
-          // Звёзды
+          const SizedBox(height: 2),
           Row(
-            children: List.generate(5, (index) {
-              return Icon(
-                index < item.rating ? Icons.star : Icons.star_border,
-                color: AppColors.starsYellow,
-                size: 18,
-              );
-            }),
+            children: List.generate(5, (index) => Icon(
+              index < item.rating ? Icons.star : Icons.star_border,
+              color: AppColors.starsYellow,
+              size: 12,
+            )),
           ),
-
-          const SizedBox(height: 8),
-
-          Expanded(
-            child: Text(
-              item.comment,
-              style: const TextStyle(fontSize: 14, color: AppColors.primaryBlack),
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-            ),
+          const SizedBox(height: 4),
+          Text(
+            item.comment,
+            style: const TextStyle(fontSize: 12, height: 1.2),
+            maxLines: 2, // Ограничиваем текст, чтобы карточки были одной высоты
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

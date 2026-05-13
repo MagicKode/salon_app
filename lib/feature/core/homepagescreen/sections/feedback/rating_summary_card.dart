@@ -15,95 +15,97 @@ class RatingSummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 2.0),
+      // Меньше внешний отступ
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: AppColors.primaryBackgroundColor,
-          borderRadius: BorderRadius.circular(20),
+          color: AppColors.primaryBlue.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Большой рейтинг
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      averageRating.toStringAsFixed(1),
-                      style: const TextStyle(
-                        fontSize: 55,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primaryBlack,
+            // Левая часть
+            SizedBox(
+              width: 70,
+              child: Column(
+                children: [
+                  Text(
+                    averageRating.toStringAsFixed(1),
+                    style: const TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      height: 1.0,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      5,
+                      (index) => Icon(
+                        index < averageRating.floor()
+                            ? Icons.star
+                            : Icons.star_border,
+                        color: AppColors.starsYellow,
+                        size: 12,
                       ),
                     ),
-                    Row(
-                      children: List.generate(5, (index) {
-                        return Icon(
-                          index < averageRating.floor()
-                              ? Icons.star
-                              : Icons.star_border,
-                          color: AppColors.starsYellow,
-                          size: 16,
-                        );
-                      }),
+                  ),
+                  Text(
+                    "$totalReviews отзывов",
+                    style: TextStyle(
+                      color: AppColors.primaryGrey,
+                      fontSize: 10,
                     ),
+                  ),
+                ],
+              ),
+            ),
 
-                    const SizedBox(height: 4),
+            const SizedBox(width: 6),
 
-                    Text(
-                      "$totalReviews ${AppStrings.reviews}",
-                      style: TextStyle(
-                        color: AppColors.primaryGrey,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                ),
+            // Разделитель (опционально, добавит аккуратности)
+            Container(
+              width: 1,
+              height: 40,
+              color: Colors.black.withOpacity(0.05),
+            ),
 
-                const Spacer(),
-
-                // Распределение оценок
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: List.generate(5, (index) {
-                    final rating = 5 - index;
-                    final percentage = rating == 5 ? 0.85 : (rating == 4 ? 0.1 : 0.02);
-
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 2),
-                      child: Row(
-                        children: [
-                          Text(
-                            "$rating",
-                            style: const TextStyle(fontSize: 13),
-                          ),
-
-                          const SizedBox(width: 6),
-
-                          Icon(Icons.star, color: AppColors.starsYellow, size: 14),
-
-                          const SizedBox(width: 8),
-
-                          SizedBox(
-                            width: 200,
-                            child: LinearProgressIndicator(
-                              value: percentage,
-                              backgroundColor: AppColors.primaryGrey,
-                              color: AppColors.primaryGreen,
-                              minHeight: 6,
-                              borderRadius: BorderRadius.circular(4),
+            const SizedBox(width: 12),
+            // Правая часть (прогресс-бары)
+            Expanded(
+              child: Column(
+                children: List.generate(5, (index) {
+                  final rating = 5 - index;
+                  final percentage =
+                      rating == 5 ? 0.85 : (rating == 4 ? 0.15 : 0.05);
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 1),
+                    // Плотная верстка
+                    child: Row(
+                      children: [
+                        Text("$rating", style: const TextStyle(fontSize: 10)),
+                        const SizedBox(width: 2),
+                        Icon(Icons.star, color: AppColors.starsYellow, size: 8),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: LinearProgressIndicator(
+                            value: percentage,
+                            backgroundColor: AppColors.primaryGrey.withOpacity(
+                              0.3,
                             ),
+                            color: AppColors.primaryGreen,
+                            minHeight: 2.5,
+                            // Тонкие полоски
+                            borderRadius: BorderRadius.circular(2),
                           ),
-                        ],
-                      ),
-                    );
-                  }),
-                ),
-              ],
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+              ),
             ),
           ],
         ),

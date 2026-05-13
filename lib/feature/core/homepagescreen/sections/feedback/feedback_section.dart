@@ -48,7 +48,7 @@ class FeedbackSection extends StatelessWidget {
                   child: const Text(
                     AppStrings.leaveFeedback,
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 13,
                       fontWeight: FontWeight.w500,
                       color: AppColors.primaryBlue,
                       decoration: TextDecoration.underline,
@@ -63,7 +63,7 @@ class FeedbackSection extends StatelessWidget {
 
         // 3. Горизонтальный список отзывов
         SizedBox(
-          height: 170,
+          height: 100,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 16),
