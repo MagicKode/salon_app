@@ -77,7 +77,7 @@ class AppStrings {
       "Мы гарантируем качество каждой услуги и дарим приятные эмоции "
       "нашим клиентам!";
   static const String moreDetails = "Подробнее";
-
+  static const String ourMasters = "Наш мастер";
   static const String studio = 'Студия';
   static const String pavlaYaroshenko = 'Павла Ярошенко';
   static const String alreadyHaveAnAccount = 'Уже есть аккаунт?';
