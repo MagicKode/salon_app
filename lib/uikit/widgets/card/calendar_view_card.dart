@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../../../uikit/colors/app_colors.dart';
-import '../../../feature/core/masterschedulescreen/master_schedule_screen.dart';
+import '../../../feature/core/masterschedulescreen/domain/day_availability_model.dart';
 
 class CalendarViewCard extends StatelessWidget {
   final DateTime focusedDay;
-  final CalendarViewMode viewMode;
   final Function(DateTime) onDaySelected;
+  // Добавляем карту занятости
+  final Map<DateTime, DayStatus> availability;
 
   const CalendarViewCard({
     super.key,
     required this.focusedDay,
-    required this.viewMode,
     required this.onDaySelected,
+    required this.availability,
   });
 
   @override
@@ -42,10 +43,9 @@ class CalendarViewCard extends StatelessWidget {
         focusedDay: focusedDay,
         // Проверка выбранного дня, чтобы кружок не пропадал
         selectedDayPredicate: (day) => isSameDay(focusedDay, day),
-        calendarFormat: viewMode == CalendarViewMode.week
-            ? CalendarFormat.week
-            : CalendarFormat.month,
+        calendarFormat: CalendarFormat.month,
         startingDayOfWeek: StartingDayOfWeek.monday,
+
         headerStyle: const HeaderStyle(
           formatButtonVisible: false,
           titleCentered: true,
@@ -55,21 +55,37 @@ class CalendarViewCard extends StatelessWidget {
             fontSize: 16,
           ),
         ),
+
+        // 1. Предикат доступности (Блокирует клики)
+        enabledDayPredicate: (day) {
+          final status = availability[DateTime(day.year, day.month, day.day)];
+          return status != DayStatus.full;
+        },
+
         calendarStyle: CalendarStyle(
-          todayDecoration: BoxDecoration(
-            color: AppColors.primaryBlue.withOpacity(0.3),
-            shape: BoxShape.circle,
-          ),
+          // 2. Стиль для отключенных дней (Серый текст)
+          disabledTextStyle: TextStyle(color: Colors.grey.shade400),
+          disabledDecoration: const BoxDecoration(shape: BoxShape.circle),
+
           selectedDecoration: const BoxDecoration(
             color: AppColors.primaryBlue,
             shape: BoxShape.circle,
           ),
           defaultTextStyle: const TextStyle(color: AppColors.primaryBlack),
+
+          // Выходные остаются ярко-красными (как на макете)
           weekendTextStyle: const TextStyle(color: AppColors.primaryRed),
-          // Убираем лишние отступы внутри ячеек
           cellMargin: const EdgeInsets.all(4),
         ),
+
+        // 2. Логика блокировки кликов для выходных
         onDaySelected: (selectedDay, focusedDay) {
+          // Если нажали на субботу (6) или воскресенье (7)
+          if (selectedDay.weekday == DateTime.saturday ||
+              selectedDay.weekday == DateTime.sunday) {
+            return;
+          }
+
           onDaySelected(selectedDay);
         },
       ),

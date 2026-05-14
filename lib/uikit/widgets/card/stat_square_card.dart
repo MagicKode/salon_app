@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../../uikit/colors/app_colors.dart';
 
 class StatSquareCard extends StatelessWidget {
@@ -16,38 +17,51 @@ class StatSquareCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16),
       decoration: BoxDecoration(
         color: AppColors.primaryBlue.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppColors.primaryBlue.withOpacity(0.1),
-        ),
+        borderRadius: BorderRadius.circular(12),
+        // Небольшая рамка добавит четкости при увеличении текста
+        border: Border.all(color: AppColors.primaryBlue.withOpacity(0.1)),
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Stack(
         children: [
-          Icon(icon, color: AppColors.primaryBlue, size: 24),
 
-          const SizedBox(height: 8),
-
-          Text(
-            value,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-              color: AppColors.primaryBlack,
+          // 1. Иконка в углу
+          Positioned(
+            top: 6,
+            right: 6,
+            child: Icon(
+              icon,
+              size: 18,
+              color: AppColors.primaryBlue.withOpacity(0.5),
             ),
           ),
 
-          const SizedBox(height: 2),
-
-          Text(
-            label,
-            style: const TextStyle(
-              color: AppColors.primaryGrey,
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
+          // 2. Основной контент по центру
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryBlack,
+                    height: 1.0,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: AppColors.primaryGrey,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
           ),
         ],

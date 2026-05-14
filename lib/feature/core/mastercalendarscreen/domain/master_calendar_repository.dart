@@ -1,3 +1,4 @@
+import '../../masterschedulescreen/domain/day_availability_model.dart';
 import 'appointment_model.dart';
 
 class MasterCalendarRepository {
@@ -61,4 +62,14 @@ class MasterCalendarRepository {
   }
 
   static List<AppointmentModel> getEmptyAppointments() => [];
+
+  static Map<DateTime, DayStatus> getMockAvailability() {
+    final today = DateTime.now();
+    return {
+      // Убираем время из даты (Normalization), оставляем только год-месяц-день
+      DateTime(today.year, today.month, today.day + 1): DayStatus.full,
+      DateTime(today.year, today.month, today.day + 5): DayStatus.full,
+      DateTime(today.year, today.month, today.day + 10): DayStatus.dayOff,
+    };
+  }
 }

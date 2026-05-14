@@ -208,7 +208,8 @@ class AppStrings {
   static const String scheduler = "Расписание";
   static const String orders = "Записи";
   static const String serviceHours = "Нагрузка";
-  static const String start = "Старт";
+  static const String firstClient = "Первый клиент";
+  static const String lastClient = "Последний клиент";
   static const String daySchedule = "Сводка дня";
   static const String weeklyOrders = "На неделю";
   static const String monthlyOrders = "На месяц";
@@ -217,6 +218,11 @@ class AppStrings {
   static const String confirmationOfDelete = "Вы действительно хотите отменить запись клиента";
   static const String deleteBookedService = "Удалить";
   static const String deletedSuccessfully = "Запись успешно удалена";
+
+  // Master schedule screen
+  static const String dayIsFull = "День занят";
+  static const String chosenDay = "Выбрано";
+  static const String weekend = "Выходной";
 
   //Notification screen
   static const String notifications = "Уведомления";

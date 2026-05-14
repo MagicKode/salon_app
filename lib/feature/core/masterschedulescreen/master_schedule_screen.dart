@@ -13,7 +13,6 @@ class MasterScheduleScreen extends StatefulWidget {
 }
 
 class _MasterScheduleScreenState extends State<MasterScheduleScreen> {
-  CalendarViewMode _viewMode = CalendarViewMode.week;
   DateTime _selectedDay = DateTime.now();
 
   @override
@@ -21,12 +20,9 @@ class _MasterScheduleScreenState extends State<MasterScheduleScreen> {
     return Scaffold(
       appBar: ScheduleHeaderSection(
         focusedDay: _selectedDay,
-        viewMode: _viewMode,
-        onViewModeChanged: (mode) => setState(() => _viewMode = mode),
       ),
       body: MasterScheduleBody(
         focusedDay: _selectedDay,
-        viewMode: _viewMode,
         onDaySelected: (day) => setState(() => _selectedDay = day),
       ),
     );

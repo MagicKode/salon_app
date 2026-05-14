@@ -43,34 +43,35 @@ class DaySummaryCard extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          Row(
+          // Сетка 2х2
+          GridView.count(
+            crossAxisCount: 2,           // 2 колонки
+            shrinkWrap: true,            // Сетка занимает только нужное место
+            physics: const NeverScrollableScrollPhysics(), // Отключаем внутренний скролл
+            crossAxisSpacing: 10,        // Отступы по горизонтали
+            mainAxisSpacing: 10,         // Отступы по вертикали
+            childAspectRatio: 2.1,       // Баланс ширины и высоты карточек
             children: [
-              Expanded(
-                child: StatSquareCard(
-                  label: AppStrings.orders,
-                  value: "${appointments.length}",
-                  icon: Icons.people_outline,
-                ),
+              StatSquareCard(
+                label: AppStrings.orders,
+                value: "${appointments.length}",
+                icon: Icons.people_outline,
               ),
-
-              const SizedBox(width: 12),
-
-              Expanded(
-                child: StatSquareCard(
-                  label: AppStrings.serviceHours,
-                  value: "${appointments.totalWorkHours()} ч.",
-                  icon: Icons.timer_outlined,
-                ),
+              StatSquareCard(
+                label: AppStrings.serviceHours,
+                value: "${appointments.totalWorkHours()} ч.",
+                icon: Icons.timer_outlined,
               ),
-
-              const SizedBox(width: 12),
-
-              Expanded(
-                child: StatSquareCard(
-                  label: AppStrings.start,
-                  value: "${appointments.first.startTime.hour}:00",
-                  icon: Icons.play_circle_outline,
-                ),
+              StatSquareCard(
+                label: AppStrings.firstClient,
+                value: "${appointments.first.startTime.hour}:00",
+                icon: Icons.play_circle_outline,
+              ),
+              StatSquareCard(
+                label: AppStrings.lastClient,
+                // БЕРЕМ ПОСЛЕДНЕГО: appointments.last
+                value: "${appointments.last.startTime.hour}:00",
+                icon: Icons.stop_circle_outlined,
               ),
             ],
           ),
