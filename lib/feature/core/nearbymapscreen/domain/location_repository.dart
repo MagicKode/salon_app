@@ -1,61 +1,26 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
-import 'location_model.dart';
-
-abstract class ILocationRepository {
-  Future<LocationModel> getCurrentLocation();
-
-  Future<double> calculateDistance(LatLng from, LatLng to);
-
-  Future<String> getAddressFromCoordinates(LatLng coordinates);
-}
+import 'interface/i_location-repository.dart';
 
 class LocationRepository implements ILocationRepository {
   @override
-  Future<LocationModel> getCurrentLocation() async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      throw Exception('Геолокация выключена. Включите в настройках.');
-    }
-
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        throw Exception('Доступ к геолокации запрещён');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      throw Exception('Доступ к геолокации permanently denied');
-    }
-
+  Future<LatLng> getCurrentLocation() async {
+    // Используем среднюю точность для скорости
     final position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
+      desiredAccuracy: LocationAccuracy.medium,
     );
-
-    return LocationModel(
-      coordinates: LatLng(position.latitude, position.longitude),
-      address: "Ваше местоположение", // можно позже добавить geocoding
-      distanceInKm: null,
-    );
+    return LatLng(position.latitude, position.longitude);
   }
 
   @override
-  Future<double> calculateDistance(LatLng from, LatLng to) async {
+  double calculateDistance(LatLng from, LatLng to) {
     return Geolocator.distanceBetween(
           from.latitude,
           from.longitude,
           to.latitude,
           to.longitude,
         ) /
-        1000; // в километрах
-  }
-
-  @override
-  Future<String> getAddressFromCoordinates(LatLng coordinates) async {
-    // Для обратного геокодинга можно использовать geocoding пакет позже
-    return "Ваше текущее местоположение";
+        1000;
   }
 }

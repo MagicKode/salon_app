@@ -13,10 +13,17 @@ class LocationModel {
     this.heading,
   });
 
-  LocationModel copyWith({double? distanceInKm}) {
+  // copyWith необходим для Cubit, чтобы обновлять только дистанцию
+  // или только направление (heading)
+  LocationModel copyWith({
+    LatLng? coordinates,
+    String? address,
+    double? distanceInKm,
+    double? heading,
+  }) {
     return LocationModel(
-      coordinates: coordinates,
-      address: address,
+      coordinates: coordinates ?? this.coordinates,
+      address: address ?? this.address,
       distanceInKm: distanceInKm ?? this.distanceInKm,
       heading: heading ?? this.heading,
     );
@@ -25,4 +32,8 @@ class LocationModel {
   String get formattedDistance => distanceInKm != null
       ? '${distanceInKm!.toStringAsFixed(1)} км'
       : '... км';
+
+  // Полезно добавить для отладки
+  @override
+  String toString() => 'LocationModel(address: $address, distance: $distanceInKm)';
 }

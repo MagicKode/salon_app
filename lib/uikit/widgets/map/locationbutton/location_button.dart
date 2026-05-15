@@ -8,16 +8,12 @@ class LocationButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      right: 16,
-      bottom: 120,
-      child: FloatingActionButton(
-        mini: true,
-        backgroundColor: AppColors.primaryWhite,
-        elevation: 4,
-        onPressed: onPressed,
-        child: const Icon(Icons.gps_fixed, color: AppColors.primaryBlue),
-      ),
+    return FloatingActionButton(
+      mini: true,
+      backgroundColor: AppColors.primaryWhite,
+      elevation: 4,
+      onPressed: onPressed,
+      child: const Icon(Icons.gps_fixed, color: AppColors.primaryBlue),
     );
   }
 }
