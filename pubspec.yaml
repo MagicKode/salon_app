@@ -49,6 +49,9 @@ dependencies:
   equatable: ^2.0.5
   url_launcher: ^6.3.2
 
+  dio: ^5.4.0               # Для сетевых запросов
+  flutter_secure_storage: ^9.0.0 # Для безопасного хранения JWT-токена в памяти устройства
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
