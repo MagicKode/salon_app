@@ -10,11 +10,12 @@ abstract class AuthRemoteDataSource {
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final Dio dio;
+  final String baseUrl;
 
-  // Если тестируешь на Android-эмуляторе, замени localhost на 10.0.2.2
-  final String baseUrl = 'http://localhost:8080/api/v1/auth';
-
-  AuthRemoteDataSourceImpl({required this.dio});
+  AuthRemoteDataSourceImpl({
+    required this.dio,
+    required this.baseUrl, // Передаем значение из main.dart
+  });
 
   @override
   Future<AuthResponseModel> register(AuthRequestModel request) async {

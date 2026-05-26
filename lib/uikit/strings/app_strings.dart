@@ -263,4 +263,16 @@ class AppStrings {
   static const String image = 'image';
   static const String imageTitle = 'title';
   static const String imageDescription = 'description';
+
+  // Integrated with Back service
+  static const String errorInLoadingCatalogData = 'Не удалось загрузить данные каталога';
+  static const String errorNetworkInGettingCatalog = 'Ошибка сети при получении каталога';
+  static const String fillThePhoneAndPasswordErrorMessage = 'Пожалуйста, заполните Номер телефона и Пароль';
+  static const String errorNetwork = 'Неизвестная ошибка сети';
+  static const String errorRegistration = 'Ошибка регистрации';
+  static const String incorrectNumberOrPassword = 'Неверный номер телефона или пароль';
+  static const String tryAgain = 'Повторить попытку';
+  static const String user = 'Пользователь';
+  static const String authorized = 'Авторизован';
+
 }

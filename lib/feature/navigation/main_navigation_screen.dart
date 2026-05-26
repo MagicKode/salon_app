@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salon_flutter/feature/core/historyscreen/history_screen.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/home_page_screen.dart';
 import 'package:salon_flutter/feature/core/masterschedulescreen/master_schedule_screen.dart';
 
-import '../auth/fakeauth/authservice/auth_service.dart';
+import '../auth/fakeauth/bloc/auth_block.dart';
+import '../auth/fakeauth/bloc/auth_state.dart';
 import '../core/bookingservicescreen/booking_service_screen.dart';
 import '../core/homepagescreen/sections/bottomnavbar/bottom_nav_bar_section.dart';
 import '../core/mastercalendarscreen/master_calendar_screen.dart';
@@ -27,26 +29,34 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // 1. Проверяем роль текущего пользователя
-    final isMaster = AuthService.currentUser?.role == 'master';
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (context, state) {
+        // 1. Проверяем роль текущего пользователя
+        final bool isMaster =
+            state is AuthSuccess &&
+            (state as AuthSuccess).toString().contains('master');
 
-    // 2. Формируем список экранов динамически
-    final List<Widget> screens = [
-      HomePageScreen(isMaster: isMaster),
+        // 2. Формируем список экранов динамически
+        final List<Widget> screens = [
+          HomePageScreen(isMaster: isMaster),
 
-      isMaster ? const MasterCalendarScreen() : const BookingServiceScreen(),
-      isMaster ? const MasterScheduleScreen() : const HistoryScreen(),
-      // Меняем экран
-      const ProfileScreen(),
-    ];
+          isMaster
+              ? const MasterCalendarScreen()
+              : const BookingServiceScreen(),
+          isMaster ? const MasterScheduleScreen() : const HistoryScreen(),
+          // Меняем экран
+          const ProfileScreen(),
+        ];
 
-    return Scaffold(
-      body: IndexedStack(index: _currentIndex, children: screens),
-      bottomNavigationBar: BottomNavBarSection(
-        currentIndex: _currentIndex,
-        onTap: _onTabTapped,
-        isMaster: isMaster,
-      ),
+        return Scaffold(
+          body: IndexedStack(index: _currentIndex, children: screens),
+          bottomNavigationBar: BottomNavBarSection(
+            currentIndex: _currentIndex,
+            onTap: _onTabTapped,
+            isMaster: isMaster,
+          ),
+        );
+      },
     );
   }
 }

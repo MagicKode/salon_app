@@ -103,7 +103,7 @@ class _CreateAccountBodyState extends State<CreateAccountBody> {
   void _dispatchRegisterEvent() {
     if (_mobileNumberController.text.trim().isEmpty ||
         _passwordController.text.trim().isEmpty) {
-      _showError("Пожалуйста, заполните Номер телефона и Пароль");
+      _showError(AppStrings.fillThePhoneAndPasswordErrorMessage);
       return;
     }
 
@@ -116,8 +116,16 @@ class _CreateAccountBodyState extends State<CreateAccountBody> {
   }
 
   void _showError(String message) {
+    // Временно выводим сообщение как есть, без наших сокращений
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: AppColors.primaryRed),
+      SnackBar(
+        content: Text(
+          message.isEmpty ? AppStrings.errorNetwork : message,
+          style: const TextStyle(color: AppColors.primaryWhite),
+        ),
+        backgroundColor: AppColors.primaryRed,
+        duration: const Duration(seconds: 6), // Увеличим время, чтобы успеть прочитать
+      ),
     );
   }
 

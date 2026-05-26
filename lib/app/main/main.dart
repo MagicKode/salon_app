@@ -17,6 +17,14 @@ import '../../feature/catalog/data/repositories/catalog_repository_impl.dart';
 import '../../feature/catalog/domain/repositories/catalog_repository.dart';
 import '../../feature/core/network/auth_interceptor.dart';
 
+// Переключай одной кнопкой: true — для эмулятора, false — для смартфона
+const bool isEmulator = false;
+
+// Определяем базовый IP и порты для сервисов
+const String _host = isEmulator ? '10.0.2.2' : '192.168.1.223';
+const String authBaseUrl = 'http://$_host:8082/api/v1/auth';
+const String catalogBaseUrl = 'http://$_host:8080/api/v1/catalog/salon';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -24,27 +32,37 @@ void main() async {
 
   // 1. Создаем инфраструктурные зависимости
   final dio = Dio();
+  dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
   const secureStorage = FlutterSecureStorage();
 
   // Добавляем наш новенький перехватчик в Dio!
   dio.interceptors.add(AuthInterceptor(secureStorage: secureStorage));
 
   // 2. Инициализируем слои данных по Clean Architecture
-  final authRemoteDataSource = AuthRemoteDataSourceImpl(dio: dio);
+  final authRemoteDataSource = AuthRemoteDataSourceImpl(
+    dio: dio,
+    baseUrl: authBaseUrl,
+  );
   final authRepository = AuthRepositoryImpl(
     remoteDataSource: authRemoteDataSource,
     secureStorage: secureStorage,
   );
 
   // Инициализируем новые слои каталога
-  final catalogRemoteDataSource = CatalogRemoteDataSourceImpl(dio: dio);
-  final catalogRepository = CatalogRepositoryImpl(remoteDataSource: catalogRemoteDataSource);
+  final catalogRemoteDataSource = CatalogRemoteDataSourceImpl(
+    dio: dio,
+    baseUrl: catalogBaseUrl,
+  );
+  final catalogRepository = CatalogRepositoryImpl(
+    remoteDataSource: catalogRemoteDataSource,
+  );
 
   runApp(
     MultiRepositoryProvider(
       providers: [
         RepositoryProvider<AuthRepository>.value(value: authRepository),
-        RepositoryProvider<CatalogRepository>.value(value: catalogRepository), // Новый репозиторий
+        RepositoryProvider<CatalogRepository>.value(value: catalogRepository),
+        // Новый репозиторий
       ],
       child: MultiBlocProvider(
         providers: [
@@ -53,7 +71,8 @@ void main() async {
           ),
           BlocProvider<CatalogBloc>(
             // Новый БЛок, который сразу готов к работе
-            create: (context) => CatalogBloc(catalogRepository: catalogRepository),
+            create:
+                (context) => CatalogBloc(catalogRepository: catalogRepository),
           ),
         ],
         child: const MyApp(),

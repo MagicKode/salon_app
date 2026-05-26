@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:salon_flutter/uikit/strings/app_strings.dart';
+
 import '../models/salon_model.dart';
 
 abstract class CatalogRemoteDataSource {
@@ -7,26 +9,29 @@ abstract class CatalogRemoteDataSource {
 
 class CatalogRemoteDataSourceImpl implements CatalogRemoteDataSource {
   final Dio dio;
+  final String baseUrl;
 
-  // Твой базовый URL к шлюзу (локальный IP для эмулятора Android)
-  static const String _baseUrl = 'http://10.0.2.2:8080/api/v1/catalog/salon';
-
-  CatalogRemoteDataSourceImpl({required this.dio});
+  CatalogRemoteDataSourceImpl({
+    required this.dio,
+    required this.baseUrl, // Передаем значение из main.dart
+  });
 
   @override
   Future<SalonModel> getSalonInfo() async {
     try {
-      final response = await dio.get(_baseUrl);
+      final response = await dio.get(baseUrl);
 
       if (response.statusCode == 200 && response.data != null) {
         // Парсим в соответствии со структурой ответа бэкенда: response.data['data']
-        final Map<String, dynamic> dataBody = response.data['data'] as Map<String, dynamic>;
+        final Map<String, dynamic> dataBody =
+            response.data['data'] as Map<String, dynamic>;
         return SalonModel.fromJson(dataBody);
       } else {
-        throw Exception('Не удалось загрузить данные каталога');
+        throw Exception(AppStrings.errorInLoadingCatalogData);
       }
     } on DioException catch (e) {
-      final errorMessage = e.response?.data['message'] ?? 'Ошибка сети при получении каталога';
+      final errorMessage =
+          e.response?.data['message'] ?? AppStrings.errorNetworkInGettingCatalog;
       throw Exception(errorMessage);
     }
   }

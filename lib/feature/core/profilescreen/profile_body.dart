@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salon_flutter/feature/core/profilescreen/sections/appinfo/version_section.dart';
-import 'package:salon_flutter/feature/core/profilescreen/sections/auth/login_section.dart';
 import 'package:salon_flutter/feature/core/profilescreen/sections/auth/logout_section.dart';
 import 'package:salon_flutter/feature/core/profilescreen/sections/legal/privacy_policy_section.dart';
 import 'package:salon_flutter/feature/core/profilescreen/sections/support/share_section.dart';
@@ -8,7 +8,9 @@ import 'package:salon_flutter/feature/core/profilescreen/sections/support/suppor
 import 'package:salon_flutter/feature/core/profilescreen/sections/userinfo/user_info_section.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
-import '../../auth/fakeauth/authservice/auth_service.dart';
+import '../../auth/fakeauth/bloc/auth_block.dart';
+import '../../auth/fakeauth/bloc/auth_event.dart';
+import '../../auth/fakeauth/bloc/auth_state.dart';
 import '../../auth/loginscreen/login_screen.dart';
 import 'domain/entities/app_version_entity.dart';
 import 'domain/entities/profile_action_entity.dart';
@@ -23,106 +25,121 @@ class ProfileBody extends StatefulWidget {
 
 class _ProfileBodyState extends State<ProfileBody> {
   void _navigateToLogin(BuildContext context) {
-    Navigator.push(
+    Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => const LoginScreen()),
-    ).then(
-      (_) => setState(() {}),
-    ); // Обновляем профиль после возврата с экрана логина
-  }
-
-  void _handleLogout() {
-    AuthService.currentUser = null; // Очищаем пользователя в мок-сервисе
-    setState(() {}); // Перерисовываем экран
+      (route) =>
+          false, // Удаляет все предыдущие экраны, чтобы нельзя было вернуться назад кнопкой "Назад"
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    // Получаем текущего пользователя из нашего AuthService
-    final currentUser = AuthService.currentUser;
-    final bool isAuthorized = currentUser != null;
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is! AuthSuccess) {
+          // Если стейт сменился на логаут или ошибку — улетаем на логин
+          _navigateToLogin(context);
+        }
+      },
 
-    return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      children: [
-        const SizedBox(height: 8),
+      child: BlocBuilder<AuthBloc, AuthState>(
+        builder: (context, state) {
+          // Проверяем авторизацию через состояние AuthBloc
+          final bool isAuthorized = state is AuthSuccess;
 
-        // 1. Секция: ВОЙТИ
-        LoginSection(
-          isVisible: !isAuthorized,
-          onTap: () => _navigateToLogin(context), // Передаем context в метод
-        ),
+          // Достаем токен или данные пользователя, если он авторизован
+          // Если в AuthSuccess у тебя лежит объект User, используй его поля (state.user.name и т.д.)
+          final String name = state is AuthSuccess ? AppStrings.user : "";
+          final String phone =
+              state is AuthSuccess ? AppStrings.authorized : "";
 
-        const SizedBox(height: 8),
+          return ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            children: [
+              const SizedBox(height: 16),
 
-        // 2. Секция ИНФО (всегда видна для демо)
-        if (isAuthorized)
-          UserInfoSection(
-            user: UserEntity(
-              firstName: currentUser.name,
-              lastName: currentUser.role == 'master' ? 'Ярошенко' : '',
-              phone: currentUser.phone,
-              email: currentUser.email,
-              avatarUrl: currentUser.avatarUrl, // Передаем аву из MockUser
-            ),
-          ),
+              // 1. Секция ИНФО (всегда видна для демо)
+              if (isAuthorized)
+                UserInfoSection(
+                  user: UserEntity(
+                    firstName: name,
+                    lastName: '',
+                    phone: phone,
+                    email: '',
+                    avatarUrl: '', // Передаем аву из MockUser
+                  ),
+                ),
 
-        const SizedBox(height: 50),
+              const SizedBox(height: 50),
 
-        // 3. Секция Поделиться приложением (всегда видна для демо)
-        ShareSection(
-          action: ProfileActionEntity(
-            icon: Icons.share_outlined,
-            title: AppStrings.shareApp,
-            onTap: () {
-              // Логика Share (будет позже)
-              print("Нажали: Поделиться");
-            },
-          ),
-        ),
+              // 2. Секция Поделиться приложением (всегда видна для демо)
+              ShareSection(
+                action: ProfileActionEntity(
+                  icon: Icons.share_outlined,
+                  title: AppStrings.shareApp ?? "Поделиться приложением",
+                  onTap: () {
+                    // Логика Share (будет позже)
+                    print("Нажали: Поделиться");
+                  },
+                ),
+              ),
 
-        const SizedBox(height: 4),
+              const SizedBox(height: 4),
 
-        // 4. СЕКЦИЯ СЛУЖБА ПОДДЕРЖКИ
-        SupportSection(
-          action: ProfileActionEntity(
-            icon: Icons.headset_mic_outlined,
-            title: AppStrings.supportTeam,
-            onTap: () {
-              // Здесь будет логика открытия чата или почты
-              print("Нажали: Служба поддержки");
-            },
-          ),
-        ),
+              // 4. СЕКЦИЯ СЛУЖБА ПОДДЕРЖКИ
+              SupportSection(
+                action: ProfileActionEntity(
+                  icon: Icons.headset_mic_outlined,
+                  title: AppStrings.supportTeam,
+                  onTap: () {
+                    // Здесь будет логика открытия чата или почты
+                    print("Нажали: Служба поддержки");
+                  },
+                ),
+              ),
 
-        const SizedBox(height: 4),
+              const SizedBox(height: 4),
 
-        // 5. СЕКЦИЯ ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ
-        PrivacyPolicySection(
-          action: ProfileActionEntity(
-            icon: Icons.description_outlined,
-            title: AppStrings.privacyPolicy,
-            onTap: () {
-              // Логика открытия документа (пока заглушка для демо)
-              print("Нажали: Политика конфиденциальности");
-            },
-          ),
-        ),
+              // 5. СЕКЦИЯ ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ
+              PrivacyPolicySection(
+                action: ProfileActionEntity(
+                  icon: Icons.description_outlined,
+                  title: AppStrings.privacyPolicy,
+                  onTap: () {
+                    // Логика открытия документа (пока заглушка для демо)
+                    print("Нажали: Политика конфиденциальности");
+                  },
+                ),
+              ),
 
-        const SizedBox(height: 50),
+              const SizedBox(height: 50),
 
-        // 6. Секция Выход из аккаунта
-        if (isAuthorized) LogoutSection(onConfirm: _handleLogout),
+              // 6. Секция Выход из аккаунта
+              if (isAuthorized)
+                LogoutSection(
+                  // Отправляем событие логаута в БЛок, который очистит SecureStorage
+                  onConfirm: () {
+                    final authBloc = BlocProvider.of<AuthBloc>(context);
+                    authBloc.add(AuthLogoutRequested());
+                  },
+                ),
 
-        const SizedBox(height: 8),
+              const SizedBox(height: 8),
 
-        // 7. Версия
-        const VersionSection(
-          versionInfo: AppVersionEntity(version: '1.0.1', buildNumber: '27'),
-        ),
+              // 7. Версия
+              const VersionSection(
+                versionInfo: AppVersionEntity(
+                  version: '1.0.1',
+                  buildNumber: '27',
+                ),
+              ),
 
-        const SizedBox(height: 8),
-      ],
+              const SizedBox(height: 8),
+            ],
+          );
+        },
+      ),
     );
   }
 }
