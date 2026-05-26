@@ -11,6 +11,10 @@ import '../../feature/auth/fakeauth/bloc/auth_block.dart';
 import '../../feature/auth/fakeauth/data/datasources/auth_remote_data_source.dart';
 import '../../feature/auth/fakeauth/data/repositories/auth_repository_impl.dart';
 import '../../feature/auth/fakeauth/domain/repositories/auth_repository.dart';
+import '../../feature/catalog/bloc/catalog_bloc.dart';
+import '../../feature/catalog/data/datasources/catalog_remote_data_source.dart';
+import '../../feature/catalog/data/repositories/catalog_repository_impl.dart';
+import '../../feature/catalog/domain/repositories/catalog_repository.dart';
 import '../../feature/core/network/auth_interceptor.dart';
 
 void main() async {
@@ -32,13 +36,26 @@ void main() async {
     secureStorage: secureStorage,
   );
 
+  // Инициализируем новые слои каталога
+  final catalogRemoteDataSource = CatalogRemoteDataSourceImpl(dio: dio);
+  final catalogRepository = CatalogRepositoryImpl(remoteDataSource: catalogRemoteDataSource);
+
   runApp(
-    // 3. Внедряем репозиторий по принципу Dependency Inversion
-    RepositoryProvider<AuthRepository>.value(
-      value: authRepository,
-      child: BlocProvider<AuthBloc>(
-        // Инициализируем глобальный AuthBloc для работы экранов
-        create: (context) => AuthBloc(authRepository: authRepository),
+    MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<AuthRepository>.value(value: authRepository),
+        RepositoryProvider<CatalogRepository>.value(value: catalogRepository), // Новый репозиторий
+      ],
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<AuthBloc>(
+            create: (context) => AuthBloc(authRepository: authRepository),
+          ),
+          BlocProvider<CatalogBloc>(
+            // Новый БЛок, который сразу готов к работе
+            create: (context) => CatalogBloc(catalogRepository: catalogRepository),
+          ),
+        ],
         child: const MyApp(),
       ),
     ),
