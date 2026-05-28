@@ -25,6 +25,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final user = await authRepository.register(
         phoneNumber: event.phoneNumber,
         password: event.password,
+        firstName: event.firstName,
+        email: event.email,
       );
       emit(AuthSuccess(user: user));
     } on DioException catch (e) {

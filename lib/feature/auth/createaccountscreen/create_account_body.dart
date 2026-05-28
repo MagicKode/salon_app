@@ -111,6 +111,8 @@ class _CreateAccountBodyState extends State<CreateAccountBody> {
       AuthRegisterRequested(
         phoneNumber: _mobileNumberController.text.trim(),
         password: _passwordController.text.trim(),
+        firstName: _nameController.text,  // Передаем имя с формы ввода
+        email: _emailController.text,
       ),
     );
   }

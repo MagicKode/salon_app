@@ -154,7 +154,7 @@ class AppStrings {
   static const String payment = "Способы оплаты";
   static const String exitFromAccount = "Выйти из аккаунта";
   static const String loginAccount = "Войти в аккаунт";
-  static const String profileEmail = "email: ";
+  static const String profileEmail = "Email: ";
   static const String cash = "НАЛИЧНЫМИ";
   static const String exitHeader = "Выход";
   static const String exit = "Выход";
@@ -272,7 +272,6 @@ class AppStrings {
   static const String errorRegistration = 'Ошибка регистрации';
   static const String incorrectNumberOrPassword = 'Неверный номер телефона или пароль';
   static const String tryAgain = 'Повторить попытку';
-  static const String user = 'Пользователь';
   static const String authorized = 'Авторизован';
 
 }

@@ -4,8 +4,15 @@ abstract class AuthEvent {}
 class AuthRegisterRequested extends AuthEvent {
   final String phoneNumber;
   final String password;
+  final String firstName; // ИСПРАВЛЕНО: Добавили поле для имени
+  final String email;
 
-  AuthRegisterRequested({required this.phoneNumber, required this.password});
+  AuthRegisterRequested({
+    required this.phoneNumber,
+    required this.password,
+    required this.firstName,
+    required this.email,
+  });
 }
 
 // Событие нажатия на кнопку "Войти"

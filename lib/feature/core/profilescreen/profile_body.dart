@@ -50,9 +50,17 @@ class _ProfileBodyState extends State<ProfileBody> {
 
           // Достаем токен или данные пользователя, если он авторизован
           // Если в AuthSuccess у тебя лежит объект User, используй его поля (state.user.name и т.д.)
-          final String name = state is AuthSuccess ? AppStrings.user : "";
-          final String phone =
-              state is AuthSuccess ? AppStrings.authorized : "";
+          String firstName = "";
+          String phone = "";
+          String email = "";
+
+          if (state is AuthSuccess) {
+            final userModel = state.user;
+
+            firstName = userModel.name;
+            phone = userModel.phoneNumber;
+            email = userModel.email;
+          }
 
           return ListView(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -63,11 +71,11 @@ class _ProfileBodyState extends State<ProfileBody> {
               if (isAuthorized)
                 UserInfoSection(
                   user: UserEntity(
-                    firstName: name,
+                    firstName: firstName,
                     lastName: '',
                     phone: phone,
-                    email: '',
-                    avatarUrl: '', // Передаем аву из MockUser
+                    email: email,
+                    avatarUrl: null,
                   ),
                 ),
 

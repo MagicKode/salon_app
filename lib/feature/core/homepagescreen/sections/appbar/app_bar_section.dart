@@ -19,10 +19,9 @@ class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
       builder: (context, state) {
         // Если юзер успешно авторизован, выводим его имя.
         // Замени "Пользователь" на имя из твоей модели, если бэк его возвращает в AuthSuccess (например: state.user.name)
-        final userName =
-            state is AuthSuccess
-                ? (AppStrings.homeGuest ?? "Гость")
-                : "Пользователь";
+        final String userName = state is AuthSuccess
+                ? state.user.name
+                : (AppStrings.homeGuest ?? "Гость");
 
         return AppBar(
           backgroundColor: AppColors.primaryWhite,

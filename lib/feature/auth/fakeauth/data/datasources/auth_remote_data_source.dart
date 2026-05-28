@@ -1,10 +1,11 @@
 import 'package:dio/dio.dart';
+import 'package:salon_flutter/feature/auth/fakeauth/data/models/register_request_model.dart';
 
 import '../models/auth_request_model.dart';
 import '../models/auth_response_model.dart';
 
 abstract class AuthRemoteDataSource {
-  Future<AuthResponseModel> register(AuthRequestModel request);
+  Future<AuthResponseModel> register(RegisterRequestModel request);
   Future<AuthResponseModel> login(AuthRequestModel request);
 }
 
@@ -18,7 +19,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   });
 
   @override
-  Future<AuthResponseModel> register(AuthRequestModel request) async {
+  Future<AuthResponseModel> register(RegisterRequestModel request) async {
     final response = await dio.post(
       '$baseUrl/register',
       data: request.toJson(),

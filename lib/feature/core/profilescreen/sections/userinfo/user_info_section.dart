@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:salon_flutter/uikit/strings/app_strings.dart';
 import '../../../../../uikit/colors/app_colors.dart';
 import '../../../../../uikit/assets/app_assets.dart'; // Путь к твоим ассетам
 import '../../domain/entities/user_entity.dart';
@@ -36,7 +37,7 @@ class UserInfoSection extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          // ИМЯ ФАМИЛИЯ
+          // ИМЯ (ФАМИЛИЯ)
           Text(
             user.fullName,
             style: const TextStyle(
@@ -55,9 +56,26 @@ class UserInfoSection extends StatelessWidget {
           const SizedBox(height: 4),
 
           // EMAIL
-          Text(
-            user.email,
-            style: const TextStyle(fontSize: 14, color: AppColors.primaryGrey),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                AppStrings.profileEmail,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.primaryGrey,
+                ),
+              ),
+              Text(
+                user.email,
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: AppColors.primaryGrey,
+                ),
+              ),
+            ],
           ),
         ],
       ),
