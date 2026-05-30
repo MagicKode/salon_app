@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:salon_flutter/feature/core/bookingservicescreen/booking_service_screen.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/appbar/app_bar_section.dart';
+import 'package:salon_flutter/feature/core/homepagescreen/sections/bookingbutton/home_booking_button_section.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/description/description_section.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/feedback/feedback_section.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/gallery/sections/gallery_section.dart';
@@ -27,6 +29,13 @@ class HomePageBody extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const NearbyMapScreen()),
+    );
+  }
+
+  void _onBookingTap(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const BookingServiceScreen()),
     );
   }
 
@@ -88,6 +97,7 @@ class HomePageBody extends StatelessWidget {
                   : salon.name;
 
               return SingleChildScrollView(
+                padding: const EdgeInsets.only(bottom: 80),
                 child: Column(
                   children: [
                     HomeSearchBar(
@@ -128,6 +138,12 @@ class HomePageBody extends StatelessWidget {
           },
         ),
       ),
+
+      // ВЫЗОВ СЕКЦИИ КНОПКИ бронирования
+      floatingActionButton: HomeBookingButtonSection(
+        onPressed: () => _onBookingTap(context),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
