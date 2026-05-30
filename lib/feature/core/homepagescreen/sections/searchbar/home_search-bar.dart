@@ -33,22 +33,7 @@ class HomeSearchBar extends StatelessWidget {
           ),
           const SizedBox(width: 8),
 
-          GestureDetector(
-            onTap: onLocationTap,
-            child: Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: AppColors.primaryWhite,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Icon(
-                Icons.location_on_outlined,
-                color: AppColors.primaryBlue,
-                size: 24,
-              ),
-            ),
-          ),
+
         ],
       ),
     );

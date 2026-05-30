@@ -4,6 +4,7 @@ import 'package:salon_flutter/feature/core/homepagescreen/sections/appbar/app_ba
 import 'package:salon_flutter/feature/core/homepagescreen/sections/description/description_section.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/feedback/feedback_section.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/gallery/sections/gallery_section.dart';
+import 'package:salon_flutter/feature/core/homepagescreen/sections/salonheadersection/salon_header_section.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/searchbar/home_search-bar.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/servicesgrid/service_grid_section.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/specialists/sections/specialists_section.dart';
@@ -81,21 +82,32 @@ class HomePageBody extends StatelessWidget {
             if (state is CatalogSuccess) {
               final salon = state.salon;
 
+              // Идея с кастомным или дефолтным названием студии:
+              final displaySalonName = salon.name.isEmpty || salon.name == "Дмитрий"
+                  ? "Студия Павла Ярошенко"
+                  : salon.name;
+
               return SingleChildScrollView(
                 child: Column(
                   children: [
                     HomeSearchBar(
                       onLocationTap: () => _navigateToNearbyMap(context),
                     ),
+
+                    // НОВЫЙ БЛОК: Визитка салона (теперь она НАВЕРХУ!)
+                    SalonHeaderSection(
+                      name: displaySalonName,
+                      address: salon.address,
+                      workingHours: salon.workingHours,
+                      onLocationTap: () => _navigateToNearbyMap(context),
+                    ),
+
                     const SizedBox(height: 16),
                     ServiceGridSection(isMaster: isMaster),
                     const SizedBox(height: 16),
                     // Передаем реальные данные с бэкенда в секцию описания!
                     DescriptionSection(
-                      name: salon.name,
-                      address: salon.address,
                       description: salon.description,
-                      workingHours: salon.workingHours,
                     ),
                     const SizedBox(height: 16),
                     const GallerySection(),

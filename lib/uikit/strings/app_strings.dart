@@ -61,7 +61,7 @@ class AppStrings {
   static const String usePhoneNumber = "Номер телефона?";
 
   // home screen
-  static const String homeWelcome = "Приветстую, ";
+  static const String homeWelcome = "Приветствую, ";
   static const String homeGuest = "Дмитрий";
   static const String homeSubtitle = "Выберите желаемый сервис";
   static const String sectionServices = "Выберите услугу";
@@ -84,6 +84,9 @@ class AppStrings {
   static const String studio = 'Студия';
   static const String pavlaYaroshenko = 'Павла Ярошенко';
   static const String alreadyHaveAnAccount = 'Уже есть аккаунт?';
+  static const String workSchedule = 'Режим работы: ';
+  static const String ourAddress = 'Где мы находимся';
+
 
   // Service Detail Screen
   static const String descriptionHeader = "Описание";
