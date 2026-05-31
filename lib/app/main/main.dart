@@ -15,6 +15,7 @@ import '../../feature/catalog/bloc/catalog_bloc.dart';
 import '../../feature/catalog/data/datasources/catalog_remote_data_source.dart';
 import '../../feature/catalog/data/repositories/catalog_repository_impl.dart';
 import '../../feature/catalog/domain/repositories/catalog_repository.dart';
+import '../../feature/checkout/domain/repository/booking_repository.dart';
 import '../../feature/core/network/auth_interceptor.dart';
 
 // Переключай одной кнопкой: true — для эмулятора, false — для смартфона
@@ -24,6 +25,7 @@ const bool isEmulator = false;
 const String _host = isEmulator ? '10.0.2.2' : '192.168.1.223';
 const String authBaseUrl = 'http://$_host:8082/api/v1/auth';
 const String catalogBaseUrl = 'http://$_host:8080/api/v1/catalog/salon';
+const String bookingBaseUrl = 'http://$_host:8080/api/v1/bookings';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,13 +58,14 @@ void main() async {
   final catalogRepository = CatalogRepositoryImpl(
     remoteDataSource: catalogRemoteDataSource,
   );
+  final bookingRepository = BookingRepository(baseUrl: bookingBaseUrl);
 
   runApp(
     MultiRepositoryProvider(
       providers: [
         RepositoryProvider<AuthRepository>.value(value: authRepository),
         RepositoryProvider<CatalogRepository>.value(value: catalogRepository),
-        // Новый репозиторий
+        RepositoryProvider<BookingRepository>.value(value: bookingRepository),
       ],
       child: MultiBlocProvider(
         providers: [

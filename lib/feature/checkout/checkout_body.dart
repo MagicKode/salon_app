@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 import '../../uikit/colors/app_colors.dart';
 import '../../uikit/widgets/button/app_button.dart';
+import '../auth/fakeauth/bloc/auth_block.dart';
+import '../auth/fakeauth/bloc/auth_state.dart';
 import 'booking_success_screen.dart';
 import 'domain/booking_entity.dart';
+import 'domain/repository/booking_repository.dart';
 import 'sections/booking_summary_card.dart';
 import 'sections/cash_payment_info.dart';
 
 class CheckoutBody extends StatelessWidget {
   final BookingEntity booking;
 
-  const CheckoutBody({super.key, required this.booking});
+  CheckoutBody({super.key, required this.booking});
 
   @override
   Widget build(BuildContext context) {
@@ -63,11 +67,69 @@ class CheckoutBody extends StatelessWidget {
     );
   }
 
-  void _onConfirm(BuildContext context) {
-    Navigator.pop(context);
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const BookingSuccessScreen()),
+  /// Чистая и лаконичная обработка нажатия кнопки подтверждения
+  Future<void> _onConfirm(BuildContext context) async {
+    print("=== [DEBUG] Нажата кнопка подтверждения бронирования ===");
+
+    // 1. Показываем лоадер загрузки
+    _showLoadingDialog(context);
+    final bookingRepository = RepositoryProvider.of<BookingRepository>(context);
+
+    // 2. Получаем JWT токен из стейта авторизации
+    final authState = context.read<AuthBloc>().state;
+    String? jwtToken;
+
+    if (authState is AuthSuccess) {
+      jwtToken = authState.user.token;
+      print("=== [DEBUG] Токен успешно найден ===");
+    } else {
+      print("=== [DEBUG] Ошибка: Текущий стейт AuthBloc НЕ AuthSuccess! Стейт: $authState ===");
+    }
+
+    if (jwtToken == null) {
+      if (context.mounted) Navigator.pop(context); // FIX: Закрываем лоадер, чтобы экран не завис
+      _showErrorSnackBar(context, "Ошибка авторизации. Пожалуйста, войдите снова.");
+      return;
+    }
+
+    try {
+      print("=== [DEBUG] Отправляем запрос на сервер... ===");
+      // 3. Вызываем изолированный метод отправки из репозитория
+      final bool isSuccess = await bookingRepository.sendBooking(booking, jwtToken);
+      print("=== [DEBUG] Ответ от сервера успешный! Результат: $isSuccess ===");
+
+      if (context.mounted) Navigator.pop(context); // Скрываем лоадер
+
+      if (isSuccess && context.mounted) {
+        Navigator.pop(context); // Успех — убираем шторку чекаута и открываем экран успеха
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const BookingSuccessScreen()),
+        );
+      }
+    } catch (error) {
+      print("=== [DEBUG] Поймали ошибку при отправке: $error ===");
+      if (context.mounted) Navigator.pop(context); // Скрываем лоадер при ошибке
+      _showErrorSnackBar(context, error.toString().replaceAll("Exception: ", ""));
+    }
+  }
+
+  void _showLoadingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(color: AppColors.primaryBlue),
+      ),
+    );
+  }
+
+  void _showErrorSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: AppColors.primaryRed,
+      ),
     );
   }
 }
