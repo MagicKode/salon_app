@@ -194,7 +194,7 @@ class AppStrings {
   static const String navProfile = "Профиль";
 
   // HomeSearchBar
-  static const String hintServiceMasterSearch = "Поиск услуг или мастеров...";
+  static const String hintServiceMasterSearch = "Поиск услуги в каталоге...";
 
   // NearbyMap screen
   static const String howToFind = "Как добраться";
@@ -234,6 +234,12 @@ class AppStrings {
   static const String themeOfNotificationForClient = "Текст сообщения для клиентов...";
   static const String sendNotificationToAllClients = "Отправить всем клиентам";
   static const String notificationSuccessfullySent = "Уведомление успешно отправлено";
+
+  //Catalog screen
+  static const String servicesCatalogTitle = "Каталог услуг";
+  static const String chosenServices = "Выбранные услуги:";
+  static const String nextService = "Далее";
+  static const String totalAmount = "Итого:";
 
   // Тестовые данные для примера (можно оставить здесь или в domain)
   static const String dummyServiceTitle = "Мужская стрижка";

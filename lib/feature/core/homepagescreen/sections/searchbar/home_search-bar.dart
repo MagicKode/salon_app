@@ -3,9 +3,9 @@ import 'package:salon_flutter/uikit/colors/app_colors.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 class HomeSearchBar extends StatelessWidget {
-  final VoidCallback? onLocationTap;
+  final VoidCallback? onTap;
 
-  const HomeSearchBar({super.key, this.onLocationTap});
+  const HomeSearchBar({super.key, this.onTap,});
 
   @override
   Widget build(BuildContext context) {
@@ -21,19 +21,19 @@ class HomeSearchBar extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: TextField(
+                readOnly: true,
+                onTap: onTap,
                 decoration: InputDecoration(
                   hintText: AppStrings.hintServiceMasterSearch,
                   hintStyle: const TextStyle(fontSize: 14),
                   prefixIcon: const Icon(Icons.search, size: 20),
                   border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 14),
                 ),
               ),
             ),
           ),
           const SizedBox(width: 8),
-
-
         ],
       ),
     );

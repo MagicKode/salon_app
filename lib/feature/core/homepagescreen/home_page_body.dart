@@ -16,6 +16,7 @@ import 'package:salon_flutter/uikit/strings/app_strings.dart';
 import '../../catalog/bloc/catalog_bloc.dart';
 import '../../catalog/bloc/catalog_event.dart';
 import '../../catalog/bloc/catalog_state.dart';
+import '../catalogscreen/catalog_screen.dart';
 import '../nearbymapscreen/nearby_map_screen.dart';
 import 'domain/feedback_item.dart';
 
@@ -101,7 +102,12 @@ class HomePageBody extends StatelessWidget {
                 child: Column(
                   children: [
                     HomeSearchBar(
-                      onLocationTap: () => _navigateToNearbyMap(context),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => CatalogScreen()),
+                        );
+                      },
                     ),
 
                     // НОВЫЙ БЛОК: Визитка салона (теперь она НАВЕРХУ!)
@@ -140,8 +146,18 @@ class HomePageBody extends StatelessWidget {
       ),
 
       // ВЫЗОВ СЕКЦИИ КНОПКИ бронирования
-      floatingActionButton: HomeBookingButtonSection(
-        onPressed: () => _onBookingTap(context),
+      floatingActionButton: BlocBuilder<CatalogBloc, CatalogState>(
+        builder: (context, state) {
+          if (state is CatalogSuccess) {
+            return HomeBookingButtonSection(
+              key: const ValueKey('persistent_booking_button'),
+              onPressed: () => _onBookingTap(context),
+            );
+          }
+          // Если идет загрузка или ошибка, возвращаем null (или SizedBox.shrink)
+          // Благодаря этому Scaffold корректно убирает виджет из фазы layout
+          return const SizedBox.shrink();
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
