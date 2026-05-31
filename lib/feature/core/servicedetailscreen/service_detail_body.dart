@@ -7,16 +7,19 @@ import 'package:salon_flutter/uikit/strings/app_strings.dart';
 import '../../../uikit/colors/app_colors.dart';
 import '../../../uikit/widgets/button/app_button.dart';
 import '../bookingservicescreen/booking_service_screen.dart';
+import '../catalogscreen/domain/catalog_service.dart';
 import 'domain/service_detail_data.dart';
 
 class ServiceDetailBody extends StatelessWidget {
   final ServiceDetail service;
   final bool isMaster;
+  final Function(CatalogService selectedService)? onServiceSelected;
 
   const ServiceDetailBody({
     super.key,
     required this.service,
     required this.isMaster,
+    this.onServiceSelected,
   });
 
   @override
@@ -45,16 +48,24 @@ class ServiceDetailBody extends StatelessWidget {
                   AppButton(
                     text: AppStrings.bookNow,
                     onPressed: () {
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => BookingServiceScreen(
-                                selectedServices: const [],
-                              ),
-                        ),
+                      final double computedPrice = double.tryParse(
+                        service.price.toString().replaceAll(RegExp(r'[^0-9.]'), ''),
+                      ) ?? 0.0; // Если перевод не удался, ставим 0.0 по умолчанию
+
+                      final selectedService = CatalogService(
+                        id: service.title,
+                        name: service.title, // Передаем название (например, "Мужская стрижка")
+                        price: computedPrice, // Передаем цену (например, 30.0)
+                        duration: '1 ч.',
                       );
+
+                      // Закрываем шторку деталей и передаем выбранную услугу назад в HomePageBody
+                      if (onServiceSelected != null) {
+                        onServiceSelected!(selectedService);
+                      } else {
+                        // Фаллбэк на случай, если экран открыт не в модалке
+                        Navigator.pop(context, selectedService);
+                      }
                     },
                   ),
                 ],

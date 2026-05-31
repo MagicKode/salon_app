@@ -23,7 +23,7 @@ class ServiceDetailData {
   static const ServiceDetail mensHaircut = ServiceDetail(
     id: '1',
     title: AppStrings.dummyServiceTitle,
-    imageUrl: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=1000&auto=format&fit=crop',
+    imageUrl: 'assets/images/services/man/man-style.jpg',
     duration: '45-60 ${AppStrings.durationUnit}',
     price: '30 ${AppStrings.currency}',
     description: AppStrings.dummyServiceDescription,

@@ -3,23 +3,43 @@ import 'package:salon_flutter/feature/core/homepagescreen/sections/servicesgrid/
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 import '../../../../../uikit/colors/app_colors.dart';
+import '../../../catalogscreen/domain/catalog_service.dart';
+import '../../../servicedetailscreen/domain/service_detail_data.dart';
+import '../../../servicedetailscreen/service_detail_body.dart';
 import '../../../servicedetailscreen/sevice_detail_screen.dart';
 import '../../domain/home_models.dart';
 
 class ServiceGridSection extends StatelessWidget {
   final bool isMaster;
+  final Function(CatalogService service)? onQuickBookRequested;
 
-  const ServiceGridSection({super.key, required this.isMaster});
+  const ServiceGridSection({
+    super.key,
+    required this.isMaster,
+    this.onQuickBookRequested,
+  });
 
-  void _showServiceDetails(BuildContext context, ServiceCategory category) {
-    showModalBottomSheet(
+  Future<void> _showServiceDetails(BuildContext context, ServiceCategory category) async {
+    // 1. Ищем данные детализации прямо здесь (код скопирован из твоего ServiceDetailScreen)
+    final detail = ServiceDetailData.allDetails.firstWhere(
+          (element) => element.title == category.title,
+      orElse: () => ServiceDetailData.mensHaircut,
+    );
+
+    // 2. Открываем Body напрямую в модалке
+    final CatalogService? result = await showModalBottomSheet<CatalogService>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder:
-          (context) =>
-              ServiceDetailScreen(category: category, isMaster: isMaster),
+      builder: (context) => ServiceDetailBody(
+        service: detail,
+        isMaster: isMaster,
+      ),
     );
+
+    if (result != null && context.mounted) {
+      onQuickBookRequested?.call(result);
+    }
   }
 
   @override

@@ -30,6 +30,18 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     });
   }
 
+  // FIX: Метод должен лежать ТУТ — внутри класса состояния, наравне с _onTabTapped
+  void _handleQuickBooking(CatalogService service) {
+    setState(() {
+      // Проверяем, чтобы услуга не продублировалась в чеке
+      if (!_globalSelectedServices.any((s) => s.name == service.name)) {
+        _globalSelectedServices.add(service);
+      }
+      // Мгновенно переключаем нижний бар на вкладку "Бронировать"
+      _currentIndex = 1;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
@@ -41,14 +53,20 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
         // 2. Формируем список экранов динамически
         final List<Widget> screens = [
-          HomePageScreen(isMaster: isMaster),
+          HomePageScreen(
+            isMaster: isMaster,
+            onQuickBookRequested: _handleQuickBooking,
+          ),
 
           isMaster
               ? const MasterCalendarScreen()
               : BookingServiceScreen(
-            // FIX: Передаем живой список, который обновляется глобально
-            selectedServices: _globalSelectedServices,
-          ),
+                // FIX: Передаем живой список, который обновляется глобально
+                key: ValueKey(
+                  'booking_screen_${_globalSelectedServices.length}',
+                ),
+                selectedServices: _globalSelectedServices,
+              ),
 
           isMaster ? const MasterScheduleScreen() : const HistoryScreen(),
           const ProfileScreen(),

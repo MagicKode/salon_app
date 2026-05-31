@@ -21,7 +21,23 @@ class ServiceImageHeaderSection extends StatelessWidget {
               borderRadius: const BorderRadius.vertical(
                 top: Radius.circular(20),
               ),
-              child: Image.network(service.imageUrl, fit: BoxFit.cover),
+              child: Image.asset(
+                service.imageUrl,
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: 250, // твоя высота по макету
+                errorBuilder: (context, error, stackTrace) {
+                  // Подстраховка: если путь к ассету указан с ошибкой, приложение не упадет
+                  return Container(
+                    color: Colors.grey.shade200,
+                    child: const Icon(
+                      Icons.image_not_supported_rounded,
+                      color: AppColors.primaryGrey,
+                      size: 48,
+                    ),
+                  );
+                },
+              ),
             ),
           ),
 

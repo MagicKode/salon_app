@@ -25,7 +25,14 @@ class ServiceDetailScreen extends StatelessWidget {
     );
 
     // 2. Создаем контент напрямую
-    final Widget content = ServiceDetailBody(service: detail, isMaster: isMaster,);
+    final Widget content = ServiceDetailBody(
+      service: detail,
+      isMaster: isMaster,
+      onServiceSelected: (selectedService) {
+        // Когда внутри Body нажали кнопку, закрываем экран и передаем объект в GridSection
+        Navigator.pop(context, selectedService);
+      },
+    );
 
     // 3. Возвращаем результат
     if (isModal) {

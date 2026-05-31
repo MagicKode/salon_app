@@ -17,13 +17,19 @@ import '../../catalog/bloc/catalog_bloc.dart';
 import '../../catalog/bloc/catalog_event.dart';
 import '../../catalog/bloc/catalog_state.dart';
 import '../catalogscreen/catalog_screen.dart';
+import '../catalogscreen/domain/catalog_service.dart';
 import '../nearbymapscreen/nearby_map_screen.dart';
 import 'domain/feedback_item.dart';
 
 class HomePageBody extends StatelessWidget {
   final bool isMaster;
+  final Function(CatalogService service)? onQuickBookRequested;
 
-  const HomePageBody({super.key, required this.isMaster});
+  const HomePageBody({
+    super.key,
+    required this.isMaster,
+    this.onQuickBookRequested,
+  });
 
   // Вынес навигацию в отдельный метод внутри StatelessWidget
   void _navigateToNearbyMap(BuildContext context) {
@@ -124,7 +130,10 @@ class HomePageBody extends StatelessWidget {
                     ),
 
                     const SizedBox(height: 16),
-                    ServiceGridSection(isMaster: isMaster),
+                    ServiceGridSection(
+                      isMaster: isMaster,
+                      onQuickBookRequested: onQuickBookRequested,
+                    ),
                     const SizedBox(height: 16),
                     // Передаем реальные данные с бэкенда в секцию описания!
                     DescriptionSection(description: salon.description),
