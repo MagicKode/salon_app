@@ -36,7 +36,9 @@ class HomePageBody extends StatelessWidget {
   void _onBookingTap(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const BookingServiceScreen()),
+      MaterialPageRoute(
+        builder: (context) => BookingServiceScreen(selectedServices: const []),
+      ),
     );
   }
 
@@ -93,9 +95,10 @@ class HomePageBody extends StatelessWidget {
               final salon = state.salon;
 
               // Идея с кастомным или дефолтным названием студии:
-              final displaySalonName = salon.name.isEmpty || salon.name == "Дмитрий"
-                  ? "Студия Павла Ярошенко"
-                  : salon.name;
+              final displaySalonName =
+                  salon.name.isEmpty || salon.name == "Дмитрий"
+                      ? "Студия Павла Ярошенко"
+                      : salon.name;
 
               return SingleChildScrollView(
                 padding: const EdgeInsets.only(bottom: 80),
@@ -105,7 +108,9 @@ class HomePageBody extends StatelessWidget {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => CatalogScreen()),
+                          MaterialPageRoute(
+                            builder: (context) => CatalogScreen(),
+                          ),
                         );
                       },
                     ),
@@ -122,9 +127,7 @@ class HomePageBody extends StatelessWidget {
                     ServiceGridSection(isMaster: isMaster),
                     const SizedBox(height: 16),
                     // Передаем реальные данные с бэкенда в секцию описания!
-                    DescriptionSection(
-                      description: salon.description,
-                    ),
+                    DescriptionSection(description: salon.description),
                     const SizedBox(height: 16),
                     const GallerySection(),
                     const SizedBox(height: 16),

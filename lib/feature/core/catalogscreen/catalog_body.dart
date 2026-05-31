@@ -76,7 +76,11 @@ class _CatalogBodyState extends State<CatalogBody> {
     // Переход на готовый экран бронирования (image_3fba3c.png)
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const BookingServiceScreen()),
+      MaterialPageRoute(
+        builder:
+            (context) =>
+                BookingServiceScreen(selectedServices: _selectedServices),
+      ),
     );
   }
 
@@ -403,14 +407,15 @@ class _CatalogBodyState extends State<CatalogBody> {
 
             // Секция раскрывающегося списка категорий
             Expanded(
-              child: _isSearching
-              ? _buildSearchResultsList()
-              : CategoryGridList(
-                categories: MockCatalogData.categories,
-                onCategorySelected: (category) {
-                  _showServicesBottomSheet(context, category);
-                },
-              ),
+              child:
+                  _isSearching
+                      ? _buildSearchResultsList()
+                      : CategoryGridList(
+                        categories: MockCatalogData.categories,
+                        onCategorySelected: (category) {
+                          _showServicesBottomSheet(context, category);
+                        },
+                      ),
             ),
           ],
         ),

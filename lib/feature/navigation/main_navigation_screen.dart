@@ -7,6 +7,7 @@ import 'package:salon_flutter/feature/core/masterschedulescreen/master_schedule_
 import '../auth/fakeauth/bloc/auth_block.dart';
 import '../auth/fakeauth/bloc/auth_state.dart';
 import '../core/bookingservicescreen/booking_service_screen.dart';
+import '../core/catalogscreen/domain/catalog_service.dart';
 import '../core/homepagescreen/sections/bottomnavbar/bottom_nav_bar_section.dart';
 import '../core/mastercalendarscreen/master_calendar_screen.dart';
 import '../core/profilescreen/profile_screen.dart';
@@ -20,6 +21,8 @@ class MainNavigationScreen extends StatefulWidget {
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _currentIndex = 0;
+
+  final List<CatalogService> _globalSelectedServices = [];
 
   void _onTabTapped(int index) {
     setState(() {
@@ -42,9 +45,12 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
           isMaster
               ? const MasterCalendarScreen()
-              : const BookingServiceScreen(),
+              : BookingServiceScreen(
+            // FIX: Передаем живой список, который обновляется глобально
+            selectedServices: _globalSelectedServices,
+          ),
+
           isMaster ? const MasterScheduleScreen() : const HistoryScreen(),
-          // Меняем экран
           const ProfileScreen(),
         ];
 

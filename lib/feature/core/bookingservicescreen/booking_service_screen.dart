@@ -5,10 +5,19 @@ import 'package:salon_flutter/uikit/colors/app_colors.dart';
 import '../../../uikit/strings/app_strings.dart';
 import '../../checkout/checkout_screen.dart';
 import '../../checkout/domain/booking_entity.dart';
+import '../catalogscreen/domain/catalog_service.dart';
 
-class BookingServiceScreen extends StatelessWidget {
-  const BookingServiceScreen({super.key});
+class BookingServiceScreen extends StatefulWidget {
+  // Добавляем обязательный параметр для передачи выбранных услуг
+  final List<CatalogService> selectedServices;
 
+  const BookingServiceScreen({super.key, required this.selectedServices});
+
+  @override
+  State<BookingServiceScreen> createState() => _BookingServiceScreenState();
+}
+
+class _BookingServiceScreenState extends State<BookingServiceScreen> {
   void _showCheckoutBottomSheet(BuildContext context, BookingEntity booking) {
     showModalBottomSheet(
       context: context,
@@ -35,6 +44,7 @@ class BookingServiceScreen extends StatelessWidget {
         elevation: 0,
       ),
       body: BookingServiceBody(
+        initialServices: widget.selectedServices,
         onBookPressed: (booking, services) {
           _showCheckoutBottomSheet(context, booking);
         },

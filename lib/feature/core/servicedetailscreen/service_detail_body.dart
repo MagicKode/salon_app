@@ -49,7 +49,10 @@ class ServiceDetailBody extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const BookingServiceScreen(),
+                          builder:
+                              (context) => BookingServiceScreen(
+                                selectedServices: const [],
+                              ),
                         ),
                       );
                     },

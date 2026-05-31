@@ -9,12 +9,17 @@ import 'package:salon_flutter/feature/core/bookingservicescreen/sections/time/ti
 
 import '../../../../uikit/strings/app_strings.dart';
 import '../../checkout/domain/booking_entity.dart';
+import '../catalogscreen/domain/catalog_service.dart';
 import 'domain/add_service_data.dart';
 
 class BookingServiceBody extends StatefulWidget {
+  final List<CatalogService> initialServices;
   final Function(BookingEntity booking, List<AddServiceData> services)? onBookPressed;
 
-  const BookingServiceBody({super.key, this.onBookPressed});
+  const BookingServiceBody({
+    super.key,
+    required this.initialServices,
+    this.onBookPressed});
 
   @override
   State<BookingServiceBody> createState() => _BookingServiceBodyState();
@@ -34,18 +39,29 @@ class _BookingServiceBodyState extends State<BookingServiceBody> {
   int get _requiredSlots => _selectedServices.requiredSlots;
 
   @override
-  void dispose() {
-    _notesController.dispose(); // Не забываем очищать память
-    super.dispose();
-  }
-
-  @override
   void initState() {
     super.initState();
     _selectedDate = DateTime.now();
+
+    // FIX: Конвертируем CatalogService в AddServiceData при инициализации экрана
+    _selectedServices = widget.initialServices.map((service) {
+      return AddServiceData(
+        id: service.name, // Используем имя или service.id как уникальный маркер
+        name: service.name,
+        price: service.price,
+        // slots: service.slots или 1, в зависимости от того, как устроена AddServiceData
+      );
+    }).toList();
+
     _notesController.addListener(() {
       setState(() {});
     });
+  }
+
+  @override
+  void dispose() {
+    _notesController.dispose();
+    super.dispose();
   }
 
   @override

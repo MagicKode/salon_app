@@ -90,7 +90,7 @@ class AppStrings {
 
   // Service Detail Screen
   static const String descriptionHeader = "Описание";
-  static const String bookNow = "Забронировать";
+  static const String bookNow = "Оставить заявку";
   static const String durationUnit = "мин";
   static const String currency = "BYN";
 
