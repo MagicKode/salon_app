@@ -20,48 +20,39 @@ class SpecialistSelectorSection extends StatelessWidget {
         const SizedBox(height: 16),
 
         // Делаем контейнер кликабельным
-        GestureDetector(
-          onTap: () {
-            onMasterSelected?.call("Pavel", AppStrings.topMaster);
-            // В будущем здесь можно открыть BottomSheet с выбором мастера
-          },
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: AppColors.primaryBackgroundColor,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: AppColors.lightBorder),
-            ),
-            child: Row(
-              children: [
-                const CircleAvatar(
-                  radius: 30,
-                  backgroundImage: AssetImage(AppAssets.pavelImg),
-                ),
-                const SizedBox(width: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Pavel",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primaryBlue,
-                      ),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppColors.primaryBackgroundColor,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: AppColors.lightBorder),
+          ),
+          child: Row(
+            children: [
+              const CircleAvatar(
+                radius: 30,
+                backgroundImage: AssetImage(AppAssets.pavelImg),
+              ),
+              const SizedBox(width: 16),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    AppStrings.masterName,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primaryBlue,
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      AppStrings.topMaster,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.black54,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    AppStrings.topMaster,
+                    style: const TextStyle(fontSize: 14, color: Colors.black54),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ],

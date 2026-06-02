@@ -1,30 +1,35 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../core/bookingservicescreen/domain/time_slot_model.dart';
 import '../booking_entity.dart';
 import '../models/booking_request_dto.dart'; // Скорректируй импорт под свой проект
 
 class BookingRepository {
-  final String baseUrl; // Динамический адрес, передаваемый из main.dart
+  final Dio _dio;
+  final String baseUrl;
 
-  BookingRepository({required this.baseUrl});
+  BookingRepository({required Dio dio, required this.baseUrl}) : _dio = dio;
 
   /// Метод отправки бронирования на сервер
   Future<bool> sendBooking(BookingEntity booking, String jwtToken) async {
-    final url = Uri.parse(baseUrl);
-
-    // Преобразуем сущность в DTO для отправки
     final dto = BookingRequestDto.fromEntity(booking);
+    final jsonData = dto.toJson();
+
+    print("=== [DEBUG] ОТПРАВЛЯЕМЫЙ НА БЭК JSON: $jsonData ===");
 
     try {
-      final response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $jwtToken',
-        },
-        body: jsonEncode(dto.toJson()),
+      final response = await _dio.post(
+        baseUrl,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $jwtToken',
+          },
+        ),
+        data: dto.toJson(),
       );
 
       if (response.statusCode == 201) {
@@ -34,32 +39,52 @@ class BookingRepository {
       } else {
         throw Exception("Ошибка сервера: ${response.statusCode}");
       }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 409) {
+        throw Exception("Извините, это время уже занято другим клиентом!");
+      }
+      throw Exception("Ошибка при отправке брони: ${e.message}");
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<List<dynamic>> fetchAvailableSlots(
+  Future<List<TimeSlotModel>> fetchAvailableSlots(
     String masterName,
     DateTime date,
   ) async {
     final String formattedDate =
         "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
 
-    final url = Uri.parse(
-      '$baseUrl/slots?masterName=$masterName&date=$formattedDate',
-    );
     try {
-      final response = await http.get(url);
+      final response = await _dio.get(
+        '$baseUrl/slots',
+        queryParameters: {'masterName': masterName, 'date': formattedDate},
+      );
+
       if (response.statusCode == 200) {
-        return jsonDecode(
-          response.body,
-        );
+        // Если вдруг с бэка летит сразу чистый массив:
+        if (response.data is List) {
+          final List<dynamic> rawList = response.data;
+          // Превращаем каждую мапу в типизированный TimeSlotModel
+          return rawList
+              .map(
+                (json) => TimeSlotModel.fromJson(json as Map<String, dynamic>),
+              )
+              .toList();
+        }
+        return [];
       } else {
-        throw Exception("Не удалось загрузить слоты");
+        throw Exception(
+          "Не удалось загрузить слоты. Статус: ${response.statusCode}",
+        );
       }
+    } on DioException catch (e) {
+      // Если упала сетевая ошибка Dio — вытаскиваем сообщение бэка
+      final serverMessage = e.response?.data?['message'];
+      throw Exception(serverMessage ?? "Ошибка сети Dio: ${e.message}");
     } catch (e) {
-      throw Exception("Ошибка сети при загрузке слотов: $e");
+      throw Exception("Ошибка парсинга или локальная ошибка: $e");
     }
   }
 }

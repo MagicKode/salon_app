@@ -7,15 +7,16 @@ import 'package:salon_flutter/feature/auth/splashscreen/splash_screen.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
-import '../../feature/auth/fakeauth/bloc/auth_block.dart';
-import '../../feature/auth/fakeauth/data/datasources/auth_remote_data_source.dart';
-import '../../feature/auth/fakeauth/data/repositories/auth_repository_impl.dart';
-import '../../feature/auth/fakeauth/domain/repositories/auth_repository.dart';
+import '../../feature/auth/authblock/bloc/auth_block.dart';
+import '../../feature/auth/authblock/data/datasources/auth_remote_data_source.dart';
+import '../../feature/auth/authblock/data/repositories/auth_repository_impl.dart';
+import '../../feature/auth/authblock/domain/repositories/auth_repository.dart';
 import '../../feature/catalog/bloc/catalog_bloc.dart';
 import '../../feature/catalog/data/datasources/catalog_remote_data_source.dart';
 import '../../feature/catalog/data/repositories/catalog_repository_impl.dart';
 import '../../feature/catalog/domain/repositories/catalog_repository.dart';
 import '../../feature/checkout/domain/repository/booking_repository.dart';
+import '../../feature/core/bookingservicescreen/bookingblock/booking_slots_bloc.dart';
 import '../../feature/core/network/auth_interceptor.dart';
 
 // Переключай одной кнопкой: true — для эмулятора, false — для смартфона
@@ -25,7 +26,7 @@ const bool isEmulator = false;
 const String _host = isEmulator ? '10.0.2.2' : '192.168.1.223';
 const String authBaseUrl = 'http://$_host:8082/api/v1/auth';
 const String catalogBaseUrl = 'http://$_host:8080/api/v1/catalog/salon';
-const String bookingBaseUrl = 'http://$_host:8080/api/v1/bookings';
+const String bookingBaseUrl = 'http://$_host:8083/api/v1/bookings';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,7 +34,12 @@ void main() async {
   await initializeDateFormatting('ru', null);
 
   // 1. Создаем инфраструктурные зависимости
-  final dio = Dio();
+  final dio = Dio(
+    BaseOptions(
+      connectTimeout: const Duration(seconds: 5), // Запрос упадет через 5 сек, если сервер недоступен
+      receiveTimeout: const Duration(seconds: 5),
+    ),
+  );
   dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
   const secureStorage = FlutterSecureStorage();
 
@@ -58,7 +64,7 @@ void main() async {
   final catalogRepository = CatalogRepositoryImpl(
     remoteDataSource: catalogRemoteDataSource,
   );
-  final bookingRepository = BookingRepository(baseUrl: bookingBaseUrl);
+  final bookingRepository = BookingRepository(dio: dio, baseUrl: bookingBaseUrl);
 
   runApp(
     MultiRepositoryProvider(
@@ -73,9 +79,12 @@ void main() async {
             create: (context) => AuthBloc(authRepository: authRepository),
           ),
           BlocProvider<CatalogBloc>(
-            // Новый БЛок, который сразу готов к работе
-            create:
-                (context) => CatalogBloc(catalogRepository: catalogRepository),
+            create: (context) => CatalogBloc(catalogRepository: catalogRepository),
+          ),
+          BlocProvider<BookingSlotsBloc>(
+            create: (context) => BookingSlotsBloc(
+              bookingRepository: RepositoryProvider.of<BookingRepository>(context),
+            ),
           ),
         ],
         child: const MyApp(),

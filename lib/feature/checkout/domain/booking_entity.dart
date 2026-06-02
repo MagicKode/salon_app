@@ -46,9 +46,13 @@ extension ServiceListExtension on List<AddServiceData> {
   BookingEntity toEntity({
     required String masterName,
     required DateTime date,
-    required TimeOfDay time,
+    required String time,
     String? notes,
   }) {
+    final timeParts = time.split(':');
+    final int hour = int.parse(timeParts[0]);
+    final int minute = int.parse(timeParts[1]);
+
     return BookingEntity(
       services: this,
       masterName: masterName,
@@ -56,8 +60,8 @@ extension ServiceListExtension on List<AddServiceData> {
         date.year,
         date.month,
         date.day,
-        time.hour,
-        time.minute,
+        hour,
+        minute,
       ),
       price: totalPrice,
       durationMinutes: totalDuration,

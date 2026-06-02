@@ -4,8 +4,8 @@ import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 import '../../uikit/colors/app_colors.dart';
 import '../../uikit/widgets/button/app_button.dart';
-import '../auth/fakeauth/bloc/auth_block.dart';
-import '../auth/fakeauth/bloc/auth_state.dart';
+import '../auth/authblock/bloc/auth_block.dart';
+import '../auth/authblock/bloc/auth_state.dart';
 import 'booking_success_screen.dart';
 import 'domain/booking_entity.dart';
 import 'domain/repository/booking_repository.dart';

@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:salon_flutter/feature/auth/fakeauth/data/models/register_request_model.dart';
+import 'package:salon_flutter/feature/auth/authblock/data/models/register_request_model.dart';
 
 import '../models/auth_request_model.dart';
 import '../models/auth_response_model.dart';

@@ -9,9 +9,9 @@ import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 import '../../../uikit/widgets/welcome/welcome_section.dart';
 import '../../navigation/main_navigation_screen.dart';
-import '../fakeauth/bloc/auth_block.dart';
-import '../fakeauth/bloc/auth_event.dart';
-import '../fakeauth/bloc/auth_state.dart';
+import '../authblock/bloc/auth_block.dart';
+import '../authblock/bloc/auth_event.dart';
+import '../authblock/bloc/auth_state.dart';
 
 class CreateAccountBody extends StatefulWidget {
   const CreateAccountBody({super.key});
@@ -111,7 +111,7 @@ class _CreateAccountBodyState extends State<CreateAccountBody> {
       AuthRegisterRequested(
         phoneNumber: _mobileNumberController.text.trim(),
         password: _passwordController.text.trim(),
-        firstName: _nameController.text,  // Передаем имя с формы ввода
+        firstName: _nameController.text,
         email: _emailController.text,
       ),
     );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:salon_flutter/feature/auth/fakeauth/bloc/auth_block.dart';
-import 'package:salon_flutter/feature/auth/fakeauth/bloc/auth_state.dart';
+import 'package:salon_flutter/feature/auth/authblock/bloc/auth_block.dart';
+import 'package:salon_flutter/feature/auth/authblock/bloc/auth_state.dart';
 import 'package:salon_flutter/feature/auth/loginscreen/sections/forgot_password_section.dart';
 import 'package:salon_flutter/feature/auth/loginscreen/sections/login_buttons_section.dart';
 import 'package:salon_flutter/feature/auth/loginscreen/sections/login_form_section.dart';
@@ -12,7 +12,7 @@ import '../../../uikit/colors/app_colors.dart';
 import '../../../uikit/widgets/welcome/welcome_section.dart';
 import '../../navigation/main_navigation_screen.dart';
 import '../createaccountscreen/create_acc_screen.dart';
-import '../fakeauth/bloc/auth_event.dart';
+import '../authblock/bloc/auth_event.dart';
 import '../forgotpasswordscreen/forgot_password_screen.dart';
 
 class LoginBody extends StatefulWidget {

@@ -5,8 +5,8 @@ import 'package:salon_flutter/feature/core/notificationscreen/notifications_scre
 import '../../../../../uikit/colors/app_colors.dart';
 import '../../../../../uikit/strings/app_strings.dart';
 import '../../../../../uikit/widgets/button/notifications_button.dart';
-import '../../../../auth/fakeauth/bloc/auth_block.dart';
-import '../../../../auth/fakeauth/bloc/auth_state.dart';
+import '../../../../auth/authblock/bloc/auth_block.dart';
+import '../../../../auth/authblock/bloc/auth_state.dart';
 
 class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
   final bool isMaster;

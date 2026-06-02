@@ -28,10 +28,10 @@ class BookingServiceBody extends StatefulWidget {
 class _BookingServiceBodyState extends State<BookingServiceBody> {
   // Состояние экрана
   List<AddServiceData> _selectedServices = [];
-  String _selectedMaster = "Pavel";
-  String _masterTitle = "Топ-стилист";
+  String _selectedMaster = AppStrings.masterName;
+  String _masterTitle = AppStrings.topMaster;
   DateTime? _selectedDate;
-  TimeOfDay? _selectedTime;
+  String? _selectedTime;
 
   final TextEditingController _notesController = TextEditingController();
 
@@ -82,12 +82,11 @@ class _BookingServiceBodyState extends State<BookingServiceBody> {
                 ),
                 const SizedBox(height: 32),
 
-                SpecialistSelectorSection(
-                  onMasterSelected: _updateMaster,
-                ),
+                SpecialistSelectorSection(),
                 const SizedBox(height: 24),
 
                 DateSelectionSection(
+                  masterName: _selectedMaster,
                   onDateSelected: (date) => setState(() => _selectedDate = date),
                 ),
                 const SizedBox(height: 24),
@@ -95,7 +94,7 @@ class _BookingServiceBodyState extends State<BookingServiceBody> {
                 TimeSelectionSection(
                   // Передаем динамически вычисленное кол-во слотов
                   requiredSlots: _requiredSlots,
-                  onTimeChanged: (time) => setState(() => _selectedTime = time),
+                  onTimeChanged: (String? time) => setState(() => _selectedTime = time),
                 ),
                 const SizedBox(height: 24),
 

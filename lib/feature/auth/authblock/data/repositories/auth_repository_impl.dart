@@ -1,5 +1,5 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:salon_flutter/feature/auth/fakeauth/data/models/register_request_model.dart';
+import 'package:salon_flutter/feature/auth/authblock/data/models/register_request_model.dart';
 import '../../domain/entities/auth_user.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_remote_data_source.dart';

@@ -8,9 +8,9 @@ import 'package:salon_flutter/feature/core/profilescreen/sections/support/suppor
 import 'package:salon_flutter/feature/core/profilescreen/sections/userinfo/user_info_section.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
-import '../../auth/fakeauth/bloc/auth_block.dart';
-import '../../auth/fakeauth/bloc/auth_event.dart';
-import '../../auth/fakeauth/bloc/auth_state.dart';
+import '../../auth/authblock/bloc/auth_block.dart';
+import '../../auth/authblock/bloc/auth_event.dart';
+import '../../auth/authblock/bloc/auth_state.dart';
 import '../../auth/loginscreen/login_screen.dart';
 import 'domain/entities/app_version_entity.dart';
 import 'domain/entities/profile_action_entity.dart';

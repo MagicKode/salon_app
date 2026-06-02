@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:salon_flutter/feature/core/bookingservicescreen/domain/time_slot_model.dart';
+import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
 import '../../../../../uikit/strings/app_strings.dart';
 import '../../../../../uikit/widgets/time/time_slots_grid.dart';
+import '../../bookingblock/booking_slots_bloc.dart';
+import '../../bookingblock/booking_slots_state.dart';
 import '../../utils/date_helper.dart';
 
 class TimeSelectionSection extends StatefulWidget {
-  final Function(TimeOfDay?) onTimeChanged;
+  final Function(String?) onTimeChanged;
   final int requiredSlots;
 
   const TimeSelectionSection({
@@ -19,48 +24,54 @@ class TimeSelectionSection extends StatefulWidget {
 }
 
 class _TimeSelectionSectionState extends State<TimeSelectionSection> {
-  late final List<TimeOfDay> _slots;
-  TimeOfDay? _selectedTime;
+  List<TimeSlotModel> _selectedRange = [];
+  String? _selectedTime;
 
-  @override
-  void initState() {
-    super.initState();
-    _slots = DateHelper.generateTimeSlots(
-      startHour: 9,
-      endHour: 20,
-      intervalMinutes: 60,
+  void _handleTimeTap(String startTime, List<TimeSlotModel> availableSlots) {
+    final startIndex = availableSlots.indexWhere(
+      (slot) => slot.time == startTime,
     );
-  }
 
-  void _handleTimeTap(TimeOfDay startTime) {
-    final startIndex = _slots.indexOf(startTime);
+    if (startIndex == -1) return;
 
     // Проверка: хватает ли времени до конца рабочего дня?
-    if (startIndex + widget.requiredSlots > _slots.length) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text(AppStrings.notEnoughTimeForService)),
-      );
+    if (startIndex + widget.requiredSlots > availableSlots.length) {
+      _showErrorSnackBar(AppStrings.notEnoughTimeForService);
       return;
     }
 
-    setState(() => _selectedTime = startTime);
+    // 2. Проверка: свободны ли все последующие слоты подряд для длинной услуги?
+    final List<TimeSlotModel> temporaryRange = [];
+    for (int i = 0; i < widget.requiredSlots; i++) {
+      final nextSlot = availableSlots[startIndex + i];
+
+      if (!nextSlot.isAvailable) {
+        _showErrorSnackBar(
+          "Недостаточно свободного времени подряд для этой услуги!",
+        );
+        return;
+      }
+      temporaryRange.add(nextSlot);
+    }
+
+    // 3. Если всё ок — сохраняем выбор в стейт виджета для подсветки UI
+    setState(() {
+      _selectedTime = startTime;
+      _selectedRange = temporaryRange;
+    });
+
+    // 4. Передаем наверх родителю строку времени
     widget.onTimeChanged(startTime);
+  }
+
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: AppColors.primaryRed),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    // Вычисляем список всех выделенных слотов для подсветки
-    List<TimeOfDay> selectedRange = [];
-    if (_selectedTime != null) {
-      int startIdx = _slots.indexOf(_selectedTime!);
-      // Собираем диапазон выбранных слотов
-      for (int i = 0; i < widget.requiredSlots; i++) {
-        if (startIdx + i < _slots.length) {
-          selectedRange.add(_slots[startIdx + i]);
-        }
-      }
-    }
-    // 2. Возврат интерфейса (UI) - всегда в конце метода
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -70,12 +81,15 @@ class _TimeSelectionSectionState extends State<TimeSelectionSection> {
         ),
         const SizedBox(height: 16),
         TimeSlotsGrid(
-          slots: _slots,
-          // Передаем основной выбранный слот
           selectedTime: _selectedTime,
-          selectedSlots: selectedRange,
-          onTimeSelected: _handleTimeTap,
-          formatLabel: (ctx, time) => DateHelper.formatTime(ctx, time),
+          selectedSlots: _selectedRange,
+          onTimeSelected: (String timeLabel) {
+            // Читаем текущее состояние Блока прямо в момент клика для валидации
+            final state = context.read<BookingSlotsBloc>().state;
+            if (state is BookingSlotsSuccess) {
+              _handleTimeTap(timeLabel, state.slots);
+            }
+          },
         ),
       ],
     );

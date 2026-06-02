@@ -4,8 +4,8 @@ import 'package:salon_flutter/feature/core/historyscreen/history_screen.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/home_page_screen.dart';
 import 'package:salon_flutter/feature/core/masterschedulescreen/master_schedule_screen.dart';
 
-import '../auth/fakeauth/bloc/auth_block.dart';
-import '../auth/fakeauth/bloc/auth_state.dart';
+import '../auth/authblock/bloc/auth_block.dart';
+import '../auth/authblock/bloc/auth_state.dart';
 import '../core/bookingservicescreen/booking_service_screen.dart';
 import '../core/catalogscreen/domain/catalog_service.dart';
 import '../core/homepagescreen/sections/bottomnavbar/bottom_nav_bar_section.dart';

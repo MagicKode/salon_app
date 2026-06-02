@@ -83,6 +83,7 @@ class AppStrings {
   static const String seeAllGallery = "Посмотреть все работы";
   static const String studio = 'Студия';
   static const String pavlaYaroshenko = 'Павла Ярошенко';
+  static const String pavel = 'Павла Ярошенко';
   static const String alreadyHaveAnAccount = 'Уже есть аккаунт?';
   static const String workSchedule = 'Режим работы: ';
   static const String ourAddress = 'Где мы находимся';
@@ -113,6 +114,8 @@ class AppStrings {
   static const String finalSum = "Итого:";
   static const String chooseYourService = "Выберите услуги";
   static const String addToServices = "Добавить к записи";
+  static const String errorLoadingSlots = "Ошибка загрузки слотов";
+  static const String errorNoAvailableTimeSlot = "Нет доступного времени или выберите дату выше";
 
   //Booking card
   static const String finalInfo = "Итоговая информация";
@@ -142,6 +145,7 @@ class AppStrings {
 
   //BookingserviceScreen
   static const String yourMasterPavel = "Ваш мастер";
+  static const String masterName = "Павел";
   static const String topMaster = "Топ-стилист";
   static const String notEnoughTimeForService =  "На это время нельзя записаться: не хватает свободных часов.";
 
