@@ -11,9 +11,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   AuthBloc({required this.authRepository}) : super(AuthInitial()) {
     // Регистрируем обработчики событий
+    on<AuthCheckStatusRequested>(_onCheckStatusRequested);
     on<AuthRegisterRequested>(_onRegisterRequested);
     on<AuthLoginRequested>(_onLoginRequested);
     on<AuthLogoutRequested>(_onLogoutRequested);
+  }
+
+  // Проверка сессии при старте приложения
+  Future<void> _onCheckStatusRequested(
+    AuthCheckStatusRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthInitial());
   }
 
   Future<void> _onRegisterRequested(
@@ -61,21 +70,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> _onLogoutRequested(
-      AuthLogoutRequested event,
-      Emitter<AuthState> emit,
-      ) async {
-    try {
-      // Если у твоего authRepository есть метод logout (например, для стирания токенов из Secure Storage),
-      // раскомментируй строку ниже:
-      // await authRepository.logout();
-
-      print("[AuthBloc] Выход из аккаунта успешен. Сбрасываем стейт в AuthInitial.");
-    } catch (e) {
-      print("[AuthBloc] Ошибка при локальном логауте: $e");
-    } finally {
-      // В любом случае принудительно возвращаем начальный стейт,
-      // чтобы сработал редирект в UI на экран логина
-      emit(AuthInitial());
-    }
+    AuthLogoutRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    await authRepository.logout();
+    emit(AuthInitial());
   }
 }

@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
-import 'package:http/http.dart' as http;
 
 import '../../../core/bookingservicescreen/domain/time_slot_model.dart';
 import '../booking_entity.dart';
@@ -10,38 +7,48 @@ import '../models/booking_request_dto.dart'; // Скорректируй имп�
 class BookingRepository {
   final Dio _dio;
   final String baseUrl;
+  final String historyUrl;
 
-  BookingRepository({required Dio dio, required this.baseUrl}) : _dio = dio;
+  BookingRepository({
+    required Dio dio,
+    required this.baseUrl,
+    required this.historyUrl,
+  }) : _dio = dio;
 
   /// Метод отправки бронирования на сервер
-  Future<bool> sendBooking(BookingEntity booking, String jwtToken) async {
+  Future<bool> sendBooking(BookingEntity booking) async {
     final dto = BookingRequestDto.fromEntity(booking);
-    final jsonData = dto.toJson();
+    final Map<String, dynamic> jsonData = dto.toJson();
 
     print("=== [DEBUG] ОТПРАВЛЯЕМЫЙ НА БЭК JSON: $jsonData ===");
 
     try {
-      final response = await _dio.post(
-        baseUrl,
-        options: Options(
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer $jwtToken',
-          },
-        ),
-        data: dto.toJson(),
-      );
+      final response = await _dio.post(baseUrl, data: jsonData);
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 201 || response.statusCode == 200) {
         return true; // Успешно создано
       } else if (response.statusCode == 409) {
-        throw Exception("Извините, это время уже занято другим клиентом!");
+        throw Exception("Извините, это время уже занято!");
       } else {
         throw Exception("Ошибка сервера: ${response.statusCode}");
       }
     } on DioException catch (e) {
-      if (e.response?.statusCode == 409) {
-        throw Exception("Извините, это время уже занято другим клиентом!");
+      if (e.response != null) {
+        print("=== [SERVER ERROR 400/409] ДЕТАЛИ ОТ СЕРВЕРА ===");
+        print("Статус код: ${e.response?.statusCode}");
+        print("Тело ошибки (Data): ${e.response?.data}");
+        print("===============================================");
+
+        if (e.response?.statusCode == 409) {
+          throw Exception("Извините, это время уже занято другим клиентом!");
+        }
+
+        // Вытаскиваем сообщение об ошибке валидации, если Spring его прислал
+        final serverMessage =
+            e.response?.data?['message'] ?? e.response?.data?['error'];
+        if (serverMessage != null) {
+          throw Exception("Сервер отклонил запрос: $serverMessage");
+        }
       }
       throw Exception("Ошибка при отправке брони: ${e.message}");
     } catch (e) {
@@ -85,6 +92,23 @@ class BookingRepository {
       throw Exception(serverMessage ?? "Ошибка сети Dio: ${e.message}");
     } catch (e) {
       throw Exception("Ошибка парсинга или локальная ошибка: $e");
+    }
+  }
+
+  Future<List<BookingEntity>> fetchBookingHistory() async {
+    try {
+      final response = await _dio.get(historyUrl);
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data;
+        return data
+            .map((json) => BookingEntity.fromJson(json as Map<String, dynamic>))
+            .toList();
+      } else {
+        throw Exception("Ошибка загрузки истории: ${response.statusCode}");
+      }
+    } catch (e) {
+      rethrow;
     }
   }
 }

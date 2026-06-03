@@ -12,4 +12,8 @@ abstract class AuthRepository {
     required String phoneNumber,
     required String password,
   });
+
+  Future<void> logout();
+
+  Future<AuthUser?> getAuthenticatedUser();
 }

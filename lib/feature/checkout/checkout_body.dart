@@ -95,7 +95,7 @@ class CheckoutBody extends StatelessWidget {
     try {
       print("=== [DEBUG] Отправляем запрос на сервер... ===");
       // 3. Вызываем изолированный метод отправки из репозитория
-      final bool isSuccess = await bookingRepository.sendBooking(booking, jwtToken);
+      final bool isSuccess = await bookingRepository.sendBooking(booking);
       print("=== [DEBUG] Ответ от сервера успешный! Результат: $isSuccess ===");
 
       if (context.mounted) Navigator.pop(context); // Скрываем лоадер

@@ -25,3 +25,5 @@ class AuthLoginRequested extends AuthEvent {
 
 // Событие выхода из аккаунта (очистка токенов)
 class AuthLogoutRequested extends AuthEvent {}
+
+class AuthCheckStatusRequested extends AuthEvent {}

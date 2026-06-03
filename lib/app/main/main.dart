@@ -8,6 +8,7 @@ import 'package:salon_flutter/uikit/colors/app_colors.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 import '../../feature/auth/authblock/bloc/auth_block.dart';
+import '../../feature/auth/authblock/bloc/auth_event.dart';
 import '../../feature/auth/authblock/data/datasources/auth_remote_data_source.dart';
 import '../../feature/auth/authblock/data/repositories/auth_repository_impl.dart';
 import '../../feature/auth/authblock/domain/repositories/auth_repository.dart';
@@ -20,13 +21,15 @@ import '../../feature/core/bookingservicescreen/bookingblock/booking_slots_bloc.
 import '../../feature/core/network/auth_interceptor.dart';
 
 // Переключай одной кнопкой: true — для эмулятора, false — для смартфона
-const bool isEmulator = false;
+// const bool isEmulator = false;
+const bool isEmulator = true;
 
 // Определяем базовый IP и порты для сервисов
 const String _host = isEmulator ? '10.0.2.2' : '192.168.1.223';
 const String authBaseUrl = 'http://$_host:8082/api/v1/auth';
-const String catalogBaseUrl = 'http://$_host:8080/api/v1/catalog/salon';
+const String catalogBaseUrl = 'http://$_host:8081/api/v1/catalog/salon';
 const String bookingBaseUrl = 'http://$_host:8083/api/v1/bookings';
+const String historyBaseUrl = 'http://$_host:8084/api/v1/history';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,7 +39,8 @@ void main() async {
   // 1. Создаем инфраструктурные зависимости
   final dio = Dio(
     BaseOptions(
-      connectTimeout: const Duration(seconds: 5), // Запрос упадет через 5 сек, если сервер недоступен
+      connectTimeout: const Duration(seconds: 5),
+      // Запрос упадет через 5 сек, если сервер недоступен
       receiveTimeout: const Duration(seconds: 5),
     ),
   );
@@ -64,7 +68,11 @@ void main() async {
   final catalogRepository = CatalogRepositoryImpl(
     remoteDataSource: catalogRemoteDataSource,
   );
-  final bookingRepository = BookingRepository(dio: dio, baseUrl: bookingBaseUrl);
+  final bookingRepository = BookingRepository(
+    dio: dio,
+    baseUrl: bookingBaseUrl,
+    historyUrl: historyBaseUrl,
+  );
 
   runApp(
     MultiRepositoryProvider(
@@ -76,15 +84,22 @@ void main() async {
       child: MultiBlocProvider(
         providers: [
           BlocProvider<AuthBloc>(
-            create: (context) => AuthBloc(authRepository: authRepository),
+            create:
+                (context) =>
+                    AuthBloc(authRepository: authRepository)
+                      ..add(AuthCheckStatusRequested()),
           ),
           BlocProvider<CatalogBloc>(
-            create: (context) => CatalogBloc(catalogRepository: catalogRepository),
+            create:
+                (context) => CatalogBloc(catalogRepository: catalogRepository),
           ),
           BlocProvider<BookingSlotsBloc>(
-            create: (context) => BookingSlotsBloc(
-              bookingRepository: RepositoryProvider.of<BookingRepository>(context),
-            ),
+            create:
+                (context) => BookingSlotsBloc(
+                  bookingRepository: RepositoryProvider.of<BookingRepository>(
+                    context,
+                  ),
+                ),
           ),
         ],
         child: const MyApp(),

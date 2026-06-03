@@ -77,4 +77,31 @@ class AuthRepositoryImpl implements AuthRepository {
       email: response.email,
     );
   }
+
+  @override
+  Future<void> logout() async {
+    await secureStorage.deleteAll();
+  }
+
+  @override
+  Future<AuthUser?> getAuthenticatedUser() async {
+    final token = await secureStorage.read(key: 'jwt_token');
+
+    // Если токена нет, значит пользователь не авторизован
+    if (token == null || token.isEmpty) return null;
+
+    // Читаем остальные кэшированные данные
+    final role = await secureStorage.read(key: 'user_role') ?? '';
+    final name = await secureStorage.read(key: 'user_name') ?? '';
+    final phone = await secureStorage.read(key: 'user_phone') ?? '';
+    final email = await secureStorage.read(key: 'user_email') ?? '';
+
+    return AuthUser(
+      token: token,
+      role: role,
+      name: name,
+      phoneNumber: phone,
+      email: email,
+    );
+  }
 }
