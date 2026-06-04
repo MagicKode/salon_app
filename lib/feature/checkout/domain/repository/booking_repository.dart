@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../../core/bookingservicescreen/domain/time_slot_model.dart';
 import '../booking_entity.dart';
@@ -6,14 +8,18 @@ import '../models/booking_request_dto.dart'; // Скорректируй имп�
 
 class BookingRepository {
   final Dio _dio;
+  final FlutterSecureStorage _secureStorage;
   final String baseUrl;
   final String historyUrl;
 
   BookingRepository({
     required Dio dio,
+    required FlutterSecureStorage secureStorage,
     required this.baseUrl,
     required this.historyUrl,
-  }) : _dio = dio;
+  })
+      : _dio = dio,
+        _secureStorage = secureStorage;
 
   /// Метод отправки бронирования на сервер
   Future<bool> sendBooking(BookingEntity booking) async {
@@ -56,12 +62,11 @@ class BookingRepository {
     }
   }
 
-  Future<List<TimeSlotModel>> fetchAvailableSlots(
-    String masterName,
-    DateTime date,
-  ) async {
+  Future<List<TimeSlotModel>> fetchAvailableSlots(String masterName,
+      DateTime date,) async {
     final String formattedDate =
-        "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+        "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day
+        .toString().padLeft(2, '0')}";
 
     try {
       final response = await _dio.get(
@@ -77,7 +82,7 @@ class BookingRepository {
           return rawList
               .map(
                 (json) => TimeSlotModel.fromJson(json as Map<String, dynamic>),
-              )
+          )
               .toList();
         }
         return [];
@@ -109,6 +114,29 @@ class BookingRepository {
       }
     } catch (e) {
       rethrow;
+    }
+  }
+
+  Future<bool> cancelBooking(String bookingId) async {
+    try {
+      // Получаем токен и телефон из защищенного хранилища (как в fetch)
+      final token = await _secureStorage.read(key: 'auth_token');
+      final userPhone = await _secureStorage.read(key: 'user_phone');
+
+      final response = await _dio.patch(
+        '$baseUrl/$bookingId/cancel',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'X-User-Name': userPhone,
+          },
+        ),
+      );
+
+      return response.statusCode == 200;
+    } catch (e) {
+      debugPrint("Ошибка при отмене бронирования: $e");
+      return false;
     }
   }
 }

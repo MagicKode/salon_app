@@ -72,6 +72,7 @@ void main() async {
     dio: dio,
     baseUrl: bookingBaseUrl,
     historyUrl: historyBaseUrl,
+    secureStorage: const FlutterSecureStorage(),
   );
 
   runApp(

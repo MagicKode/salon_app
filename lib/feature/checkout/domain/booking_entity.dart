@@ -4,20 +4,24 @@ import 'package:intl/intl.dart';
 import '../../core/bookingservicescreen/domain/add_service_data.dart';
 
 class BookingEntity {
+  final int id;
   final List<AddServiceData> services;
   final String masterName;
   final DateTime dateTime;
   final double price;
   final int durationMinutes;
   final String? notes;
+  final String status;
 
   BookingEntity({
+    this.id = 0,
     required this.services,
     required this.masterName,
     required this.dateTime,
     required this.price,
     required this.durationMinutes,
     this.notes,
+    this.status = 'CONFIRMED',
   });
 
   /// ИСПРАВЛЕНО: Фабричный метод для создания объекта из JSON ответа бэкенда
@@ -84,12 +88,14 @@ class BookingEntity {
 
     // 3. Собираем финальную сущность для отображения во Flutter
     return BookingEntity(
+      id: json['id'] as int? ?? 0,
       services: servicesList,
       masterName: json['masterName'] ?? json['master_name'] ?? 'Мастер',
       dateTime: parsedDateTime,
       price: totalPrice, // Подставляем реальную общую цену, полученную с бэкенда
       durationMinutes: json['durationMinutes'] ?? json['duration'] ?? 60,
       notes: json['notes'],
+      status: json['status'] as String? ?? 'CONFIRMED',
     );
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:salon_flutter/uikit/strings/app_strings.dart';
 import '../../../../uikit/colors/app_colors.dart';
 
 class CheckoutBottomActions extends StatelessWidget {
@@ -27,7 +28,7 @@ class CheckoutBottomActions extends StatelessWidget {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
               child: const Text(
-                "Подтвердить бронирование",
+                AppStrings.bookingConfirmation,
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
             ),
@@ -36,7 +37,7 @@ class CheckoutBottomActions extends StatelessWidget {
           GestureDetector(
             onTap: onCancel,
             child: Text(
-              "Отменить и выйти",
+              AppStrings.cancelAndLeave,
               style: TextStyle(
                 color: AppColors.primaryRed,
                 fontWeight: FontWeight.w500,

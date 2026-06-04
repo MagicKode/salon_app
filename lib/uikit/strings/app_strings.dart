@@ -189,6 +189,12 @@ class AppStrings {
   static const String pastBooking = "Прошедшие записи";
   static const String recentBooking = "Моя ближайшая запись";
 
+  //Диалог удаления записи и другое
+  static const String cancelDelete = "Отмена";
+  static const String cancelBookingService = "Отменить";
+  static const String errorInDeleteService = "Не удалось отменить запись. Попробуйте позже.";
+  static const String successfulDeleted = "Запись успешно отменена";
+
 
   // BottomNavigation bar
   static const String navHome = "Главная";

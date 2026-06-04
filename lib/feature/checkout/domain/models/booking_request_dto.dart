@@ -10,6 +10,7 @@ class BookingRequestDto {
   final List<String> serviceNames;
   final String notes;
   final int durationMinutes;
+  final double totalPrice;
 
   BookingRequestDto({
     required this.masterName,
@@ -18,6 +19,7 @@ class BookingRequestDto {
     required this.serviceNames,
     required this.notes,
     required this.durationMinutes,
+    required this.totalPrice,
   });
 
   /// ВЕРНУЛИ НА МЕСТО: Фабричный метод для сборки DTO из сущности во Flutter
@@ -33,6 +35,7 @@ class BookingRequestDto {
       serviceNames: names,
       notes: entity.notes ?? "", // Защита от null
       durationMinutes: entity.durationMinutes,
+      totalPrice: entity.price,
     );
   }
 
@@ -41,9 +44,10 @@ class BookingRequestDto {
       'masterName': masterName,
       'bookingDate': bookingDate,
       'bookingTime': bookingTime,
-      'services': serviceNames,
+      'serviceNames': serviceNames,
       'notes': notes,
       'durationMinutes': durationMinutes,
+      'totalPrice': totalPrice,
     };
   }
 }

@@ -104,7 +104,9 @@ class CheckoutBody extends StatelessWidget {
         Navigator.pop(context); // Успех — убираем шторку чекаута и открываем экран успеха
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => const BookingSuccessScreen()),
+          MaterialPageRoute(builder: (_) => BookingSuccessScreen(
+            bookingId: '${booking.id}',
+          )),
         );
       }
     } catch (error) {

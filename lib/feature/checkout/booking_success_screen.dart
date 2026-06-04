@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salon_flutter/feature/navigation/main_navigation_screen.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 import 'package:salon_flutter/uikit/widgets/button/app_button.dart';
 
+import 'domain/repository/booking_repository.dart';
+
 class BookingSuccessScreen extends StatelessWidget {
-  const BookingSuccessScreen({super.key});
+  final String bookingId;
+
+  const BookingSuccessScreen({super.key, required this.bookingId});
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +88,7 @@ class BookingSuccessScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder:
-          (context) => AlertDialog(
+          (dialogContext) => AlertDialog(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
@@ -91,26 +96,45 @@ class BookingSuccessScreen extends StatelessWidget {
             content: const Text(AppStrings.confirmationOfCancellingBooking),
             actions: [
               TextButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => Navigator.pop(dialogContext),
                 child: const Text(
                   AppStrings.back,
                   style: TextStyle(color: AppColors.primaryGrey),
                 ),
               ),
               TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  // Возвращаем на главную после отмены
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const MainNavigationScreen(),
-                    ),
-                    (route) => false,
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text(AppStrings.bookingIsCanceled)),
-                  );
+                onPressed: () async {
+                  Navigator.pop(dialogContext);
+
+                  // 3. Отправляем реальный PATCH-запрос на бэкенд через репозиторий
+                  final success = await context
+                      .read<BookingRepository>()
+                      .cancelBooking(bookingId);
+
+                  if (success) {
+                    if (context.mounted) {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MainNavigationScreen(),
+                        ),
+                        (route) => false,
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(AppStrings.bookingIsCanceled),
+                        ),
+                      );
+                    }
+                  } else {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(AppStrings.errorInDeleteService),
+                        ),
+                      );
+                    }
+                  }
                 },
                 child: const Text(
                   AppStrings.confirmCancelling,
