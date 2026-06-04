@@ -76,8 +76,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           body: IndexedStack(index: _currentIndex, children: screens),
           bottomNavigationBar: BottomNavBarSection(
             currentIndex: _currentIndex,
-            onTap: _onTabTapped,
             isMaster: isMaster,
+            onTap: (index) {
+              _onTabTapped(index); // Сначала переключаем вкладку в UI
+            },
           ),
         );
       },

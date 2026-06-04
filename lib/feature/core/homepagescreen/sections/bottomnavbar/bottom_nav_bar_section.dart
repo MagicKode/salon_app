@@ -17,7 +17,6 @@ class BottomNavBarSection extends StatelessWidget {
   });
 
   @override
-  @override
   Widget build(BuildContext context) {
     // Формируем список айтемов динамически внутри build
     final List<NavItemModel> dynamicNavItems = [

@@ -188,6 +188,7 @@ class AppStrings {
   static const String hereWillBeYourBookingStory = "Здесь будет отображаться история ваших визитов";
   static const String pastBooking = "Прошедшие записи";
   static const String recentBooking = "Моя ближайшая запись";
+  static const String activeBookings = "Активные записи";
 
   //Диалог удаления записи и другое
   static const String cancelDelete = "Отмена";
