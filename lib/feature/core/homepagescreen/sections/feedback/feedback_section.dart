@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:salon_flutter/feature/core/homepagescreen/sections/feedback/reviewmodel/review_model.dart';
+import 'package:salon_flutter/feature/core/homepagescreen/sections/feedback/reviewmodel/review_stats_model.dart';
 
 import '../../../../../uikit/colors/app_colors.dart';
 import '../../../../../uikit/strings/app_strings.dart';
-import '../../domain/feedback_item.dart';
-import 'feedback_card.dart';
+import '../../../../../uikit/widgets/card/feedback/feedback_card.dart';
+import '../../../../../uikit/widgets/card/feedback/rating_summary_card.dart';
+import '../../../../auth/authblock/bloc/auth_block.dart';
+import '../../../../auth/authblock/bloc/auth_state.dart';
+import 'bloc/review_bloc.dart';
 import 'leave_feedback_bottom_sheet.dart';
-import 'rating_summary_card.dart';
 
 class FeedbackSection extends StatelessWidget {
-  final List<FeedbackItem> feedbacks;
+  final ReviewStatsModel stats;
+  final List<ReviewModel> reviews;
   final bool isMaster;
 
   const FeedbackSection({
     super.key,
-    required this.feedbacks,
+    required this.stats,
+    required this.reviews,
     this.isMaster = false,
   });
 
@@ -34,7 +41,7 @@ class FeedbackSection extends StatelessWidget {
         const SizedBox(height: 10),
 
         // 1. Большая карточка с общей оценкой (как на скрине)
-        const RatingSummaryCard(),
+        RatingSummaryCard(stats: stats),
 
         // 2. Строка "Напишите отзыв" вместо кнопки
         if (!isMaster)
@@ -62,27 +69,43 @@ class FeedbackSection extends StatelessWidget {
         const SizedBox(height: 20),
 
         // 3. Горизонтальный список отзывов
-        SizedBox(
-          height: 100,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            itemCount: feedbacks.length,
-            itemBuilder: (context, index) {
-              return FeedbackCard(item: feedbacks[index]);
-            },
+        if (reviews.isNotEmpty) ...[
+          const SizedBox(height: 20),
+          SizedBox(
+            height: 100,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              itemCount: reviews.length,
+              itemBuilder: (context, index) {
+                return FeedbackCard(review: reviews[index]);
+              },
+            ),
           ),
-        ),
+        ],
       ],
     );
   }
 
   void _showLeaveFeedbackSheet(BuildContext context) {
+    // 1. Читаем текущее состояние AuthBloc
+    final authState = context.read<AuthBloc>().state;
+
+    String clientName = "Клиент"; // Дефолтное значение
+
+    if (authState is AuthSuccess) {
+      clientName = authState.user.name;
+    }
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => const LeaveFeedbackBottomSheet(),
+      builder: (context) => LeaveFeedbackBottomSheet(
+        masterId: 1, // Передаем ID мастера (в будущем бери из модели салона/мастера)
+        reviewBloc: BlocProvider.of<ReviewBloc>(context),
+        clientName: clientName, // <-- Передаем вытащенное имя в шторку!
+      ),
     );
   }
 }

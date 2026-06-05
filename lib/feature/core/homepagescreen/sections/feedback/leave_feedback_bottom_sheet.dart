@@ -1,10 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:salon_flutter/feature/auth/authblock/bloc/auth_block.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 import 'package:salon_flutter/uikit/widgets/button/app_button.dart';
 
+import 'bloc/review_bloc.dart';
+import 'bloc/review_event.dart';
+
 class LeaveFeedbackBottomSheet extends StatefulWidget {
-  const LeaveFeedbackBottomSheet({super.key});
+  final int masterId;
+  final ReviewBloc reviewBloc;
+  final String clientName;
+
+  const LeaveFeedbackBottomSheet({
+    super.key,
+    required this.masterId,
+    required this.reviewBloc,
+    required this.clientName,
+  });
 
   @override
   State<LeaveFeedbackBottomSheet> createState() =>
@@ -73,15 +86,29 @@ class _LeaveFeedbackBottomSheetState extends State<LeaveFeedbackBottomSheet> {
             ),
           ),
 
+          const Spacer(), // Прижмет кнопку к низу экрана
+
           Padding(
             padding: const EdgeInsets.all(20),
             child: AppButton(
               text: AppStrings.sendFeedback,
               onPressed: () {
-                // TODO: Интеграция с API
+                widget.reviewBloc.add(
+                  ReviewCreateRequested(
+                    masterId: widget.masterId,
+                    rating: _rating,
+                    clientName: widget.clientName,
+                    text: _commentController.text,
+                  ),
+                );
+
                 Navigator.pop(context);
+
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text(AppStrings.thanksForYourFeedback)),
+                  const SnackBar(
+                    content: Text(AppStrings.thanksForYourFeedback),
+                    backgroundColor: AppColors.primaryBlue,
+                  ),
                 );
               },
             ),

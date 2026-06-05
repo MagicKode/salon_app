@@ -140,4 +140,25 @@ class BookingRepository {
       return false;
     }
   }
+
+  Future<bool> updateBookingComment(String bookingId, String newComment) async {
+    try {
+      final token = await _secureStorage.read(key: 'auth_token');
+
+      final response = await _dio.patch(
+        '$baseUrl/$bookingId/comment',
+        data: {'comment': newComment}, // Отправляем мапу, Dio сам превратит в JSON
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      return response.statusCode == 200;
+    } catch (e) {
+      debugPrint("Ошибка при обновлении комментария: $e");
+      return false;
+    }
+  }
 }

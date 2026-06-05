@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
-import '../../../../../uikit/strings/app_strings.dart';
+
+import '../../../../feature/core/homepagescreen/sections/feedback/reviewmodel/review_stats_model.dart';
 
 class RatingSummaryCard extends StatelessWidget {
-  final double averageRating;
-  final int totalReviews;
+  final ReviewStatsModel stats;
 
-  const RatingSummaryCard({
-    super.key,
-    this.averageRating = 4.4,
-    this.totalReviews = 907,
-  });
+  const RatingSummaryCard({super.key, required this.stats});
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +19,7 @@ class RatingSummaryCard extends StatelessWidget {
           color: AppColors.primaryBlue.withOpacity(0.1),
           borderRadius: BorderRadius.circular(12),
         ),
+
         child: Row(
           children: [
             // Левая часть
@@ -31,7 +28,7 @@ class RatingSummaryCard extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    averageRating.toStringAsFixed(1),
+                    stats.averageRating.toStringAsFixed(1),
                     style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -44,7 +41,7 @@ class RatingSummaryCard extends StatelessWidget {
                     children: List.generate(
                       5,
                       (index) => Icon(
-                        index < averageRating.floor()
+                        index < stats.averageRating.floor()
                             ? Icons.star
                             : Icons.star_border,
                         color: AppColors.starsYellow,
@@ -53,7 +50,7 @@ class RatingSummaryCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    "$totalReviews отзывов",
+                    "${stats.totalReviews} отзывов",
                     style: TextStyle(
                       color: AppColors.primaryGrey,
                       fontSize: 10,
@@ -73,13 +70,39 @@ class RatingSummaryCard extends StatelessWidget {
             ),
 
             const SizedBox(width: 12),
+
             // Правая часть (прогресс-бары)
             Expanded(
               child: Column(
                 children: List.generate(5, (index) {
                   final rating = 5 - index;
-                  final percentage =
-                      rating == 5 ? 0.85 : (rating == 4 ? 0.15 : 0.05);
+
+                  // Считаем количество отзывов для текущей оценки
+                  int currentStarCount = 0;
+                  switch (rating) {
+                    case 5:
+                      currentStarCount = stats.star5Count;
+                      break;
+                    case 4:
+                      currentStarCount = stats.star4Count;
+                      break;
+                    case 3:
+                      currentStarCount = stats.star3Count;
+                      break;
+                    case 2:
+                      currentStarCount = stats.star2Count;
+                      break;
+                    case 1:
+                      currentStarCount = stats.star1Count;
+                      break;
+                  }
+
+                  // Вычисляем процент заполнения полоски (защита от деления на 0)
+                  final double percentage =
+                      stats.totalReviews > 0
+                          ? currentStarCount / stats.totalReviews
+                          : 0.0;
+
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 1),
                     // Плотная верстка

@@ -1,22 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../uikit/colors/app_colors.dart';
 import '../../../feature/checkout/domain/booking_entity.dart';
+import '../../../feature/checkout/domain/repository/booking_repository.dart';
 import '../../strings/app_strings.dart';
 import '../../utils/clientsCardsDateFormater/app_date_formats.dart';
 import '../dialog/cancel_booking_dialog.dart';
+import '../dialog/edit_comment_dialog.dart';
 import 'expandable_note.dart';
 
 class HistoryBookingCard extends StatefulWidget {
   final BookingEntity booking;
   final bool isDimmed;
   final VoidCallback? onCancelSuccess;
+  final VoidCallback? onUpdateSuccess;
 
   const HistoryBookingCard({
     super.key,
     required this.booking,
     this.isDimmed = false,
     this.onCancelSuccess,
+    this.onUpdateSuccess,
   });
 
   @override
@@ -26,6 +31,49 @@ class HistoryBookingCard extends StatefulWidget {
 class _HistoryBookingCardState extends State<HistoryBookingCard> {
   // 1. Добавляем флаг анимации схлопывания карточки
   bool _isCollapsing = false;
+  late String? _currentNotes;
+
+  @override
+  void initState() {
+    super.initState();
+    // Инициализируем её при старте карточки
+    _currentNotes = widget.booking.notes;
+  }
+
+  @override
+  void didUpdateWidget(covariant HistoryBookingCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Если данные списка глобально обновятся (например, через pull-to-refresh),
+    // синхронизируем локальное состояние с новыми данными
+    if (oldWidget.booking.notes != widget.booking.notes) {
+      _currentNotes = widget.booking.notes;
+    }
+  }
+
+  // Dызов диалога редактирования
+  void _showEditCommentDialog(BuildContext context) async {
+    final bookingRepository = context.read<BookingRepository>();
+
+    // Ждем, пока диалог закроется и вернет нам строку
+    final String? updatedComment = await showDialog<String>(
+      context: context,
+      builder:
+          (dialogContext) => EditCommentDialog(
+            bookingId: '${widget.booking.id}',
+            initialComment: _currentNotes ?? '',
+            // Передаем актуальный локальный текст
+            bookingRepository: bookingRepository,
+            onUpdateSuccess: widget.onUpdateSuccess,
+          ),
+    );
+
+    // 3. Если нам вернулся измененный коммент, мгновенно перерисовываем карточку!
+    if (updatedComment != null && mounted) {
+      setState(() {
+        _currentNotes = updatedComment;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -178,10 +226,53 @@ class _HistoryBookingCardState extends State<HistoryBookingCard> {
                           ),
                         ),
                       ),
-                      if (widget.booking.notes != null &&
-                          widget.booking.notes!.isNotEmpty) ...[
+                      if (_currentNotes != null &&
+                          _currentNotes!.isNotEmpty) ...[
                         const SizedBox(height: 12),
-                        ExpandableNote(note: widget.booking.notes!),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: ExpandableNote(
+                                note: _currentNotes!,
+                              ), // <--- ТУТ
+                            ),
+                            if (!widget.isDimmed) ...[
+                              const SizedBox(width: 8),
+                              GestureDetector(
+                                onTap: () => _showEditCommentDialog(context),
+                                child: const Icon(
+                                  Icons.edit_note,
+                                  color: AppColors.primaryBlue,
+                                  size: 22,
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ] else if (!widget.isDimmed) ...[
+                        const SizedBox(height: 12),
+                        GestureDetector(
+                          onTap: () => _showEditCommentDialog(context),
+                          child: const Row(
+                            children: [
+                              Icon(
+                                Icons.add_comment_outlined,
+                                size: 16,
+                                color: AppColors.primaryBlue,
+                              ),
+                              SizedBox(width: 4),
+                              Text(
+                                "Добавить комментарий",
+                                style: TextStyle(
+                                  color: AppColors.primaryBlue,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ],
                   ),

@@ -11,20 +11,27 @@ class AuthInterceptor extends Interceptor {
       RequestOptions options,
       RequestInterceptorHandler handler,
       ) async {
-    // 1. Извлекаем сохраненные данные
+
+    // 1. ПРОВЕРКА ПУТИ: если это логин или регистрация — пропускаем без заголовков
+    final path = options.path;
+    if (path.contains('/auth/login') || path.contains('/auth/register')) {
+      // Просто передаем запрос дальше без добавления токенов
+      return handler.next(options);
+    }
+
+    // 2. Только для защищенных запросов извлекаем данные
     final token = await secureStorage.read(key: 'jwt_token');
     final phone = await secureStorage.read(key: 'user_phone');
 
-    // 2. Если токен есть, добавляем его в заголовки
+    // 3. Добавляем токен, только если он есть
     if (token != null && token.isNotEmpty) {
       options.headers['Authorization'] = 'Bearer $token';
     }
 
-    // 3. Если телефон есть в памяти, прокидываем его в X-User-Name для booking-service.
-    // Если пустой (например, тестовый запуск) — ставим 'Anonym' как фолбэк, чтобы Спринг не ругался 400.
+    // 4. Добавляем X-User-Name
     options.headers['X-User-Name'] = (phone != null && phone.isNotEmpty) ? phone : 'Anonym';
 
-    // Обязательно указываем тип контента для POST запросов
+    // 5. Указываем тип контента
     options.headers['Content-Type'] = 'application/json';
 
     print("[AuthInterceptor] Заголовки успешно применены: ${options.headers}");

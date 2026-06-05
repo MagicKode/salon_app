@@ -18,6 +18,8 @@ import '../../feature/catalog/data/repositories/catalog_repository_impl.dart';
 import '../../feature/catalog/domain/repositories/catalog_repository.dart';
 import '../../feature/checkout/domain/repository/booking_repository.dart';
 import '../../feature/core/bookingservicescreen/bookingblock/booking_slots_bloc.dart';
+import '../../feature/core/homepagescreen/sections/feedback/bloc/review_bloc.dart';
+import '../../feature/core/homepagescreen/sections/feedback/data/review_api_service.dart';
 import '../../feature/core/network/auth_interceptor.dart';
 
 // Переключай одной кнопкой: true — для эмулятора, false — для смартфона
@@ -30,6 +32,7 @@ const String authBaseUrl = 'http://$_host:8082/api/v1/auth';
 const String catalogBaseUrl = 'http://$_host:8081/api/v1/catalog/salon';
 const String bookingBaseUrl = 'http://$_host:8083/api/v1/bookings';
 const String historyBaseUrl = 'http://$_host:8084/api/v1/history';
+const String reviewBaseUrl = 'http://$_host:8086/api/v1/reviews';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -75,12 +78,15 @@ void main() async {
     secureStorage: const FlutterSecureStorage(),
   );
 
+  final reviewApiService = ReviewApiService(dio: dio, baseUrl: reviewBaseUrl);
+
   runApp(
     MultiRepositoryProvider(
       providers: [
         RepositoryProvider<AuthRepository>.value(value: authRepository),
         RepositoryProvider<CatalogRepository>.value(value: catalogRepository),
         RepositoryProvider<BookingRepository>.value(value: bookingRepository),
+        RepositoryProvider<ReviewApiService>.value(value: reviewApiService),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -101,6 +107,9 @@ void main() async {
                     context,
                   ),
                 ),
+          ),
+          BlocProvider<ReviewBloc>(
+            create: (context) => ReviewBloc(RepositoryProvider.of<ReviewApiService>(context)),
           ),
         ],
         child: const MyApp(),

@@ -4,6 +4,9 @@ import 'package:salon_flutter/feature/core/bookingservicescreen/booking_service_
 import 'package:salon_flutter/feature/core/homepagescreen/sections/appbar/app_bar_section.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/bookingbutton/home_booking_button_section.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/description/description_section.dart';
+import 'package:salon_flutter/feature/core/homepagescreen/sections/feedback/bloc/review_bloc.dart';
+import 'package:salon_flutter/feature/core/homepagescreen/sections/feedback/bloc/review_event.dart';
+import 'package:salon_flutter/feature/core/homepagescreen/sections/feedback/bloc/review_state.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/feedback/feedback_section.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/gallery/sections/gallery_section.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/salonheadersection/salon_header_section.dart';
@@ -19,7 +22,6 @@ import '../../catalog/bloc/catalog_state.dart';
 import '../catalogscreen/catalog_screen.dart';
 import '../catalogscreen/domain/catalog_service.dart';
 import '../nearbymapscreen/nearby_map_screen.dart';
-import 'domain/feedback_item.dart';
 
 class HomePageBody extends StatelessWidget {
   final bool isMaster;
@@ -52,6 +54,7 @@ class HomePageBody extends StatelessWidget {
   Widget build(BuildContext context) {
     // Триггерим загрузку данных каталога из сети при первом построении экрана
     context.read<CatalogBloc>().add(CatalogFetchRequested());
+    context.read<ReviewBloc>().add(ReviewFetchRequested(1));
 
     return Scaffold(
       backgroundColor: AppColors.primaryWhite,
@@ -130,21 +133,55 @@ class HomePageBody extends StatelessWidget {
                     ),
 
                     const SizedBox(height: 16),
+
                     ServiceGridSection(
                       isMaster: isMaster,
                       onQuickBookRequested: onQuickBookRequested,
                     ),
+
                     const SizedBox(height: 16),
+
                     // Передаем реальные данные с бэкенда в секцию описания!
                     DescriptionSection(description: salon.description),
+
                     const SizedBox(height: 16),
+
                     const GallerySection(),
+
                     const SizedBox(height: 16),
+
                     const SpecialistsSection(),
+
                     const SizedBox(height: 20),
-                    FeedbackSection(
-                      feedbacks: FeedbackData.items,
-                      isMaster: isMaster,
+
+                    BlocBuilder<ReviewBloc, ReviewState>(
+                      builder: (context, reviewState) {
+                        if (reviewState is ReviewLoading || reviewState is ReviewInitial) {
+                          return const Center(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 20.0),
+                              child: CircularProgressIndicator(color: AppColors.primaryBlue),
+                            ),
+                          );
+                        }
+                        if (reviewState is ReviewSuccess) {
+                          return FeedbackSection(
+                            stats: reviewState.stats,
+                            reviews: reviewState.reviews,
+                            isMaster: isMaster,
+                          );
+                        }
+                        if (reviewState is ReviewFailure) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+                            child: Text(
+                              "Не удалось загрузить отзывы: ${reviewState.errorMessage}",
+                              style: const TextStyle(color: AppColors.primaryRed, fontSize: 12),
+                            ),
+                          );
+                        }
+                        return const SizedBox.shrink();
+                      },
                     ),
                     const SizedBox(height: 5),
                   ],
