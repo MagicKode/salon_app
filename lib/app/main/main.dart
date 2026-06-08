@@ -20,40 +20,40 @@ import '../../feature/checkout/domain/repository/booking_repository.dart';
 import '../../feature/core/bookingservicescreen/bookingblock/booking_slots_bloc.dart';
 import '../../feature/core/homepagescreen/sections/feedback/bloc/review_bloc.dart';
 import '../../feature/core/homepagescreen/sections/feedback/data/review_api_service.dart';
+import '../../feature/core/mastercalendarscreen/domain/master_calendar_repository.dart';
+import '../../feature/core/masterschedulescreen/domain/master_schedule_repository.dart';
 import '../../feature/core/network/auth_interceptor.dart';
+import '../../feature/navigation/app_root_router.dart';
 
 // Переключай одной кнопкой: true — для эмулятора, false — для смартфона
-// const bool isEmulator = false;
-const bool isEmulator = true;
+const bool isEmulator = false;
+// const bool isEmulator = true;
 
 // Определяем базовый IP и порты для сервисов
 const String _host = isEmulator ? '10.0.2.2' : '192.168.1.223';
 const String authBaseUrl = 'http://$_host:8082/api/v1/auth';
 const String catalogBaseUrl = 'http://$_host:8081/api/v1/catalog/salon';
 const String bookingBaseUrl = 'http://$_host:8083/api/v1/bookings';
+const String masterScheduleBaseUrl = 'http://$_host:8083/api/v1/master/schedule';
 const String historyBaseUrl = 'http://$_host:8084/api/v1/history';
 const String reviewBaseUrl = 'http://$_host:8086/api/v1/reviews';
+const String clientBaseUrl = 'http://$_host:8082/api/v1/clients';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await initializeDateFormatting('ru', null);
 
-  // 1. Создаем инфраструктурные зависимости
+  // Auth
   final dio = Dio(
     BaseOptions(
       connectTimeout: const Duration(seconds: 5),
-      // Запрос упадет через 5 сек, если сервер недоступен
       receiveTimeout: const Duration(seconds: 5),
     ),
   );
   dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
   const secureStorage = FlutterSecureStorage();
 
-  // Добавляем наш новенький перехватчик в Dio!
-  dio.interceptors.add(AuthInterceptor(secureStorage: secureStorage));
-
-  // 2. Инициализируем слои данных по Clean Architecture
+  // Auth
   final authRemoteDataSource = AuthRemoteDataSourceImpl(
     dio: dio,
     baseUrl: authBaseUrl,
@@ -63,7 +63,7 @@ void main() async {
     secureStorage: secureStorage,
   );
 
-  // Инициализируем новые слои каталога
+  // Catalog
   final catalogRemoteDataSource = CatalogRemoteDataSourceImpl(
     dio: dio,
     baseUrl: catalogBaseUrl,
@@ -71,6 +71,8 @@ void main() async {
   final catalogRepository = CatalogRepositoryImpl(
     remoteDataSource: catalogRemoteDataSource,
   );
+
+  // Booking
   final bookingRepository = BookingRepository(
     dio: dio,
     baseUrl: bookingBaseUrl,
@@ -78,7 +80,20 @@ void main() async {
     secureStorage: const FlutterSecureStorage(),
   );
 
+  // Review
   final reviewApiService = ReviewApiService(dio: dio, baseUrl: reviewBaseUrl);
+
+  final masterCalendarRepo = MasterCalendarRepository(
+    dio: dio,
+    scheduleBaseUrl: masterScheduleBaseUrl,
+    bookingBaseUrl: bookingBaseUrl,
+    clientBaseUrl: clientBaseUrl,
+  );
+
+  final masterScheduleRepo = MasterScheduleRepository(
+    dio: dio,
+    scheduleBaseUrl: masterScheduleBaseUrl,
+  );
 
   runApp(
     MultiRepositoryProvider(
@@ -87,6 +102,8 @@ void main() async {
         RepositoryProvider<CatalogRepository>.value(value: catalogRepository),
         RepositoryProvider<BookingRepository>.value(value: bookingRepository),
         RepositoryProvider<ReviewApiService>.value(value: reviewApiService),
+        RepositoryProvider<MasterScheduleRepository>.value(value: masterScheduleRepo),
+        RepositoryProvider<MasterCalendarRepository>.value(value: masterCalendarRepo),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -132,7 +149,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: 'Montserrat',
       ),
-      home: const SplashScreen(),
+      home: const AppRootRouter(),
     );
   }
 }

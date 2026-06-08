@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
-
 import '../../../../uikit/colors/app_colors.dart';
-import '../master_schedule_screen.dart';
 
 class ScheduleHeaderSection extends StatelessWidget implements PreferredSizeWidget {
-  final DateTime focusedDay;
-
-  const ScheduleHeaderSection({
-    super.key,
-    required this.focusedDay,
-  });
+  const ScheduleHeaderSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +13,10 @@ class ScheduleHeaderSection extends StatelessWidget implements PreferredSizeWidg
       centerTitle: true,
       title: const Text(
         AppStrings.scheduler,
-        style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.primaryBlack),
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: AppColors.primaryBlack,
+        ),
       ),
     );
   }

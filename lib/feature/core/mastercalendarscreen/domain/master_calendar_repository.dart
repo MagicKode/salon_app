@@ -1,75 +1,104 @@
-import '../../masterschedulescreen/domain/day_availability_model.dart';
-import 'appointment_model.dart';
+import 'package:dio/dio.dart';
+
+import 'client_model.dart';
+import 'daily_schedule_model.dart';
 
 class MasterCalendarRepository {
-  static List<AppointmentModel> getMockAppointments() {
-    return [
-      AppointmentModel(
-        id: '1',
-        clientName: "Иван Иванов",
-        servicesNames: ["Мужская стрижка", "Стрижка бороды"],
-        startTime: DateTime.now().add(const Duration(hours: 1)),
-        endTime: DateTime.now().add(const Duration(hours: 2)),
-        notes: "Просил сделать покороче по бокам, переход 3мм.",
-      ),
-      AppointmentModel(
-        id: '2',
-        clientName: "Марина Сергеевна",
-        servicesNames: ["Окрашивание"],
-        startTime: DateTime.now().add(const Duration(hours: 3)),
-        endTime: DateTime.now().add(const Duration(hours: 5)),
-      ),
-      AppointmentModel(
-        id: '3',
-        clientName: "Дмитрий Волков",
-        servicesNames: ["Стрижка бороды"],
-        startTime: DateTime.now().add(const Duration(hours: 6)),
-        endTime: DateTime.now().add(const Duration(hours: 7)),
-        notes: "Просил сделать покороче по бокам, переход 3мм.",
-      ),
-      AppointmentModel(
-        id: '4',
-        clientName: "Иван Иванов",
-        servicesNames: ["Мужская стрижка", "Стрижка бороды"],
-        startTime: DateTime.now().add(const Duration(hours: 1)),
-        endTime: DateTime.now().add(const Duration(hours: 2)),
-        notes: "Просил сделать покороче по бокам, переход 3мм.",
-      ),
-      AppointmentModel(
-        id: '5',
-        clientName: "Марина Сергеевна",
-        servicesNames: ["Окрашивание"],
-        startTime: DateTime.now().add(const Duration(hours: 3)),
-        endTime: DateTime.now().add(const Duration(hours: 5)),
-      ),
-      AppointmentModel(
-        id: '6',
-        clientName: "Дмитрий Волков",
-        servicesNames: ["Стрижка бороды"],
-        startTime: DateTime.now().add(const Duration(hours: 6)),
-        endTime: DateTime.now().add(const Duration(hours: 7)),
-        notes: "Просил сделать покороче по бокам, переход 3мм.",
-      ),
-      AppointmentModel(
-        id: '7',
-        clientName: "Дмитрий Волков",
-        servicesNames: ["Стрижка бороды"],
-        startTime: DateTime.now().add(const Duration(hours: 6)),
-        endTime: DateTime.now().add(const Duration(hours: 7)),
-        notes: "Просил сделать покороче по бокам, переход 3мм.",
-      ),
-    ];
+  final Dio _dio;
+  final String scheduleBaseUrl;
+  final String bookingBaseUrl;
+  final String clientBaseUrl;
+
+  MasterCalendarRepository({
+    required Dio dio,
+    required this.scheduleBaseUrl,
+    required this.bookingBaseUrl,
+    required this.clientBaseUrl,
+  }) : _dio = dio;
+
+  Future<Map<String, ClientModel>> getClientsInfo(List<String> phoneNumbers) async {
+    if (phoneNumbers.isEmpty) return {};
+
+    try {
+      final phones = phoneNumbers.join(',');
+      final response = await _dio.get(
+        '$clientBaseUrl/batch',
+        queryParameters: {'phones': phones},
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> clients = response.data;
+        final Map<String, ClientModel> result = {};
+        for (var client in clients) {
+          final model = ClientModel.fromJson(client);
+          result[model.phoneNumber] = model;
+        }
+        return result;
+      }
+      return {};
+    } on DioException catch (e) {
+      print('Error fetching clients: ${e.message}');
+      return {};
+    }
   }
 
-  static List<AppointmentModel> getEmptyAppointments() => [];
+  Future<DailyScheduleModel> getTodayAppointments(String masterName) async {
+    try {
+      final response = await _dio.get(
+        '$scheduleBaseUrl/today',
+        options: Options(headers: {'X-User-Name': masterName}),
+      );
 
-  static Map<DateTime, DayStatus> getMockAvailability() {
-    final today = DateTime.now();
-    return {
-      // Убираем время из даты (Normalization), оставляем только год-месяц-день
-      DateTime(today.year, today.month, today.day + 1): DayStatus.full,
-      DateTime(today.year, today.month, today.day + 5): DayStatus.full,
-      DateTime(today.year, today.month, today.day + 10): DayStatus.dayOff,
-    };
+      if (response.statusCode == 200) {
+        return DailyScheduleModel.fromJson(response.data);
+      } else {
+        throw Exception('Ошибка загрузки: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      throw Exception(e.message ?? 'Ошибка сети');
+    }
+  }
+
+  Future<DailyScheduleModel> getScheduleForDate(
+    String masterName,
+    DateTime date,
+  ) async {
+    final dateStr =
+        '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+    return _getSchedule('$scheduleBaseUrl/date?date=$dateStr', masterName);
+  }
+
+  Future<DailyScheduleModel> _getSchedule(String url, String masterName) async {
+    try {
+      final response = await _dio.get(
+        url,
+        options: Options(headers: {'X-User-Name': masterName}),
+      );
+
+      if (response.statusCode == 200) {
+        return DailyScheduleModel.fromJson(
+          response.data as Map<String, dynamic>,
+        );
+      } else {
+        throw Exception('Ошибка загрузки: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      throw Exception(
+        e.response?.data?['message'] ??
+            e.message ??
+            'Ошибка сети при получении расписания',
+      );
+    }
+  }
+
+  Future<void> cancelAppointment(String masterName, String appointmentId) async {
+    try {
+      await _dio.patch(
+        '$bookingBaseUrl/$appointmentId/cancel',
+        options: Options(headers: {'X-User-Name': masterName}),
+      );
+    } on DioException catch (e) {
+      throw Exception(e.message ?? 'Ошибка сети');
+    }
   }
 }

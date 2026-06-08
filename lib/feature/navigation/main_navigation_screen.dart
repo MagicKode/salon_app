@@ -21,7 +21,6 @@ class MainNavigationScreen extends StatefulWidget {
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _currentIndex = 0;
-
   final List<CatalogService> _globalSelectedServices = [];
 
   void _onTabTapped(int index) {
@@ -30,15 +29,12 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     });
   }
 
-  // FIX: Метод должен лежать ТУТ — внутри класса состояния, наравне с _onTabTapped
   void _handleQuickBooking(CatalogService service) {
     setState(() {
-      // Проверяем, чтобы услуга не продублировалась в чеке
       if (!_globalSelectedServices.any((s) => s.name == service.name)) {
         _globalSelectedServices.add(service);
       }
-      // Мгновенно переключаем нижний бар на вкладку "Бронировать"
-      _currentIndex = 1;
+      _currentIndex = 1;// Переключаем на вторую вкладку
     });
   }
 
@@ -47,24 +43,26 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
         // 1. Проверяем роль текущего пользователя
-        final bool isMaster =
-            state is AuthSuccess &&
-            (state as AuthSuccess).toString().contains('master');
+        bool isMaster = false;
+        if (state is AuthSuccess) {
+          isMaster = state.user.role == 'MASTER';
+          print('🔑 User role: ${state.user.role}, isMaster: $isMaster');
+          print('🔑 User name: ${state.user.name}');
+        }
+
+        print('📱 Building MainNavigationScreen. Current index: $_currentIndex, isMaster: $isMaster');
 
         // 2. Формируем список экранов динамически
         final List<Widget> screens = [
           HomePageScreen(
             isMaster: isMaster,
-            onQuickBookRequested: _handleQuickBooking,
+            onQuickBookRequested: isMaster ? null : _handleQuickBooking,
           ),
 
           isMaster
               ? const MasterCalendarScreen()
               : BookingServiceScreen(
-                // FIX: Передаем живой список, который обновляется глобально
-                key: ValueKey(
-                  'booking_screen_${_globalSelectedServices.length}',
-                ),
+                key: ValueKey('booking_screen_${_globalSelectedServices.length}'),
                 selectedServices: _globalSelectedServices,
               ),
 
@@ -77,9 +75,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           bottomNavigationBar: BottomNavBarSection(
             currentIndex: _currentIndex,
             isMaster: isMaster,
-            onTap: (index) {
-              _onTabTapped(index); // Сначала переключаем вкладку в UI
-            },
+            onTap: _onTabTapped,
           ),
         );
       },

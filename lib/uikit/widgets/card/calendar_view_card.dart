@@ -7,6 +7,7 @@ import '../../../feature/core/masterschedulescreen/domain/day_availability_model
 class CalendarViewCard extends StatelessWidget {
   final DateTime focusedDay;
   final Function(DateTime) onDaySelected;
+
   // Добавляем карту занятости
   final Map<DateTime, DayStatus> availability;
 
@@ -25,9 +26,7 @@ class CalendarViewCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.boxDecorationColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppColors.primaryBlue.withOpacity(0.5),
-        ),
+        border: Border.all(color: AppColors.primaryBlue.withOpacity(0.5)),
         boxShadow: const [
           BoxShadow(
             color: AppColors.primaryBlackShadow,
@@ -54,6 +53,32 @@ class CalendarViewCard extends StatelessWidget {
             fontWeight: FontWeight.bold,
             fontSize: 16,
           ),
+        ),
+
+        // ДОБАВЛЯЕМ СТИЛИЗАЦИЮ ЧЕРЕЗ СУЩЕСТВУЮЩИЙ МАР
+        calendarBuilders: CalendarBuilders(
+          defaultBuilder: (context, day, focusedDay) {
+            final normalizedDay = DateTime(day.year, day.month, day.day);
+            final status = availability[normalizedDay];
+
+            // Если день полностью занят (FULL) — красим его в серый круг,
+            if (status == DayStatus.full) {
+              return Container(
+                margin: const EdgeInsets.all(4),
+                decoration: const BoxDecoration(
+                  color: AppColors.primaryGrey, // Серый круг занятого дня
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Text(
+                    '${day.day}',
+                    style: const TextStyle(color: AppColors.primaryWhite),
+                  ),
+                ),
+              );
+            }
+            return null; // Для остальных дней оставляем стандартный дизайн
+          },
         ),
 
         // 1. Предикат доступности (Блокирует клики)

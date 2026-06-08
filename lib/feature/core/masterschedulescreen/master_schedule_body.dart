@@ -1,60 +1,115 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
-
 import '../../../../uikit/colors/app_colors.dart';
 import '../../../uikit/widgets/card/calendar_view_card.dart';
 import '../../../uikit/widgets/card/day_summary_card.dart';
-import '../mastercalendarscreen/domain/appointment_model.dart';
-import '../mastercalendarscreen/domain/master_calendar_repository.dart';
+import '../../auth/authblock/bloc/auth_block.dart';
+import '../../auth/authblock/bloc/auth_state.dart';
+import 'bloc/master_schedule_bloc.dart';
+import 'bloc/master_schedule_event.dart';
+import 'bloc/master_schedule_state.dart';
+import 'domain/day_availability_model.dart';
 
 class MasterScheduleBody extends StatelessWidget {
-  final DateTime focusedDay;
-  final Function(DateTime) onDaySelected;
-
-  const MasterScheduleBody({
-    super.key,
-    required this.focusedDay,
-    required this.onDaySelected,
-  });
+  const MasterScheduleBody({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // 1. Получаем все записи (из репозитория-заглушки)
-    final allAppointments = MasterCalendarRepository.getMockAppointments();
-    final availability = MasterCalendarRepository.getMockAvailability();
+    return BlocBuilder<MasterScheduleBloc, MasterScheduleState>(
+      builder: (context, state) {
+        if (state is MasterScheduleLoading) {
+          return const Center(
+            child: CircularProgressIndicator(color: AppColors.primaryBlue),
+          );
+        }
 
-    final dayAppointments = allAppointments.forDate(focusedDay);
+        if (state is MasterScheduleFailure) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline, size: 48, color: AppColors.primaryRed),
+                  const SizedBox(height: 16),
+                  Text(state.errorMessage,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: AppColors.primaryRed, fontSize: 16),
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      final auth = context.read<AuthBloc>().state;
+                      if (auth is AuthSuccess) {
+                        context.read<MasterScheduleBloc>().add(
+                          LoadScheduleMonth(
+                            masterName: auth.user.masterName,
+                            month: DateTime.now(),
+                          ),
+                        );
+                      }
+                    },
+                    icon: const Icon(Icons.refresh),
+                    label: const Text("Повторить"),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
 
-    return Column(
-      children: [
-        CalendarViewCard(
-          focusedDay: focusedDay,
-          onDaySelected: onDaySelected,
-          availability: availability,
-        ),
+        if (state is MasterScheduleSuccess) {
+          final availabilityMap = <DateTime, DayStatus>{
+            for (var item in state.availability)
+              DateTime.parse(item.date): item.status,
+          };
 
-        _buildLegend(),
+          final dayAppointments = state.allAppointments.where((a) =>
+          a.startTime.year == state.selectedDay.year &&
+              a.startTime.month == state.selectedDay.month &&
+              a.startTime.day == state.selectedDay.day,
+          ).toList();
 
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-          child: Divider(color: AppColors.lightBorder),
-        ),
-
-        // Здесь можно добавить краткий список дел на выбранное число
-        Expanded(
-          child: SingleChildScrollView(
-            child: Column(
+          return RefreshIndicator(
+            color: AppColors.primaryBlue,
+            onRefresh: () async {
+              final auth = context.read<AuthBloc>().state;
+              if (auth is AuthSuccess) {
+                context.read<MasterScheduleBloc>().add(
+                  LoadScheduleMonth(
+                    masterName: auth.user.masterName,
+                    month: state.selectedDay,
+                  ),
+                );
+              }
+            },
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
               children: [
-                // Передаем отфильтрованные данные в карточку сводки
+                CalendarViewCard(
+                  focusedDay: state.selectedDay,
+                  onDaySelected: (day) {
+                    context.read<MasterScheduleBloc>().add(ChangeSelectedDay(day));
+                  },
+                  availability: availabilityMap,
+                ),
+                _buildLegend(),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                  child: Divider(color: AppColors.lightBorder),
+                ),
                 DaySummaryCard(
                   appointments: dayAppointments,
-                  selectedDate: focusedDay,
+                  selectedDate: state.selectedDay,
                 ),
               ],
             ),
-          ),
-        ),
-      ],
+          );
+        }
+
+        return const SizedBox.shrink();
+      },
     );
   }
 
@@ -77,11 +132,7 @@ class MasterScheduleBody extends StatelessWidget {
   Widget _legendItem(Color color, String text) {
     return Row(
       children: [
-        Container(
-          width: 10,
-          height: 10,
-          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-        ),
+        Container(width: 10, height: 10, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
         const SizedBox(width: 6),
         Text(text, style: const TextStyle(fontSize: 10, color: AppColors.primaryGrey)),
       ],

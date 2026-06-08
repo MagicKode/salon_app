@@ -52,7 +52,6 @@ class HomePageBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Триггерим загрузку данных каталога из сети при первом построении экрана
     context.read<CatalogBloc>().add(CatalogFetchRequested());
     context.read<ReviewBloc>().add(ReviewFetchRequested(1));
 
@@ -110,19 +109,20 @@ class HomePageBody extends StatelessWidget {
                       : salon.name;
 
               return SingleChildScrollView(
-                padding: const EdgeInsets.only(bottom: 80),
+                padding: EdgeInsets.only(bottom: isMaster ? 20 : 80),
                 child: Column(
                   children: [
-                    HomeSearchBar(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CatalogScreen(),
-                          ),
-                        );
-                      },
-                    ),
+                    if (!isMaster)
+                      HomeSearchBar(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CatalogScreen(),
+                            ),
+                          );
+                        },
+                      ),
 
                     // НОВЫЙ БЛОК: Визитка салона (теперь она НАВЕРХУ!)
                     SalonHeaderSection(
@@ -136,7 +136,7 @@ class HomePageBody extends StatelessWidget {
 
                     ServiceGridSection(
                       isMaster: isMaster,
-                      onQuickBookRequested: onQuickBookRequested,
+                      onQuickBookRequested: isMaster ? null : onQuickBookRequested,
                     ),
 
                     const SizedBox(height: 16),
@@ -156,11 +156,14 @@ class HomePageBody extends StatelessWidget {
 
                     BlocBuilder<ReviewBloc, ReviewState>(
                       builder: (context, reviewState) {
-                        if (reviewState is ReviewLoading || reviewState is ReviewInitial) {
+                        if (reviewState is ReviewLoading ||
+                            reviewState is ReviewInitial) {
                           return const Center(
                             child: Padding(
                               padding: EdgeInsets.symmetric(vertical: 20.0),
-                              child: CircularProgressIndicator(color: AppColors.primaryBlue),
+                              child: CircularProgressIndicator(
+                                color: AppColors.primaryBlue,
+                              ),
                             ),
                           );
                         }
@@ -173,10 +176,16 @@ class HomePageBody extends StatelessWidget {
                         }
                         if (reviewState is ReviewFailure) {
                           return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                              vertical: 10.0,
+                            ),
                             child: Text(
                               "Не удалось загрузить отзывы: ${reviewState.errorMessage}",
-                              style: const TextStyle(color: AppColors.primaryRed, fontSize: 12),
+                              style: const TextStyle(
+                                color: AppColors.primaryRed,
+                                fontSize: 12,
+                              ),
                             ),
                           );
                         }
@@ -195,19 +204,20 @@ class HomePageBody extends StatelessWidget {
       ),
 
       // ВЫЗОВ СЕКЦИИ КНОПКИ бронирования
-      floatingActionButton: BlocBuilder<CatalogBloc, CatalogState>(
-        builder: (context, state) {
-          if (state is CatalogSuccess) {
-            return HomeBookingButtonSection(
-              key: const ValueKey('persistent_booking_button'),
-              onPressed: () => _onBookingTap(context),
-            );
-          }
-          // Если идет загрузка или ошибка, возвращаем null (или SizedBox.shrink)
-          // Благодаря этому Scaffold корректно убирает виджет из фазы layout
-          return const SizedBox.shrink();
-        },
-      ),
+      floatingActionButton:
+          isMaster
+              ? null
+              : BlocBuilder<CatalogBloc, CatalogState>(
+                builder: (context, state) {
+                  if (state is CatalogSuccess) {
+                    return HomeBookingButtonSection(
+                      key: const ValueKey('persistent_booking_button'),
+                      onPressed: () => _onBookingTap(context),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }

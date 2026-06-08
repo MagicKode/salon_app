@@ -20,6 +20,10 @@ class DaySummaryCard extends StatelessWidget {
     // Состояние "Нет записей"
     if (appointments.isEmpty) return _buildEmptyState();
 
+    // ✅ Сортируем по времени
+    final sorted = List<AppointmentModel>.from(appointments)
+      ..sort((a, b) => a.startTime.compareTo(b.startTime));
+
     // Состояние "Есть записи"
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -59,7 +63,7 @@ class DaySummaryCard extends StatelessWidget {
               ),
               StatSquareCard(
                 label: AppStrings.serviceHours,
-                value: "${appointments.totalWorkHours()} ч.",
+                value: "${_calculateTotalHours(appointments)} ч.",
                 icon: Icons.timer_outlined,
               ),
               StatSquareCard(
@@ -78,6 +82,15 @@ class DaySummaryCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  /// ✅ Вычисляем общее количество часов
+  int _calculateTotalHours(List<AppointmentModel> apps) {
+    final totalMinutes = apps.fold<int>(
+      0,
+          (sum, a) => sum + a.endTime.difference(a.startTime).inMinutes,
+    );
+    return (totalMinutes / 60).round();
   }
 
   Widget _buildEmptyState() {
