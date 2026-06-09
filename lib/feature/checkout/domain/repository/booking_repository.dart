@@ -20,15 +20,33 @@ class BookingRepository {
   }) : _dio = dio,
        _secureStorage = secureStorage;
 
+  /// ✅ Получение телефона текущего пользователя
+  Future<String> _getUserPhone() async {
+    final phone = await _secureStorage.read(key: 'user_phone');
+    return phone ?? '';
+  }
+
+  Future<String?> _getToken() async {
+    return await _secureStorage.read(key: 'auth_token');
+  }
+
   /// Метод отправки бронирования на сервер
   Future<bool> sendBooking(BookingEntity booking) async {
     final dto = BookingRequestDto.fromEntity(booking);
     final Map<String, dynamic> jsonData = dto.toJson();
-
-    print("=== [DEBUG] ОТПРАВЛЯЕМЫЙ НА БЭК JSON: $jsonData ===");
+    final userPhone = await _getUserPhone();
 
     try {
-      final response = await _dio.post(baseUrl, data: jsonData);
+      final response = await _dio.post(
+        baseUrl,
+        data: jsonData,
+        options: Options(
+          headers: {
+            'X-User-Name': userPhone,
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
 
       if (response.statusCode == 201 || response.statusCode == 200) {
         return true; // Успешно создано
@@ -39,11 +57,6 @@ class BookingRepository {
       }
     } on DioException catch (e) {
       if (e.response != null) {
-        print("=== [SERVER ERROR 400/409] ДЕТАЛИ ОТ СЕРВЕРА ===");
-        print("Статус код: ${e.response?.statusCode}");
-        print("Тело ошибки (Data): ${e.response?.data}");
-        print("===============================================");
-
         if (e.response?.statusCode == 409) {
           throw Exception("Извините, это время уже занято другим клиентом!");
         }
@@ -79,10 +92,8 @@ class BookingRepository {
       );
 
       if (response.statusCode == 200) {
-        // Если вдруг с бэка летит сразу чистый массив:
         if (response.data is List) {
           final List<dynamic> rawList = response.data;
-          // Превращаем каждую мапу в типизированный TimeSlotModel
           return rawList
               .map(
                 (json) => TimeSlotModel.fromJson(json as Map<String, dynamic>),
@@ -99,14 +110,22 @@ class BookingRepository {
       // Если упала сетевая ошибка Dio — вытаскиваем сообщение бэка
       final serverMessage = e.response?.data?['message'];
       throw Exception(serverMessage ?? "Ошибка сети Dio: ${e.message}");
-    } catch (e) {
-      throw Exception("Ошибка парсинга или локальная ошибка: $e");
     }
   }
 
   Future<List<BookingEntity>> fetchBookingHistory() async {
+    final userPhone = await _getUserPhone();
+    final token = await _secureStorage.read(key: 'auth_token');
+
     try {
-      final response = await _dio.get(historyUrl);
+      final response = await _dio.get(
+        historyUrl,
+        options: Options(
+          headers: {'Authorization': 'Bearer $token',
+            'X-User-Name': userPhone,
+          },
+        ),
+      );
 
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data;
@@ -116,17 +135,16 @@ class BookingRepository {
       } else {
         throw Exception("Ошибка загрузки истории: ${response.statusCode}");
       }
-    } catch (e) {
-      rethrow;
+    } on DioException catch (e) {
+      throw Exception(e.message ?? 'Ошибка сети');
     }
   }
 
   Future<bool> cancelBooking(String bookingId) async {
-    try {
-      // Получаем токен и телефон из защищенного хранилища (как в fetch)
-      final token = await _secureStorage.read(key: 'auth_token');
-      final userPhone = await _secureStorage.read(key: 'user_phone');
+    final userPhone = await _getUserPhone();
+    final token = await _getToken();
 
+    try {
       final response = await _dio.patch(
         '$baseUrl/$bookingId/cancel',
         options: Options(
@@ -142,21 +160,24 @@ class BookingRepository {
   }
 
   Future<bool> updateBookingComment(String bookingId, String newComment) async {
-    try {
-      final token = await _secureStorage.read(key: 'auth_token');
+    final userPhone = await _getUserPhone();
+    final token = await _getToken();
 
+    try {
       final response = await _dio.patch(
         '$baseUrl/$bookingId/comment',
-        data: {'comment': newComment}, // Отправляем мапу, Dio сам превратит в JSON
+        data: {'comment': newComment},
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
+            'X-User-Name': userPhone,
+            'Content-Type': 'application/json',
           },
         ),
       );
 
       return response.statusCode == 200;
-    } catch (e) {
+    } on DioException catch (e) {
       debugPrint("Ошибка при обновлении комментария: $e");
       return false;
     }

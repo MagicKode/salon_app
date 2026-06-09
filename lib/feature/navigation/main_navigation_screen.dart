@@ -9,6 +9,8 @@ import '../auth/authblock/bloc/auth_state.dart';
 import '../core/bookingservicescreen/booking_service_screen.dart';
 import '../core/catalogscreen/domain/catalog_service.dart';
 import '../core/homepagescreen/sections/bottomnavbar/bottom_nav_bar_section.dart';
+import '../core/mastercalendarscreen/bloc/master_calendar_bloc.dart';
+import '../core/mastercalendarscreen/bloc/master_calendar_event.dart';
 import '../core/mastercalendarscreen/master_calendar_screen.dart';
 import '../core/profilescreen/profile_screen.dart';
 
@@ -27,6 +29,21 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     setState(() {
       _currentIndex = index;
     });
+
+    // ✅ Автообновление при переходе на вкладку "Записи"
+    if (index == 1) {
+      // Небольшая задержка для завершения анимации
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (mounted) {
+          final authState = context.read<AuthBloc>().state;
+          if (authState is AuthSuccess && authState.user.isMaster) {
+            context.read<MasterCalendarBloc>().add(
+              FetchTodayAppointments(authState.user.masterName),
+            );
+          }
+        }
+      });
+    }
   }
 
   void _handleQuickBooking(CatalogService service) {
@@ -34,7 +51,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       if (!_globalSelectedServices.any((s) => s.name == service.name)) {
         _globalSelectedServices.add(service);
       }
-      _currentIndex = 1;// Переключаем на вторую вкладку
+      _currentIndex = 1; // Переключаем на вторую вкладку
     });
   }
 
@@ -50,7 +67,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           print('🔑 User name: ${state.user.name}');
         }
 
-        print('📱 Building MainNavigationScreen. Current index: $_currentIndex, isMaster: $isMaster');
+        print(
+          '📱 Building MainNavigationScreen. Current index: $_currentIndex, isMaster: $isMaster',
+        );
 
         // 2. Формируем список экранов динамически
         final List<Widget> screens = [
@@ -62,7 +81,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           isMaster
               ? const MasterCalendarScreen()
               : BookingServiceScreen(
-                key: ValueKey('booking_screen_${_globalSelectedServices.length}'),
+                key: ValueKey(
+                  'booking_screen_${_globalSelectedServices.length}',
+                ),
                 selectedServices: _globalSelectedServices,
               ),
 

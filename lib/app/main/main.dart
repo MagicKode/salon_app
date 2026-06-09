@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:salon_flutter/feature/auth/splashscreen/splash_screen.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
@@ -22,12 +21,11 @@ import '../../feature/core/homepagescreen/sections/feedback/bloc/review_bloc.dar
 import '../../feature/core/homepagescreen/sections/feedback/data/review_api_service.dart';
 import '../../feature/core/mastercalendarscreen/domain/master_calendar_repository.dart';
 import '../../feature/core/masterschedulescreen/domain/master_schedule_repository.dart';
-import '../../feature/core/network/auth_interceptor.dart';
 import '../../feature/navigation/app_root_router.dart';
 
-// Переключай одной кнопкой: true — для эмулятора, false — для смартфона
-const bool isEmulator = false;
-// const bool isEmulator = true;
+/// Переключай одной кнопкой: true — для эмулятора, false — для смартфона
+// const bool isEmulator = false;
+const bool isEmulator = true;
 
 // Определяем базовый IP и порты для сервисов
 const String _host = isEmulator ? '10.0.2.2' : '192.168.1.223';

@@ -5,7 +5,7 @@ import 'package:salon_flutter/feature/core/mastercalendarscreen/sections/calenda
 import '../../../uikit/colors/app_colors.dart';
 import '../../auth/authblock/bloc/auth_block.dart';
 import '../../auth/authblock/bloc/auth_state.dart';
-import 'bloc/master_calendar_bloc/master_calendar_bloc.dart';
+import 'bloc/master_calendar_bloc.dart';
 import 'bloc/master_calendar_event.dart';
 import 'domain/master_calendar_repository.dart';
 
@@ -32,6 +32,27 @@ class MasterCalendarScreen extends StatelessWidget {
             backgroundColor: AppColors.primaryWhite,
             appBar: CalendarHeaderSection(selectedDate: DateTime.now()),
             body: const MasterCalendarBody(),
+
+            // ✅ Кнопка обновления
+            floatingActionButton: FloatingActionButton.small(
+              onPressed: () {
+                final auth = context.read<AuthBloc>().state;
+                if (auth is AuthSuccess) {
+                  context.read<MasterCalendarBloc>().add(
+                    FetchTodayAppointments(auth.user.masterName),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Обновлено"),
+                      duration: Duration(seconds: 1),
+                      backgroundColor: AppColors.primaryBlue,
+                    ),
+                  );
+                }
+              },
+              backgroundColor: AppColors.lightBlue,
+              child: const Icon(Icons.refresh, color: AppColors.primaryWhite),
+            ),
           ),
         );
       },

@@ -5,12 +5,36 @@ import '../../../uikit/colors/app_colors.dart';
 import '../../../uikit/widgets/card/master_appointment_card.dart';
 import '../../auth/authblock/bloc/auth_block.dart';
 import '../../auth/authblock/bloc/auth_state.dart';
-import 'bloc/master_calendar_bloc/master_calendar_bloc.dart';
+import 'bloc/master_calendar_bloc.dart';
 import 'bloc/master_calendar_event.dart';
 import 'bloc/master_calendar_state.dart';
 
-class MasterCalendarBody extends StatelessWidget {
+class MasterCalendarBody extends StatefulWidget  {
   const MasterCalendarBody({super.key});
+
+  @override
+  State<MasterCalendarBody> createState() => _MasterCalendarBodyState();
+}
+
+class _MasterCalendarBodyState extends State<MasterCalendarBody> {
+
+  @override
+  void initState() {
+    super.initState();
+    // ✅ Автообновление при возврате на экран
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _refreshData();
+    });
+  }
+
+  void _refreshData() {
+    final authState = context.read<AuthBloc>().state;
+    if (authState is AuthSuccess) {
+      context.read<MasterCalendarBloc>().add(
+        FetchTodayAppointments(authState.user.masterName),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

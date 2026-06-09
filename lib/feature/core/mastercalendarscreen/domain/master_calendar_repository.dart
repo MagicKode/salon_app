@@ -44,10 +44,17 @@ class MasterCalendarRepository {
 
   Future<DailyScheduleModel> getTodayAppointments(String masterName) async {
     try {
+      print('=== GET TODAY APPOINTMENTS ===');
+      print('URL: $scheduleBaseUrl/today');
+      print('MasterName: $masterName');
+
       final response = await _dio.get(
         '$scheduleBaseUrl/today',
         options: Options(headers: {'X-User-Name': masterName}),
       );
+
+      print('Response status: ${response.statusCode}');
+      print('Response data: ${response.data}');
 
       if (response.statusCode == 200) {
         return DailyScheduleModel.fromJson(response.data);
@@ -55,6 +62,13 @@ class MasterCalendarRepository {
         throw Exception('Ошибка загрузки: ${response.statusCode}');
       }
     } on DioException catch (e) {
+
+      print('=== DIO ERROR ===');
+      print('Type: ${e.type}');
+      print('Message: ${e.message}');
+      print('Response: ${e.response?.data}');
+      print('==================');
+
       throw Exception(e.message ?? 'Ошибка сети');
     }
   }

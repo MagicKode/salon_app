@@ -62,7 +62,7 @@ class AuthRepositoryImpl implements AuthRepository {
     final response = await remoteDataSource.login(requestModel);
 
     // 2. Сохраняем токен
-    await secureStorage.write(key: 'jwt_token', value: response.token);
+    await secureStorage.write(key: 'auth_token', value: response.token);
     await secureStorage.write(key: 'user_role', value: response.role);
     await secureStorage.write(key: 'user_name', value: response.firstName);
     await secureStorage.write(key: 'user_phone', value: response.phoneNumber);
