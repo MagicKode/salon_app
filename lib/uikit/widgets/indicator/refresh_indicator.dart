@@ -68,7 +68,7 @@ class HistoryRefreshListView extends StatelessWidget {
                   child: HistoryBookingCard(
                     booking: b,
                     // проверяем затенение карточки только по текущему времени
-                    isDimmed: b.dateTime.isBefore(DateTime.now()),
+                    // isDimmed: b.dateTime.isBefore(DateTime.now()),
 
                     onCancelSuccess: () async {
                       // Сначала пинаем Блок часов, пока контекст на 100% живой

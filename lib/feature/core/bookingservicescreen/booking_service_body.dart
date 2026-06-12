@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salon_flutter/feature/core/bookingservicescreen/sections/bookingbottombar/booking_bottom_bar.dart';
 import 'package:salon_flutter/feature/core/bookingservicescreen/sections/calendar/date_selection_section.dart';
 import 'package:salon_flutter/feature/core/bookingservicescreen/sections/notes/notes_section.dart';
@@ -10,48 +11,51 @@ import 'package:salon_flutter/feature/core/bookingservicescreen/sections/time/ti
 import '../../../../uikit/strings/app_strings.dart';
 import '../../checkout/domain/booking_entity.dart';
 import '../catalogscreen/domain/catalog_service.dart';
+import 'bookingblock/booking_slots_bloc.dart';
+import 'bookingblock/booking_slots_event.dart';
 import 'domain/add_service_data.dart';
 
 class BookingServiceBody extends StatefulWidget {
   final List<CatalogService> initialServices;
-  final Function(BookingEntity booking, List<AddServiceData> services)? onBookPressed;
+  final Function(BookingEntity booking, List<AddServiceData> services)?
+  onBookPressed;
 
   const BookingServiceBody({
     super.key,
     required this.initialServices,
-    this.onBookPressed});
+    this.onBookPressed,
+  });
 
   @override
   State<BookingServiceBody> createState() => _BookingServiceBodyState();
 }
 
-class _BookingServiceBodyState extends State<BookingServiceBody> {
-  // Состояние экрана
+class _BookingServiceBodyState extends State<BookingServiceBody>
+    with WidgetsBindingObserver {
   List<AddServiceData> _selectedServices = [];
-  String _selectedMaster = AppStrings.masterName;
-  String _masterTitle = AppStrings.topMaster;
+  String _selectedMaster = 'Pavel';
   DateTime? _selectedDate;
   String? _selectedTime;
 
   final TextEditingController _notesController = TextEditingController();
-
   double get _totalPrice => _selectedServices.totalPrice;
   int get _requiredSlots => _selectedServices.requiredSlots;
 
   @override
   void initState() {
     super.initState();
-    _selectedDate = DateTime.now();
+    WidgetsBinding.instance.addObserver(this);
 
-    // FIX: Конвертируем CatalogService в AddServiceData при инициализации экрана
-    _selectedServices = widget.initialServices.map((service) {
-      return AddServiceData(
-        id: service.name, // Используем имя или service.id как уникальный маркер
-        name: service.name,
-        price: service.price,
-        // slots: service.slots или 1, в зависимости от того, как устроена AddServiceData
-      );
-    }).toList();
+    _selectedMaster = 'Pavel';
+    _selectedDate = DateTime.now();
+    _selectedServices =
+        widget.initialServices.map((service) {
+          return AddServiceData(
+            id: service.name,
+            name: service.name,
+            price: service.price,
+          );
+        }).toList();
 
     _notesController.addListener(() {
       setState(() {});
@@ -60,8 +64,17 @@ class _BookingServiceBodyState extends State<BookingServiceBody> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _notesController.dispose();
     super.dispose();
+  }
+
+  // ✅ Обновление слотов при возврате на экран
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _refreshSlots();
+    }
   }
 
   @override
@@ -87,14 +100,16 @@ class _BookingServiceBodyState extends State<BookingServiceBody> {
 
                 DateSelectionSection(
                   masterName: _selectedMaster,
-                  onDateSelected: (date) => setState(() => _selectedDate = date),
+                  onDateSelected:
+                      (date) => setState(() => _selectedDate = date),
                 ),
                 const SizedBox(height: 24),
 
                 TimeSelectionSection(
                   // Передаем динамически вычисленное кол-во слотов
                   requiredSlots: _requiredSlots,
-                  onTimeChanged: (String? time) => setState(() => _selectedTime = time),
+                  onTimeChanged:
+                      (String? time) => setState(() => _selectedTime = time),
                 ),
                 const SizedBox(height: 24),
 
@@ -103,30 +118,21 @@ class _BookingServiceBodyState extends State<BookingServiceBody> {
             ),
           ),
         ),
-        BookingBottomBar(
-          totalPrice: _totalPrice,
-          onTap: _handleBookingProcess,
-        ),
+        BookingBottomBar(totalPrice: _totalPrice, onTap: _handleBookingProcess),
       ],
     );
-  }
-
-  // --- Методы обновления состояния (State Management) ---
-  void _updateMaster(String name, String title) {
-    setState(() {
-      _selectedMaster = name;
-      _masterTitle = title;
-    });
   }
 
   void _showServiceSelection() {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      builder: (context) => ServiceSelectionBottomSheet(
-        alreadySelected: _selectedServices,
-        onServicesConfirmed: (services) => setState(() => _selectedServices = services),
-      ),
+      builder:
+          (context) => ServiceSelectionBottomSheet(
+            alreadySelected: _selectedServices,
+            onServicesConfirmed:
+                (services) => setState(() => _selectedServices = services),
+          ),
     );
   }
 
@@ -137,7 +143,6 @@ class _BookingServiceBodyState extends State<BookingServiceBody> {
     });
   }
 
-  // --- Бизнес-логика (Action Logic) ---
   void _handleBookingProcess() {
     if (!_isInputValid()) return;
 
@@ -164,8 +169,19 @@ class _BookingServiceBodyState extends State<BookingServiceBody> {
   }
 
   void _showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  void _refreshSlots() {
+    if (_selectedDate != null) {
+      context.read<BookingSlotsBloc>().add(
+        LoadBookingSlotsEvent(
+          masterName: _selectedMaster,
+          date: _selectedDate!,
+        ),
+      );
+    }
   }
 }

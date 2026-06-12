@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salon_flutter/feature/core/mastercalendarscreen/master_calendar_body.dart';
 import 'package:salon_flutter/feature/core/mastercalendarscreen/sections/calendar_header_section.dart';
+
 import '../../../uikit/colors/app_colors.dart';
 import '../../auth/authblock/bloc/auth_block.dart';
 import '../../auth/authblock/bloc/auth_state.dart';
@@ -14,21 +15,24 @@ class MasterCalendarScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthBloc, AuthState>(
-      builder: (context, authState) {
-        if (authState is! AuthSuccess) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
+    return BlocProvider(
+      create:
+          (_) => MasterCalendarBloc(context.read<MasterCalendarRepository>()),
+      child: BlocBuilder<AuthBloc, AuthState>(
+        builder: (context, authState) {
+          if (authState is! AuthSuccess) {
+            return const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            );
+          }
+
+          final masterName = authState.user.masterName;
+
+          context.read<MasterCalendarBloc>().add(
+            FetchTodayAppointments(masterName),
           );
-        }
 
-        final masterName = authState.user.masterName;
-
-        return BlocProvider(
-          key: ValueKey('master_calendar_$masterName'),
-          create: (_) => MasterCalendarBloc(context.read<MasterCalendarRepository>())
-            ..add(FetchTodayAppointments(masterName)),
-          child: Scaffold(
+          return Scaffold(
             backgroundColor: AppColors.primaryWhite,
             appBar: CalendarHeaderSection(selectedDate: DateTime.now()),
             body: const MasterCalendarBody(),
@@ -41,21 +45,14 @@ class MasterCalendarScreen extends StatelessWidget {
                   context.read<MasterCalendarBloc>().add(
                     FetchTodayAppointments(auth.user.masterName),
                   );
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Обновлено"),
-                      duration: Duration(seconds: 1),
-                      backgroundColor: AppColors.primaryBlue,
-                    ),
-                  );
                 }
               },
               backgroundColor: AppColors.lightBlue,
               child: const Icon(Icons.refresh, color: AppColors.primaryWhite),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

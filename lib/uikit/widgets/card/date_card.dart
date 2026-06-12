@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+
 import '../../colors/app_colors.dart';
 
 class DateCard extends StatelessWidget {
   final DateTime date;
   final bool isSelected;
   final bool isToday;
+  final bool isWeekend;
 
   const DateCard({
     super.key,
     required this.date,
     required this.isSelected,
     this.isToday = false,
+    this.isWeekend = false,
   });
 
   @override
@@ -19,29 +21,50 @@ class DateCard extends StatelessWidget {
     return Container(
       width: 60,
       decoration: BoxDecoration(
-        color: isSelected ? AppColors.primaryBlue : AppColors.primaryBackgroundColor,
-        borderRadius: BorderRadius.circular(40),
-        border: isToday && !isSelected
-            ? Border.all(color: AppColors.primaryBlue.withOpacity(0.5))
-            : null,
+        color:
+            isSelected
+                ? AppColors.primaryBlue
+                : isWeekend
+                ? AppColors.primaryRed.withOpacity(0.1)
+                : AppColors.boxDecorationColor,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color:
+              isSelected
+                  ? AppColors.primaryBlue
+                  : isWeekend
+                  ? AppColors.primaryRed.withOpacity(0.3)
+                  : AppColors.primaryBlue.withOpacity(0.3),
+        ),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            DateFormat.E('ru_RU').format(date),
+            // День недели
+            ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'][date.weekday - 1],
             style: TextStyle(
               fontSize: 14,
-              color: isSelected ? AppColors.primaryWhite : AppColors.primaryBlack,
+              color:
+                  isSelected
+                      ? Colors.white
+                      : isWeekend
+                      ? AppColors.primaryRed
+                      : AppColors.primaryGrey,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 4),
           Text(
-            date.day.toString(),
+            '${date.day}',
             style: TextStyle(
-              fontSize: 24,
+              fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: isSelected ? AppColors.primaryWhite : AppColors.primaryBlack,
+              color:
+                  isSelected
+                      ? Colors.white
+                      : isWeekend
+                      ? AppColors.primaryRed
+                      : AppColors.primaryBlack,
             ),
           ),
         ],

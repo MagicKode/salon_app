@@ -61,20 +61,23 @@ class _ServiceSelectionBottomSheetState
                 final service = _allServices[index];
                 final isSelected = _selected.any((s) => s.id == service.id);
 
-                return CheckboxListTile(
-                  title: Text(service.name),
-                  subtitle: Text('${service.price} ${AppStrings.currency}'),
-                  value: isSelected,
-                  activeColor: AppColors.primaryBlue,
-                  onChanged: (bool? value) {
-                    setState(() {
-                      if (value == true) {
-                        _selected.add(service);
-                      } else {
-                        _selected.removeWhere((s) => s.id == service.id);
-                      }
-                    });
-                  },
+                return Material(
+                  color: Colors.transparent,
+                  child: CheckboxListTile(
+                    title: Text(service.name),
+                    subtitle: Text('${service.price} ${AppStrings.currency}'),
+                    value: isSelected,
+                    activeColor: AppColors.primaryBlue,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        if (value == true) {
+                          _selected.add(service);
+                        } else {
+                          _selected.removeWhere((s) => s.id == service.id);
+                        }
+                      });
+                    },
+                  ),
                 );
               },
             ),

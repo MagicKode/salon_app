@@ -2,30 +2,41 @@ import 'package:flutter/material.dart';
 import '../../../../uikit/colors/app_colors.dart';
 
 class NotificationModel {
+  final int id;
   final String title;
   final String body;
-  final String time;
+  final String type;
   final bool isRead;
-  final bool isUrgent;
+  final DateTime createdAt;
 
   NotificationModel({
+    required this.id,
     required this.title,
     required this.body,
-    required this.time,
-    this.isRead = false,
-    this.isUrgent = false,
+    required this.type,
+    required this.isRead,
+    required this.createdAt,
   });
 
-  // UI-свойства выносим сюда, чтобы Tile оставался "глупым"
-  Color get backgroundColor => isUrgent
-      ? AppColors.primaryBlue.withOpacity(0.05)
-      : (isRead ? AppColors.boxDecorationColor : AppColors.primaryBackgroundColor);
+  factory NotificationModel.fromJson(Map<String, dynamic> json) {
+    return NotificationModel(
+      id: json['id'] as int,
+      title: json['title'] as String? ?? '',
+      body: json['body'] as String? ?? '',
+      type: json['type'] as String? ?? 'GENERAL',
+      isRead: json['isRead'] as bool? ?? false,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+    );
+  }
 
-  Color get borderColor => isRead
-      ? AppColors.primaryBlackShadow
-      : AppColors.primaryBlue.withOpacity(0.3);
+  String get timeAgo {
+    final diff = DateTime.now().difference(createdAt);
+    if (diff.inMinutes < 1) return 'Только что';
+    if (diff.inMinutes < 60) return '${diff.inMinutes} мин. назад';
+    if (diff.inHours < 24) return '${diff.inHours} ч. назад';
+    if (diff.inDays < 7) return '${diff.inDays} дн. назад';
+    return '${createdAt.day}.${createdAt.month}.${createdAt.year}';
+  }
 
-  Color get titleColor => isRead
-      ? AppColors.primaryBlack.withOpacity(0.5)
-      : AppColors.primaryBlack;
+  bool get isUrgent => type == 'BOOKING_CANCELLED';
 }

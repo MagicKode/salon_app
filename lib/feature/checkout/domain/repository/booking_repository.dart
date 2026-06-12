@@ -27,7 +27,7 @@ class BookingRepository {
   }
 
   Future<String?> _getToken() async {
-    return await _secureStorage.read(key: 'auth_token');
+    return await _secureStorage.read(key: 'jwt_token');
   }
 
   /// Метод отправки бронирования на сервер

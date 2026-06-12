@@ -26,7 +26,7 @@ class HistoryListSection extends StatelessWidget {
           separatorBuilder: (_, __) => const SizedBox(height: 12),
           itemBuilder:
               (context, index) =>
-                  HistoryBookingCard(booking: bookings[index], isDimmed: true),
+                  HistoryBookingCard(booking: bookings[index]),
         ),
       ],
     );

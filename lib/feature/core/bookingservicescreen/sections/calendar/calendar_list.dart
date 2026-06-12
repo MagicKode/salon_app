@@ -17,6 +17,10 @@ class CalendarList extends StatelessWidget {
     this.separatorWidth = 12.0,
   });
 
+  bool _isWeekend(DateTime day) {
+    return day.weekday == DateTime.saturday || day.weekday == DateTime.sunday;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -29,12 +33,15 @@ class CalendarList extends StatelessWidget {
         separatorBuilder: (_, __) => SizedBox(width: separatorWidth),
         itemBuilder: (context, index) {
           final day = days[index];
+          final weekend = _isWeekend(day);
+
           return GestureDetector(
-            onTap: () => onDaySelected(day),
+            onTap: weekend ? null : () => onDaySelected(day),
             child: DateCard(
               date: day,
               isSelected: DateUtils.isSameDay(day, selectedDay),
               isToday: DateUtils.isSameDay(day, DateTime.now()),
+              isWeekend: weekend,
             ),
           );
         },
