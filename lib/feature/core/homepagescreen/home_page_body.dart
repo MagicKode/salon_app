@@ -23,7 +23,7 @@ import '../catalogscreen/catalog_screen.dart';
 import '../catalogscreen/domain/catalog_service.dart';
 import '../nearbymapscreen/nearby_map_screen.dart';
 
-class HomePageBody extends StatelessWidget {
+class HomePageBody extends StatefulWidget {
   final bool isMaster;
   final Function(CatalogService service)? onQuickBookRequested;
 
@@ -32,6 +32,37 @@ class HomePageBody extends StatelessWidget {
     required this.isMaster,
     this.onQuickBookRequested,
   });
+
+  @override
+  State<HomePageBody> createState() => _HomePageBodyState();
+}
+
+class _HomePageBodyState extends State<HomePageBody> {
+  final ScrollController _scrollController = ScrollController();
+  bool _isAtBottom = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.position.pixels;
+    // ✅ Считаем, что "низ" — когда осталось меньше 100px
+    final atBottom = (maxScroll - currentScroll) <= 100;
+    if (atBottom != _isAtBottom) {
+      setState(() => _isAtBottom = atBottom);
+    }
+  }
 
   // Вынес навигацию в отдельный метод внутри StatelessWidget
   void _navigateToNearbyMap(BuildContext context) {
@@ -52,12 +83,21 @@ class HomePageBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.read<CatalogBloc>().add(CatalogFetchRequested());
-    context.read<ReviewBloc>().add(ReviewFetchRequested(1));
+    // ✅ Загружаем только если ещё нет данных
+    final catalogState = context.read<CatalogBloc>().state;
+    if (catalogState is! CatalogSuccess) {
+      context.read<CatalogBloc>().add(CatalogFetchRequested());
+    }
+
+    // ✅ Отзывы тоже загружаем один раз
+    final reviewState = context.read<ReviewBloc>().state;
+    if (reviewState is! ReviewSuccess) {
+      context.read<ReviewBloc>().add(ReviewFetchRequested(1));
+    }
 
     return Scaffold(
       backgroundColor: AppColors.primaryWhite,
-      appBar: AppBarSection(isMaster: isMaster),
+      appBar: AppBarSection(isMaster: widget.isMaster),
       body: SafeArea(
         child: BlocBuilder<CatalogBloc, CatalogState>(
           builder: (context, state) {
@@ -67,6 +107,7 @@ class HomePageBody extends StatelessWidget {
                 child: CircularProgressIndicator(color: AppColors.primaryBlue),
               );
             }
+
             // 2. ОШИБКА: Если бэк упал или токен просрочен, выводим ошибку с кнопкой повтора
             if (state is CatalogFailure) {
               return Center(
@@ -108,93 +149,117 @@ class HomePageBody extends StatelessWidget {
                       ? "Студия Павла Ярошенко"
                       : salon.name;
 
-              return SingleChildScrollView(
-                padding: EdgeInsets.only(bottom: isMaster ? 20 : 80),
-                child: Column(
-                  children: [
-                    if (!isMaster)
-                      HomeSearchBar(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CatalogScreen(),
-                            ),
-                          );
-                        },
+              return Stack(
+                children: [
+                  SingleChildScrollView(
+                    controller: _scrollController,
+                    padding: EdgeInsets.only(bottom: widget.isMaster ? 20 : 80),
+                    child: Column(
+                      children: [
+                        if (!widget.isMaster)
+                          HomeSearchBar(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CatalogScreen(),
+                                ),
+                              );
+                            },
+                          ),
+
+                        // НОВЫЙ БЛОК: Визитка салона (теперь она НАВЕРХУ!)
+                        SalonHeaderSection(
+                          name: displaySalonName,
+                          address: salon.address,
+                          workingHours: salon.workingHours,
+                          onLocationTap: () => _navigateToNearbyMap(context),
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        ServiceGridSection(
+                          isMaster: widget.isMaster,
+                          onQuickBookRequested:
+                              widget.isMaster
+                                  ? null
+                                  : widget.onQuickBookRequested,
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        // Передаем реальные данные с бэкенда в секцию описания!
+                        DescriptionSection(description: salon.description),
+
+                        const SizedBox(height: 16),
+
+                        const GallerySection(),
+
+                        const SizedBox(height: 16),
+
+                        const SpecialistsSection(),
+
+                        const SizedBox(height: 20),
+
+                        BlocBuilder<ReviewBloc, ReviewState>(
+                          builder: (context, reviewState) {
+                            if (reviewState is ReviewLoading ||
+                                reviewState is ReviewInitial) {
+                              return const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 20.0),
+                                  child: CircularProgressIndicator(
+                                    color: AppColors.primaryBlue,
+                                  ),
+                                ),
+                              );
+                            }
+                            if (reviewState is ReviewSuccess) {
+                              return FeedbackSection(
+                                stats: reviewState.stats,
+                                reviews: reviewState.reviews,
+                                isMaster: widget.isMaster,
+                              );
+                            }
+                            if (reviewState is ReviewFailure) {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0,
+                                  vertical: 10.0,
+                                ),
+                                child: Text(
+                                  "Не удалось загрузить отзывы: ${reviewState.errorMessage}",
+                                  style: const TextStyle(
+                                    color: AppColors.primaryRed,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              );
+                            }
+                            return const SizedBox.shrink();
+                          },
+                        ),
+                        const SizedBox(height: 5),
+                      ],
+                    ),
+                  ),
+                  // ✅ Анимированная кнопка
+                  if (!widget.isMaster)
+                    Positioned(
+                      bottom: 16,
+                      left: _isAtBottom ? 16 : 32, // ✅ Расширяется внизу
+                      right: _isAtBottom ? 16 : 32, // ✅ Расширяется внизу
+                      child: AnimatedOpacity(
+                        duration: const Duration(milliseconds: 200),
+                        opacity: 1.0,
+                        child: HomeBookingButtonSection(
+                          key: const ValueKey('persistent_booking_button'),
+                          onPressed: () => _onBookingTap(context),
+                          expanded: _isAtBottom, // ✅ Флаг для дочернего виджета
+                        ),
                       ),
-
-                    // НОВЫЙ БЛОК: Визитка салона (теперь она НАВЕРХУ!)
-                    SalonHeaderSection(
-                      name: displaySalonName,
-                      address: salon.address,
-                      workingHours: salon.workingHours,
-                      onLocationTap: () => _navigateToNearbyMap(context),
                     ),
-
-                    const SizedBox(height: 16),
-
-                    ServiceGridSection(
-                      isMaster: isMaster,
-                      onQuickBookRequested: isMaster ? null : onQuickBookRequested,
-                    ),
-
-                    const SizedBox(height: 16),
-
-                    // Передаем реальные данные с бэкенда в секцию описания!
-                    DescriptionSection(description: salon.description),
-
-                    const SizedBox(height: 16),
-
-                    const GallerySection(),
-
-                    const SizedBox(height: 16),
-
-                    const SpecialistsSection(),
-
-                    const SizedBox(height: 20),
-
-                    BlocBuilder<ReviewBloc, ReviewState>(
-                      builder: (context, reviewState) {
-                        if (reviewState is ReviewLoading ||
-                            reviewState is ReviewInitial) {
-                          return const Center(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 20.0),
-                              child: CircularProgressIndicator(
-                                color: AppColors.primaryBlue,
-                              ),
-                            ),
-                          );
-                        }
-                        if (reviewState is ReviewSuccess) {
-                          return FeedbackSection(
-                            stats: reviewState.stats,
-                            reviews: reviewState.reviews,
-                            isMaster: isMaster,
-                          );
-                        }
-                        if (reviewState is ReviewFailure) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0,
-                              vertical: 10.0,
-                            ),
-                            child: Text(
-                              "Не удалось загрузить отзывы: ${reviewState.errorMessage}",
-                              style: const TextStyle(
-                                color: AppColors.primaryRed,
-                                fontSize: 12,
-                              ),
-                            ),
-                          );
-                        }
-                        return const SizedBox.shrink();
-                      },
-                    ),
-                    const SizedBox(height: 5),
-                  ],
-                ),
+                ],
               );
             }
             // Дефолтный пустой контейнер на случай непредвиденного стейта
@@ -202,23 +267,6 @@ class HomePageBody extends StatelessWidget {
           },
         ),
       ),
-
-      // ВЫЗОВ СЕКЦИИ КНОПКИ бронирования
-      floatingActionButton:
-          isMaster
-              ? null
-              : BlocBuilder<CatalogBloc, CatalogState>(
-                builder: (context, state) {
-                  if (state is CatalogSuccess) {
-                    return HomeBookingButtonSection(
-                      key: const ValueKey('persistent_booking_button'),
-                      onPressed: () => _onBookingTap(context),
-                    );
-                  }
-                  return const SizedBox.shrink();
-                },
-              ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

@@ -8,12 +8,14 @@ class BottomNavBarSection extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTap;
   final bool isMaster;
+  final int unreadCount;
 
   const BottomNavBarSection({
     super.key,
     required this.currentIndex,
     required this.onTap,
     this.isMaster = false,
+    this.unreadCount = 0,
   });
 
   @override
@@ -67,6 +69,7 @@ class BottomNavBarSection extends StatelessWidget {
               icon: item.icon,
               activeIcon: item.activeIcon,
               label: item.label,
+              unreadCount: index == 2 ? unreadCount : 0,
               onTap: onTap,
             );
           }),

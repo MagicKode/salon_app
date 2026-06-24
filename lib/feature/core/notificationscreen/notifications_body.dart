@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:salon_flutter/feature/core/notificationscreen/sections/expandable_notification.dart';
 
 import 'bloc/notification_bloc.dart';
 import 'bloc/notification_event.dart';
 import 'bloc/notification_state.dart';
-import 'sections/notification_tile.dart';
 
 class NotificationsBody extends StatelessWidget {
   const NotificationsBody({super.key});
@@ -31,19 +31,15 @@ class NotificationsBody extends StatelessWidget {
             itemCount: state.notifications.length,
             separatorBuilder: (_, __) => const SizedBox(height: 12),
             itemBuilder: (context, index) {
-              final n = state.notifications[index];
-              return GestureDetector(
-                onTap: () {
-                  if (!n.isRead) {
-                    context.read<NotificationsBloc>().add(MarkAsRead(n.id));
-                  }
+              return ExpandableNotification(
+                notification: state.notifications[index],
+                onRead: (id) {
+                  context.read<NotificationsBloc>().add(MarkAsRead(id));
                 },
-                child: NotificationTile(notification: n),
               );
             },
           );
         }
-
         return const SizedBox.shrink();
       },
     );

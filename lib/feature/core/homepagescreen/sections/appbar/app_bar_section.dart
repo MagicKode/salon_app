@@ -7,19 +7,44 @@ import '../../../../../uikit/strings/app_strings.dart';
 import '../../../../../uikit/widgets/button/notifications_button.dart';
 import '../../../../auth/authblock/bloc/auth_block.dart';
 import '../../../../auth/authblock/bloc/auth_state.dart';
+import '../../../notificationscreen/repository/notification_repository.dart';
 
-class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
+class AppBarSection extends StatefulWidget  implements PreferredSizeWidget {
   final bool isMaster;
 
   const AppBarSection({super.key, required this.isMaster});
 
   @override
+  State<AppBarSection> createState() => _AppBarSectionState();
+
+  @override
+  Size get preferredSize => const Size.fromHeight(80);
+}
+
+class _AppBarSectionState extends State<AppBarSection> {
+  int _unreadCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUnreadCount();
+  }
+
+  void _loadUnreadCount() {
+    final authState = context.read<AuthBloc>().state;
+    if (authState is AuthSuccess) {
+      context.read<NotificationRepository>().getUnreadCount(authState.user.phoneNumber)
+          .then((count) {
+        if (mounted) setState(() => _unreadCount = count);
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
-        // Если юзер успешно авторизован, выводим его имя.
-        // Замени "Пользователь" на имя из твоей модели, если бэк его возвращает в AuthSuccess (например: state.user.name)
-        final String userName = state is AuthSuccess
+      final String userName = state is AuthSuccess
                 ? state.user.name
                 : (AppStrings.homeGuest ?? "Гость");
 
@@ -59,11 +84,11 @@ class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
                         MaterialPageRoute(
                           builder:
                               (context) =>
-                                  NotificationsScreen(isMaster: isMaster),
+                                  NotificationsScreen(isMaster: widget.isMaster),
                         ),
-                      );
+                      ).then((_) => _loadUnreadCount());
                     },
-                    hasUnread: true,
+                    unreadCount: _unreadCount,
                   ),
                 ],
               ),

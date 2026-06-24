@@ -12,6 +12,7 @@ import '../core/homepagescreen/sections/bottomnavbar/bottom_nav_bar_section.dart
 import '../core/mastercalendarscreen/bloc/master_calendar_bloc.dart';
 import '../core/mastercalendarscreen/bloc/master_calendar_event.dart';
 import '../core/mastercalendarscreen/master_calendar_screen.dart';
+import '../core/notificationscreen/repository/notification_repository.dart';
 import '../core/profilescreen/profile_screen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
@@ -23,14 +24,32 @@ class MainNavigationScreen extends StatefulWidget {
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _currentIndex = 0;
+  int _unreadCount = 0;
   final List<CatalogService> _globalSelectedServices = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUnreadCount();
+  }
+
+  void _loadUnreadCount() {
+    final authState = context.read<AuthBloc>().state;
+    if (authState is AuthSuccess) {
+      context
+          .read<NotificationRepository>()
+          .getUnreadCount(authState.user.phoneNumber)
+          .then((count) {
+        if (mounted) setState(() => _unreadCount = count);
+      });
+    }
+  }
 
   void _onTabTapped(int index) {
     setState(() {
       _currentIndex = index;
     });
 
-    // ✅ Автообновление при переходе на вкладку "Записи"
     if (index == 1) {
       // Небольшая задержка для завершения анимации
       Future.delayed(const Duration(milliseconds: 100), () {
@@ -43,6 +62,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           }
         }
       });
+    }
+
+    // ✅ Обновляем счётчик при возврате с экрана уведомлений
+    if (index == 3) {
+      _loadUnreadCount();
     }
   }
 
@@ -96,6 +120,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           bottomNavigationBar: BottomNavBarSection(
             currentIndex: _currentIndex,
             isMaster: isMaster,
+            unreadCount: _unreadCount,
             onTap: _onTabTapped,
           ),
         );

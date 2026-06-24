@@ -199,7 +199,7 @@ class AppStrings {
 
   // BottomNavigation bar
   static const String navHome = "Главная";
-  static const String navBooking = "Бронировать";
+  static const String navBooking = "Запись";
 
   static const String navHistory = "Мои записи";
   static const String navProfile = "Профиль";

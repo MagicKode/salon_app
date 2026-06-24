@@ -1,4 +1,3 @@
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../repository/notification_repository.dart';
@@ -7,9 +6,11 @@ import 'notification_state.dart';
 
 class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   final NotificationRepository _repository;
+  String _clientPhone = '';
 
   NotificationsBloc(this._repository) : super(NotificationsLoading()) {
     on<LoadNotifications>((event, emit) async {
+      _clientPhone = event.clientPhone;
       try {
         final list = await _repository.getNotifications(event.clientPhone);
         emit(NotificationsLoaded(list));
@@ -20,6 +21,12 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
 
     on<MarkAsRead>((event, emit) async {
       await _repository.markAsRead(event.id);
+      try {
+        final list = await _repository.getNotifications(_clientPhone);
+        emit(NotificationsLoaded(list));
+      } catch (e) {
+        // Оставляем текущее состояние
+      }
     });
   }
 }

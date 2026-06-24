@@ -3,12 +3,12 @@ import '../../colors/app_colors.dart';
 
 class NotificationsButton extends StatelessWidget {
   final VoidCallback onTap;
-  final bool hasUnread;
+  final int unreadCount;
 
   const NotificationsButton({
     super.key,
     required this.onTap,
-    this.hasUnread = false,
+    this.unreadCount = 0,
   });
 
   @override
@@ -16,21 +16,11 @@ class NotificationsButton extends StatelessWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        Container(
-          decoration: const BoxDecoration(
-            shape: BoxShape.circle,
-          ),
-          child: IconButton(
-            icon: const Icon(
-              Icons.notifications_none_rounded,
-              color: AppColors.primaryBlue,
-              size: 30,
-            ),
-            onPressed: onTap,
-          ),
+        IconButton(
+          icon: const Icon(Icons.notifications_none_rounded, color: AppColors.primaryBlue, size: 30),
+          onPressed: onTap,
         ),
-        // Рисуем красную точку, если есть непрочитанные
-        if (hasUnread)
+        if (unreadCount > 0)
           Positioned(
             top: 12,
             right: 12,

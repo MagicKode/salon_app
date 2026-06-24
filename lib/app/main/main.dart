@@ -34,6 +34,7 @@ const bool isEmulator = true;
 
 // Определяем базовый IP и порты для сервисов
 const String _host = isEmulator ? '10.0.2.2' : '192.168.1.223';
+
 const String authBaseUrl = 'http://$_host:8082/api/v1/auth';
 const String catalogBaseUrl = 'http://$_host:8081/api/v1/catalog/salon';
 const String bookingBaseUrl = 'http://$_host:8083/api/v1/bookings';
@@ -43,6 +44,19 @@ const String historyBaseUrl = 'http://$_host:8084/api/v1/history';
 const String reviewBaseUrl = 'http://$_host:8086/api/v1/reviews';
 const String clientBaseUrl = 'http://$_host:8082/api/v1/clients';
 const String notificationBaseUrl = 'http://$_host:8085/api/v1/notifications';
+
+//P и порты для сервисов для запуска ПК как Сервера для дистанционной демонстрации приложения.
+const String ngrokHost = 'gnarly-bounce-paper.ngrok-free.dev';
+//
+// const String authBaseUrl = 'https://$ngrokHost/api/v1/auth';
+// const String catalogBaseUrl = 'https://$ngrokHost/api/v1/catalog/salon';
+// const String bookingBaseUrl = 'https://$ngrokHost/api/v1/bookings';
+// const String masterScheduleBaseUrl =
+//     'https://$ngrokHost/api/v1/master/schedule';
+// const String historyBaseUrl = 'https://$ngrokHost/api/v1/history';
+// const String reviewBaseUrl = 'https://$ngrokHost/api/v1/reviews';
+// const String clientBaseUrl = 'https://$ngrokHost/api/v1/clients';
+// const String notificationBaseUrl = 'https://$ngrokHost/api/v1/notifications';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 FlutterLocalNotificationsPlugin();
