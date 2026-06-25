@@ -11,8 +11,8 @@ import '../core/catalogscreen/domain/catalog_service.dart';
 import '../core/homepagescreen/sections/bottomnavbar/bottom_nav_bar_section.dart';
 import '../core/mastercalendarscreen/bloc/master_calendar_bloc.dart';
 import '../core/mastercalendarscreen/bloc/master_calendar_event.dart';
+import '../core/mastercalendarscreen/domain/master_calendar_repository.dart';
 import '../core/mastercalendarscreen/master_calendar_screen.dart';
-import '../core/notificationscreen/repository/notification_repository.dart';
 import '../core/profilescreen/profile_screen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
@@ -24,25 +24,11 @@ class MainNavigationScreen extends StatefulWidget {
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _currentIndex = 0;
-  int _unreadCount = 0;
   final List<CatalogService> _globalSelectedServices = [];
 
   @override
   void initState() {
     super.initState();
-    _loadUnreadCount();
-  }
-
-  void _loadUnreadCount() {
-    final authState = context.read<AuthBloc>().state;
-    if (authState is AuthSuccess) {
-      context
-          .read<NotificationRepository>()
-          .getUnreadCount(authState.user.phoneNumber)
-          .then((count) {
-        if (mounted) setState(() => _unreadCount = count);
-      });
-    }
   }
 
   void _onTabTapped(int index) {
@@ -63,11 +49,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         }
       });
     }
-
-    // ✅ Обновляем счётчик при возврате с экрана уведомлений
-    if (index == 3) {
-      _loadUnreadCount();
-    }
   }
 
   void _handleQuickBooking(CatalogService service) {
@@ -84,16 +65,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
         // 1. Проверяем роль текущего пользователя
-        bool isMaster = false;
-        if (state is AuthSuccess) {
-          isMaster = state.user.role == 'MASTER';
-          print('🔑 User role: ${state.user.role}, isMaster: $isMaster');
-          print('🔑 User name: ${state.user.name}');
-        }
-
-        print(
-          '📱 Building MainNavigationScreen. Current index: $_currentIndex, isMaster: $isMaster',
-        );
+        bool isMaster = state is AuthSuccess && state.user.role == 'MASTER';
 
         // 2. Формируем список экранов динамически
         final List<Widget> screens = [
@@ -115,13 +87,17 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           const ProfileScreen(),
         ];
 
-        return Scaffold(
-          body: IndexedStack(index: _currentIndex, children: screens),
-          bottomNavigationBar: BottomNavBarSection(
-            currentIndex: _currentIndex,
-            isMaster: isMaster,
-            unreadCount: _unreadCount,
-            onTap: _onTabTapped,
+        return BlocProvider<MasterCalendarBloc>(
+          create:
+              (_) =>
+                  MasterCalendarBloc(context.read<MasterCalendarRepository>()),
+          child: Scaffold(
+            body: IndexedStack(index: _currentIndex, children: screens),
+            bottomNavigationBar: BottomNavBarSection(
+              currentIndex: _currentIndex,
+              isMaster: isMaster,
+              onTap: _onTabTapped,
+            ),
           ),
         );
       },
