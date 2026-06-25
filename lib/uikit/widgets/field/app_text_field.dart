@@ -8,6 +8,7 @@ class AppTextField extends StatefulWidget {
   final bool isPassword;
   final ValueNotifier<bool>? passwordVisibility;
   final TextInputType? keyboardType;
+  final bool enabled;
 
   const AppTextField({
     super.key,
@@ -17,6 +18,7 @@ class AppTextField extends StatefulWidget {
     this.isPassword = false,
     this.passwordVisibility,
     this.keyboardType,
+    this.enabled = true,
   });
 
   @override
@@ -55,6 +57,7 @@ class _AppTextFieldState extends State<AppTextField> {
             return TextField(
               controller: widget.controller,
               focusNode: _focusNode,
+              enabled: widget.enabled,
               obscureText: widget.isPassword ? !isVisible : false,
               keyboardType: widget.keyboardType,
               decoration: InputDecoration(

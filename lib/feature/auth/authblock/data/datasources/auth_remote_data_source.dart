@@ -7,6 +7,8 @@ import '../models/auth_response_model.dart';
 abstract class AuthRemoteDataSource {
   Future<AuthResponseModel> register(RegisterRequestModel request);
   Future<AuthResponseModel> login(AuthRequestModel request);
+  Future<void> forgotPassword(String email);
+  Future<void> resetPassword(String email, String code, String newPassword);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -34,5 +36,19 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       data: request.toJson(),
     );
     return AuthResponseModel.fromJson(response.data);
+  }
+
+  @override
+  Future<void> forgotPassword(String email) async{
+    await dio.post('$baseUrl/forgot-password', data: {'email': email});
+  }
+
+  @override
+  Future<void> resetPassword(String email, String code, String newPassword) async{
+    await dio.post('$baseUrl/reset-password', data: {
+      'email': email,
+      'code': code,
+      'newPassword': newPassword,
+    });
   }
 }

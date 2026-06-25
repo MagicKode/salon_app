@@ -56,9 +56,13 @@ class AppStrings {
 
   // Forgot password
   static const String forgotPassSubtitle =
-      "Пожалуйста, укажите свой email для получения OTP кода";
+      "Пожалуйста, укажите свой email для сброса";
   static const String sendCodeButton = "Отправить код";
-  static const String usePhoneNumber = "Номер телефона?";
+  static const String codeSendToEmail = "Код отправлен на email";
+  static const String uncomputablePasswords = "Пароли не совпадают";
+  static const String successfulChangedPass = "Пароль успешно изменён";
+  static const String codeFromTheLetter = "Код из письма";
+
 
   // home screen
   static const String homeWelcome = "Приветствую, ";
