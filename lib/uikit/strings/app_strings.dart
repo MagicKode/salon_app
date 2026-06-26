@@ -250,6 +250,13 @@ class AppStrings {
   static const String sendNotificationToAllClients = "Отправить всем клиентам";
   static const String notificationSuccessfullySent = "Уведомление успешно отправлено";
 
+  static const String messageSent = "Рассылка отправлена";
+  static const String clientsMessaging = "Рассылка клиентам";
+  static const String messageTitle = "Заголовок";
+  static const String messageText = "Текст сообщения";
+  static const String sendMessage = "Отправить";
+  static const String errorEmptyField = "Заполните поле";
+
   //Catalog screen
   static const String servicesCatalogTitle = "Каталог услуг";
   static const String chosenServices = "Выбранные услуги:";

@@ -4,6 +4,7 @@ import 'package:salon_flutter/feature/core/notificationscreen/repository/notific
 
 import '../../../uikit/colors/app_colors.dart';
 import '../../../uikit/strings/app_strings.dart';
+import '../../../uikit/widgets/dialog/broadcast_dialog.dart';
 import '../../auth/authblock/bloc/auth_block.dart';
 import '../../auth/authblock/bloc/auth_state.dart';
 import 'bloc/notification_bloc.dart';
@@ -37,11 +38,28 @@ class NotificationsScreen extends StatelessWidget {
               elevation: 0,
               centerTitle: true,
             ),
+
             body: const NotificationsBody(),
+
             floatingActionButton: isMaster
                 ? FloatingActionButton(
               backgroundColor: AppColors.primaryBlue,
-              onPressed: () {}, // Создание уведомления мастером
+              onPressed: () {
+                final authState = context.read<AuthBloc>().state;
+                if (authState is AuthSuccess) {
+                  showDialog(
+                    context: context,
+                    builder: (_) => BroadcastDialog (
+                      onSend: (title, body) =>
+                          context.read<NotificationRepository>().broadcastToAll(
+                            title,
+                            body,
+                            authState.user.phoneNumber,
+                          ),
+                    ),
+                  );
+                }
+              },
               child: const Icon(Icons.add_alert, color: AppColors.primaryWhite),
             )
                 : null,

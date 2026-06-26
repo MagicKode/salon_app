@@ -30,7 +30,7 @@ class _ExpandableNotificationState extends State<ExpandableNotification> {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: n.isRead ? AppColors.boxDecorationColor : Colors.white,
+          color: n.isRead ? AppColors.boxDecorationColor : AppColors.primaryBackgroundColor,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
             color: n.isRead
@@ -38,6 +38,7 @@ class _ExpandableNotificationState extends State<ExpandableNotification> {
                 : _borderColor(n.type),
             width: n.isRead ? 1 : 1.5,
           ),
+
           boxShadow: n.isRead ? null : [
             BoxShadow(
               color: _borderColor(n.type).withOpacity(0.15),

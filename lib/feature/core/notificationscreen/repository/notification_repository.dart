@@ -37,4 +37,19 @@ class NotificationRepository {
       options: Options(headers: {'X-User-Name': clientPhone}),
     );
   }
+
+  Future<int> broadcastToAll(String title, String body, String masterPhone) async {
+    final response = await _dio.post(   // ✅ POST
+      '$baseUrl/broadcast',
+      data: {
+        'title': title,
+        'body': body,
+        'type': 'GENERAL'
+      },
+      options: Options(
+        headers: {'X-User-Name': masterPhone},
+      ),
+    );
+    return response.data['data'] as int;
+  }
 }

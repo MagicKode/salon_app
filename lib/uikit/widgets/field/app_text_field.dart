@@ -9,6 +9,8 @@ class AppTextField extends StatefulWidget {
   final ValueNotifier<bool>? passwordVisibility;
   final TextInputType? keyboardType;
   final bool enabled;
+  final int? maxLines;
+  final int? minLines;
 
   const AppTextField({
     super.key,
@@ -19,6 +21,8 @@ class AppTextField extends StatefulWidget {
     this.passwordVisibility,
     this.keyboardType,
     this.enabled = true,
+    this.maxLines = 1,
+    this.minLines,
   });
 
   @override
@@ -58,6 +62,8 @@ class _AppTextFieldState extends State<AppTextField> {
               controller: widget.controller,
               focusNode: _focusNode,
               enabled: widget.enabled,
+              maxLines: widget.maxLines ?? (widget.minLines != null ? null : 1),
+              minLines: widget.minLines,
               obscureText: widget.isPassword ? !isVisible : false,
               keyboardType: widget.keyboardType,
               decoration: InputDecoration(
