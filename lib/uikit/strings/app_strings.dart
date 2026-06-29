@@ -173,6 +173,9 @@ class AppStrings {
   static const String confirmationExit =
       "Вы уверены, что хотите выйти из аккаунта?";
   static const String shareApp = "Поделиться приложением";
+  static const String shareAppLink = "https://play.google.com/store/apps/details?id=service.app.salon_flutter";
+  static const String shareAppMessage = "Рекомендую приложение Salon Flutter!\nСкачай и записывайся на стрижку легко:";
+
   static const String supportTeam = "Служба поддержки";
   static const String useSystemTheme = "Использовать системную тему";
   static const String systemThemeDescription = "Тема приложения будет переключаться автоматически при изменении системной темы";

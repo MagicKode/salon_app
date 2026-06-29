@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:salon_flutter/feature/core/profilescreen/sections/appinfo/version_section.dart';
+import 'package:salon_flutter/feature/core/profilescreen/sections/appversion/version_section.dart';
 import 'package:salon_flutter/feature/core/profilescreen/sections/auth/logout_section.dart';
 import 'package:salon_flutter/feature/core/profilescreen/sections/legal/privacy_policy_section.dart';
-import 'package:salon_flutter/feature/core/profilescreen/sections/support/share_section.dart';
+import 'package:salon_flutter/feature/core/profilescreen/sections/share/share_section.dart';
 import 'package:salon_flutter/feature/core/profilescreen/sections/support/support_section.dart';
 import 'package:salon_flutter/feature/core/profilescreen/sections/userinfo/user_info_section.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../auth/authblock/bloc/auth_block.dart';
 import '../../auth/authblock/bloc/auth_event.dart';
@@ -81,14 +82,15 @@ class _ProfileBodyState extends State<ProfileBody> {
 
               const SizedBox(height: 50),
 
-              // 2. Секция Поделиться приложением (всегда видна для демо)
+              // 2. Секция Поделиться приложением
               ShareSection(
                 action: ProfileActionEntity(
                   icon: Icons.share_outlined,
                   title: AppStrings.shareApp ?? "Поделиться приложением",
                   onTap: () {
-                    // Логика Share (будет позже)
-                    print("Нажали: Поделиться");
+                    const String appLink = AppStrings.shareAppLink;
+                    const String message = '${AppStrings.shareAppMessage} $appLink';
+                    Share.share(message);
                   },
                 ),
               ),
