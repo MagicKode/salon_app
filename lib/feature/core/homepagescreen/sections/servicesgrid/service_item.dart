@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../uikit/colors/app_colors.dart';
 import '../../domain/home_models.dart';
 
 class ServiceItem extends StatelessWidget {
@@ -28,8 +27,8 @@ class ServiceItem extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.black.withOpacity(0.1),
-                  Colors.black.withOpacity(0.8),
+                  Colors.black.withValues(alpha: 0.1),
+                  Colors.black.withValues(alpha: 0.8),
                 ],
                 stops: const [0.0, 1.0],
               ),

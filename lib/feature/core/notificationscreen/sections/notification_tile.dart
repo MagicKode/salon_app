@@ -24,7 +24,7 @@ class NotificationTile extends StatelessWidget {
           color: notification.isRead ? AppColors.boxDecorationColor : AppColors.primaryBackgroundColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: notification.isRead ? AppColors.primaryBlackShadow : AppColors.primaryBlue.withOpacity(0.3),
+            color: notification.isRead ? AppColors.primaryBlackShadow : AppColors.primaryBlue.withValues(alpha: 0.3),
           ),
         ),
         child: Column(
@@ -44,7 +44,7 @@ class NotificationTile extends StatelessWidget {
                     child: Text(notification.title,
                       style: TextStyle(
                         fontWeight: FontWeight.bold, fontSize: 14,
-                        color: notification.isRead ? AppColors.primaryBlack.withOpacity(0.5) : AppColors.primaryBlack,
+                        color: notification.isRead ? AppColors.primaryBlack.withValues(alpha: 0.5) : AppColors.primaryBlack,
                       ),
                     ),
                   ),
@@ -59,7 +59,7 @@ class NotificationTile extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                 child: Text(notification.body,
                   style: TextStyle(
-                    color: AppColors.primaryBlack.withOpacity(0.8),
+                    color: AppColors.primaryBlack.withValues(alpha: 0.8),
                     fontSize: 13, height: 1.4,
                   ),
                 ),

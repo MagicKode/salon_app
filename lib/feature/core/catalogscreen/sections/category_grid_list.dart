@@ -32,7 +32,7 @@ class CategoryGridList extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withValues(alpha: 0.1),
                     blurRadius: 8,
                     offset: const Offset(0, 4),
                   ),
@@ -52,7 +52,7 @@ class CategoryGridList extends StatelessWidget {
                         // Заглушка на случай, если картинка еще не добавлена в pubspec.yaml
                         errorBuilder: (context, error, stackTrace) {
                           return Container(
-                            color: AppColors.primaryBlue.withOpacity(0.2),
+                            color: AppColors.primaryBlue.withValues(alpha: 0.2),
                             child: const Icon(
                               Icons.image_not_supported_rounded,
                               color: AppColors.primaryGrey,
@@ -70,9 +70,9 @@ class CategoryGridList extends StatelessWidget {
                             begin: Alignment.centerLeft,
                             end: Alignment.centerRight,
                             colors: [
-                              Colors.black.withOpacity(0.65),
+                              Colors.black.withValues(alpha: 0.65),
                               // Плотное затемнение слева под текст
-                              Colors.black.withOpacity(0.1),
+                              Colors.black.withValues(alpha: 0.1),
                               // Легкое затемнение справа для объема
                             ],
                           ),
@@ -105,7 +105,7 @@ class CategoryGridList extends StatelessWidget {
                               '${category.services.length} услуг',
                               style: TextStyle(
                                 fontSize: 13,
-                                color: AppColors.primaryWhite.withOpacity(0.8),
+                                color: AppColors.primaryWhite.withValues(alpha: 0.8),
                               ),
                             ),
                           ],
@@ -120,7 +120,7 @@ class CategoryGridList extends StatelessWidget {
                       bottom: 0,
                       child: Icon(
                         Icons.arrow_forward_ios_rounded,
-                        color: AppColors.primaryWhite.withOpacity(0.7),
+                        color: AppColors.primaryWhite.withValues(alpha: 0.7),
                         size: 18,
                       ),
                     ),

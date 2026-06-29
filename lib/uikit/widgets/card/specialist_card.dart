@@ -59,7 +59,7 @@ class SpecialistCard extends StatelessWidget {
               master.description,
               style: TextStyle(
                 fontSize: 12,
-                color: AppColors.primaryBlack.withOpacity(0.5),
+                color: AppColors.primaryBlack.withValues(alpha: 0.5),
                 fontStyle: FontStyle.italic,
               ),
               maxLines: 2,

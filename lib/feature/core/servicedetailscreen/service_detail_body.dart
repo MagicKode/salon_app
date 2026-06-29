@@ -6,7 +6,6 @@ import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 import '../../../uikit/colors/app_colors.dart';
 import '../../../uikit/widgets/button/app_button.dart';
-import '../bookingservicescreen/booking_service_screen.dart';
 import '../catalogscreen/domain/catalog_service.dart';
 import 'domain/service_detail_data.dart';
 

@@ -39,7 +39,7 @@ class _MasterAppointmentCardState extends State<MasterAppointmentCard> {
             color:
                 _isExpanded
                     ? AppColors.primaryBlue
-                    : AppColors.primaryBlue.withOpacity(0.5),
+                    : AppColors.primaryBlue.withValues(alpha: 0.5),
             width: _isExpanded ? 1.5 : 1,
           ),
         ),
@@ -111,13 +111,13 @@ class _MasterAppointmentCardState extends State<MasterAppointmentCard> {
   Color _headerColor(String? status) {
     switch (status?.toUpperCase()) {
       case 'CONFIRMED':
-        return Colors.green.withOpacity(0.08);
+        return Colors.green.withValues(alpha: 0.08);
       case 'PENDING':
-        return Colors.orange.withOpacity(0.08);
+        return Colors.orange.withValues(alpha: 0.08);
       case 'CANCELED':
-        return Colors.red.withOpacity(0.08);
+        return Colors.red.withValues(alpha: 0.08);
       default:
-        return AppColors.primaryBlue.withOpacity(0.05);
+        return AppColors.primaryBlue.withValues(alpha: 0.05);
     }
   }
 
@@ -327,7 +327,7 @@ class _MasterAppointmentCardState extends State<MasterAppointmentCard> {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          color: AppColors.primaryBlue.withOpacity(0.03),
+          color: AppColors.primaryBlue.withValues(alpha: 0.03),
           borderRadius: const BorderRadius.only(
             bottomLeft: Radius.circular(12),
             bottomRight: Radius.circular(12),

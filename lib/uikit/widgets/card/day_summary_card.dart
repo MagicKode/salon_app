@@ -31,7 +31,7 @@ class DaySummaryCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.primaryBackgroundColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.primaryBlue.withOpacity(0.5)),
+        border: Border.all(color: AppColors.primaryBlue.withValues(alpha: 0.5)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,7 +102,7 @@ class DaySummaryCard extends StatelessWidget {
             Icon(
               Icons.local_cafe,
               size: 64,
-              color: AppColors.primaryGrey.withOpacity(0.5),
+              color: AppColors.primaryGrey.withValues(alpha: 0.5),
             ),
             const SizedBox(height: 20),
             const Text(

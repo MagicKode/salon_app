@@ -16,7 +16,7 @@ class RatingSummaryCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: AppColors.primaryBlue.withOpacity(0.1),
+          color: AppColors.primaryBlue.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
         ),
 
@@ -66,7 +66,7 @@ class RatingSummaryCard extends StatelessWidget {
             Container(
               width: 1,
               height: 40,
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
             ),
 
             const SizedBox(width: 12),
@@ -115,8 +115,8 @@ class RatingSummaryCard extends StatelessWidget {
                         Expanded(
                           child: LinearProgressIndicator(
                             value: percentage,
-                            backgroundColor: AppColors.primaryGrey.withOpacity(
-                              0.3,
+                            backgroundColor: AppColors.primaryGrey.withValues(
+                              alpha: 0.3,
                             ),
                             color: AppColors.primaryGreen,
                             minHeight: 2.5,

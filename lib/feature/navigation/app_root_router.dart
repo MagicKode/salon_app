@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:salon_flutter/feature/core/homepagescreen/home_page_screen.dart';
 
 import '../../feature/auth/authblock/bloc/auth_state.dart';
 
 // Импорты твоих экранов
 import '../../feature/auth/loginscreen/login_screen.dart';
 import '../auth/authblock/bloc/auth_block.dart';
-import '../auth/authblock/domain/entities/user_role.dart';
 import 'main_navigation_screen.dart';
 
 class AppRootRouter extends StatelessWidget {

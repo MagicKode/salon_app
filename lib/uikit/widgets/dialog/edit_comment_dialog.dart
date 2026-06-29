@@ -62,7 +62,7 @@ class _EditCommentDialogState extends State<EditCommentDialog> {
                 decoration: InputDecoration(
                   hintText: 'Например: опоздаю на 5 минут / нужен дизайн...',
                   hintStyle: TextStyle(
-                    color: Colors.grey.withOpacity(0.7),
+                    color: Colors.grey.withValues(alpha: 0.7),
                     fontSize: 14,
                   ),
                   border: const OutlineInputBorder(

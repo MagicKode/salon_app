@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/servicesgrid/service_item.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
-import '../../../../../uikit/colors/app_colors.dart';
 import '../../../catalogscreen/domain/catalog_service.dart';
 import '../../../servicedetailscreen/domain/service_detail_data.dart';
 import '../../../servicedetailscreen/service_detail_body.dart';
-import '../../../servicedetailscreen/sevice_detail_screen.dart';
 import '../../domain/home_models.dart';
 
 class ServiceGridSection extends StatelessWidget {

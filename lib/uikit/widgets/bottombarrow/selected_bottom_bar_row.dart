@@ -6,7 +6,7 @@ import '../../colors/app_colors.dart';
 class SelectedBottomBarRow extends StatelessWidget {
   final BottomBarItemData item;
 
-  const SelectedBottomBarRow({required this.item});
+  const SelectedBottomBarRow({super.key, required this.item});
 
   @override
   Widget build(BuildContext context) {

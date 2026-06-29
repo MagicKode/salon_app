@@ -15,7 +15,7 @@ class HistoryEmptyState extends StatelessWidget {
           Icon(
             Icons.edit_calendar_outlined,
             size: 150,
-            color: AppColors.primaryGrey.withOpacity(0.5),
+            color: AppColors.primaryGrey.withValues(alpha: 0.5),
           ),
           const SizedBox(height: 16),
           const Text(

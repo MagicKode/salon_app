@@ -17,7 +17,7 @@ class UserLocationMarker extends StatelessWidget {
           height: 25,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: AppColors.primaryBlue.withOpacity(0.2),
+            color: AppColors.primaryBlue.withValues(alpha: 0.2),
           ),
         ),
         AnimatedRotation(

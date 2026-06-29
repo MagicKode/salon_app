@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 import '../../../../../uikit/colors/app_colors.dart';
-import '../../../../../uikit/assets/app_assets.dart'; // Путь к твоим ассетам
+// Путь к твоим ассетам
 import '../../domain/entities/user_entity.dart';
 
 class UserInfoSection extends StatelessWidget {
@@ -18,7 +18,7 @@ class UserInfoSection extends StatelessWidget {
           // ФОТО ПО ЦЕНТРУ
           CircleAvatar(
             radius: 70,
-            backgroundColor: AppColors.primaryGrey.withOpacity(0.2),
+            backgroundColor: AppColors.primaryGrey.withValues(alpha: 0.2),
             // ЛОГИКА: Если есть avatarUrl (у мастера), берем его.
             // Если нет (у клиента), показываем иконку.
             backgroundImage:

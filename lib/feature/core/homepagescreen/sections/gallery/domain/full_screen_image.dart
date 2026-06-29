@@ -23,7 +23,7 @@ class FullScreenImage extends StatelessWidget {
           GestureDetector(
             onTap: () => Navigator.pop(context),
             child: Container(
-              color: Colors.black.withOpacity(0.8),
+              color: Colors.black.withValues(alpha: 0.8),
               width: double.infinity,
               height: double.infinity,
             ),
@@ -56,7 +56,7 @@ class FullScreenImage extends StatelessWidget {
             top: MediaQuery.of(context).padding.top + 20,
             right: 20,
             child: Material(
-              color: Colors.white.withOpacity(0.2), // Подложка под крестик
+              color: Colors.white.withValues(alpha: 0.2), // Подложка под крестик
               shape: const CircleBorder(),
               child: IconButton(
                 icon: const Icon(Icons.close, color: AppColors.primaryWhite, size: 24),

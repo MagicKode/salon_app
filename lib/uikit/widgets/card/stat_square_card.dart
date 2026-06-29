@@ -18,10 +18,10 @@ class StatSquareCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.primaryBlue.withOpacity(0.05),
+        color: AppColors.primaryBlue.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(12),
         // Небольшая рамка добавит четкости при увеличении текста
-        border: Border.all(color: AppColors.primaryBlue.withOpacity(0.1)),
+        border: Border.all(color: AppColors.primaryBlue.withValues(alpha: 0.1)),
       ),
       child: Stack(
         children: [
@@ -33,7 +33,7 @@ class StatSquareCard extends StatelessWidget {
             child: Icon(
               icon,
               size: 18,
-              color: AppColors.primaryBlue.withOpacity(0.5),
+              color: AppColors.primaryBlue.withValues(alpha: 0.5),
             ),
           ),
 

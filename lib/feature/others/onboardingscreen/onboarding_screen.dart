@@ -73,7 +73,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             end: Alignment.bottomCenter,
                             colors: [
                               Colors.transparent,
-                              Colors.black.withOpacity(0.6),
+                              Colors.black.withValues(alpha: 0.6),
                             ],
                             stops: [0.4, 0.9],
                           ),
@@ -106,7 +106,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   onboardingPages[_currentPage][AppStrings.imageDescription],
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withValues(alpha: 0.9),
                     height: 1.5,
                   ),
                 ),
@@ -132,7 +132,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     color:
                         _currentPage == index
                             ? Colors.white
-                            : Colors.white.withOpacity(0.5),
+                            : Colors.white.withValues(alpha: 0.5),
                   ),
                 );
               }),
@@ -159,7 +159,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   AppStrings.alreadyHaveAnAccount,
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withValues(alpha: 0.8),
                   ),
                 ),
                 SizedBox(width: 2),

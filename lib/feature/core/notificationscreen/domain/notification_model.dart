@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-import '../../../../uikit/colors/app_colors.dart';
 
 class NotificationModel {
   final int id;

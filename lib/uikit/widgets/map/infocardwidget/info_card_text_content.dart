@@ -38,7 +38,7 @@ class InfoCardTextContent extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           // Обрезаем, если адрес слишком длинный
           style: TextStyle(
-            color: AppColors.primaryWhite.withOpacity(0.9),
+            color: AppColors.primaryWhite.withValues(alpha: 0.9),
             fontSize: 14,
             fontWeight: FontWeight.w400,
           ),

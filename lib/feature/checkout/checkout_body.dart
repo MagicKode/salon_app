@@ -15,7 +15,7 @@ import 'sections/cash_payment_info.dart';
 class CheckoutBody extends StatelessWidget {
   final BookingEntity booking;
 
-  CheckoutBody({super.key, required this.booking});
+  const CheckoutBody({super.key, required this.booking});
 
   @override
   Widget build(BuildContext context) {

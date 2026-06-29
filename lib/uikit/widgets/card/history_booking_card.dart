@@ -54,7 +54,7 @@ class _HistoryBookingCardState extends State<HistoryBookingCard> {
     }
   }
 
-  bool get _isCanceled => widget.booking.status?.toUpperCase() == 'CANCELED';
+  bool get _isCanceled => widget.booking.status.toUpperCase() == 'CANCELED';
   bool get _isPast => widget.booking.dateTime.isBefore(DateTime.now());
 
   bool get _canCancel {
@@ -85,7 +85,7 @@ class _HistoryBookingCardState extends State<HistoryBookingCard> {
               color: AppColors.boxDecorationColor,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: _isExpanded ? AppColors.primaryBlue : AppColors.primaryBlue.withOpacity(0.3),
+                color: _isExpanded ? AppColors.primaryBlue : AppColors.primaryBlue.withValues(alpha: 0.3),
                 width: _isExpanded ? 1.5 : 1,
               ),
             ),
@@ -269,7 +269,7 @@ class _HistoryBookingCardState extends State<HistoryBookingCard> {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          color: AppColors.primaryBlue.withOpacity(0.03),
+          color: AppColors.primaryBlue.withValues(alpha: 0.03),
           borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(12), bottomRight: Radius.circular(12)),
         ),
         child: Row(
@@ -286,7 +286,7 @@ class _HistoryBookingCardState extends State<HistoryBookingCard> {
   Widget _buildStatusChip() {
     String label;
     Color bg;
-    switch (widget.booking.status?.toUpperCase()) {
+    switch (widget.booking.status.toUpperCase()) {
       case 'CONFIRMED':
         label = _isPast ? 'Завершено' : 'Подтверждено';
         bg = Colors.green;
@@ -315,7 +315,7 @@ class _HistoryBookingCardState extends State<HistoryBookingCard> {
       color: Colors.transparent,
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
-        splashColor: color.withOpacity(0.2),
+        splashColor: color.withValues(alpha: 0.2),
         onTap: onTap,
         child: Padding(padding: const EdgeInsets.all(4), child: Icon(icon, color: color, size: 18)),
       ),
@@ -347,8 +347,8 @@ class _HistoryBookingCardState extends State<HistoryBookingCard> {
   }
 
   Color _headerColor() {
-    if (_isCanceled) return Colors.red.withOpacity(0.08);
-    if (_isPast) return Colors.grey.withOpacity(0.05);
-    return Colors.green.withOpacity(0.08);
+    if (_isCanceled) return Colors.red.withValues(alpha: 0.08);
+    if (_isPast) return Colors.grey.withValues(alpha: 0.05);
+    return Colors.green.withValues(alpha: 0.08);
   }
 }

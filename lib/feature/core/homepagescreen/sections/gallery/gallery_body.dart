@@ -30,7 +30,7 @@ class GalleryBody extends StatelessWidget {
             Navigator.of(context).push(
               PageRouteBuilder(
                 opaque: false, // Оставляем галерею видимой под размытием
-                barrierColor: Colors.black.withOpacity(0.5),
+                barrierColor: Colors.black.withValues(alpha: 0.5),
                 transitionDuration: const Duration(milliseconds: 350), // Чуть медленнее для солидности
                 pageBuilder: (context, _, __) => FullScreenImage(
                   assetPath: item.imageUrl,

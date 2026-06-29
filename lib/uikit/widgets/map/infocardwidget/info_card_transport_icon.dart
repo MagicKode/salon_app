@@ -10,7 +10,7 @@ class InfoCardTransportIcon extends StatelessWidget {
       width: 48,
       height: 48,
       decoration: BoxDecoration(
-        color: AppColors.primaryWhite.withOpacity(0.2),
+        color: AppColors.primaryWhite.withValues(alpha: 0.2),
         shape: BoxShape.circle,
       ),
       child: const Icon(

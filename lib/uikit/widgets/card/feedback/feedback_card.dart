@@ -22,7 +22,7 @@ class FeedbackCard extends StatelessWidget {
         margin: const EdgeInsets.only(right: 12, bottom: 4),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
-          color: AppColors.primaryBlue.withOpacity(0.15),
+          color: AppColors.primaryBlue.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/feature/auth/authblock/bloc/auth_block.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 import 'package:salon_flutter/uikit/widgets/button/app_button.dart';

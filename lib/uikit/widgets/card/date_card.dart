@@ -25,7 +25,7 @@ class DateCard extends StatelessWidget {
             isSelected
                 ? AppColors.primaryBlue
                 : isWeekend
-                ? AppColors.primaryRed.withOpacity(0.1)
+                ? AppColors.primaryRed.withValues(alpha: 0.1)
                 : AppColors.boxDecorationColor,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
@@ -33,8 +33,8 @@ class DateCard extends StatelessWidget {
               isSelected
                   ? AppColors.primaryBlue
                   : isWeekend
-                  ? AppColors.primaryRed.withOpacity(0.3)
-                  : AppColors.primaryBlue.withOpacity(0.3),
+                  ? AppColors.primaryRed.withValues(alpha: 0.3)
+                  : AppColors.primaryBlue.withValues(alpha: 0.3),
         ),
       ),
       child: Column(

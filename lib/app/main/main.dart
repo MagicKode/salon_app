@@ -164,7 +164,7 @@ void main() async {
 
   authBloc.stream.listen((state) {
     if (state is AuthSuccess && fcmToken != null) {
-      notificationRepo.saveFcmToken(state.user.phoneNumber, fcmToken!);
+      notificationRepo.saveFcmToken(state.user.phoneNumber, fcmToken);
       print('🔐 FCM token saved for ${state.user.phoneNumber}');
     }
   });

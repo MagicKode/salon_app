@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../uikit/colors/app_colors.dart';
 import '../../../uikit/strings/app_strings.dart';
-import '../../navigation/main_navigation_screen.dart';
 import '../loginscreen/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {

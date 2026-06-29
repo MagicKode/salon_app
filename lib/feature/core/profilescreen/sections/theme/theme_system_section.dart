@@ -25,7 +25,7 @@ class ThemeSystemSection extends StatelessWidget {
           ),
           value: isActive,
           onChanged: onChanged,
-          activeColor: AppColors.primaryBlue,
+          activeThumbColor: AppColors.primaryBlue,
         ),
         const Text(
           AppStrings.systemThemeDescription,

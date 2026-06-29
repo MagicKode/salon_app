@@ -52,9 +52,9 @@ class ServiceImageHeaderSection extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    AppColors.primaryBlack.withOpacity(0.3),
+                    AppColors.primaryBlack.withValues(alpha: 0.3),
                     Colors.transparent,
-                    AppColors.primaryBlack.withOpacity(0.8),
+                    AppColors.primaryBlack.withValues(alpha: 0.8),
                   ],
                   stops: const [0.0, 0.5, 1.0],
                 ),
@@ -100,7 +100,7 @@ class ServiceImageHeaderSection extends StatelessWidget {
               width: 36,
               height: 4,
               decoration: BoxDecoration(
-                color: AppColors.primaryWhite.withOpacity(0.5),
+                color: AppColors.primaryWhite.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),

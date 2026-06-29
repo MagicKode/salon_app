@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 import '../../../../../uikit/colors/app_colors.dart';
-import '../../../../../uikit/widgets/button/app_button.dart';
-import '../../../../catalog/bloc/catalog_bloc.dart';
-import '../../../../catalog/bloc/catalog_state.dart';
 
 class HomeBookingButtonSection extends StatelessWidget {
   final VoidCallback onPressed;
@@ -41,7 +36,7 @@ class HomeBookingButtonSection extends StatelessWidget {
               borderRadius: BorderRadius.circular(expanded ? 16 : 26),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.primaryBlue.withOpacity(0.3),
+                  color: AppColors.primaryBlue.withValues(alpha: 0.3),
                   blurRadius: expanded ? 12 : 6,
                   offset: Offset(0, expanded ? 4 : 2),
                 ),

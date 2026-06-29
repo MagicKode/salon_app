@@ -58,6 +58,7 @@ dependencies:
 
   share_plus: ^10.0.0
 
+  provider: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

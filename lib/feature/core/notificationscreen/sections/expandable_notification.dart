@@ -34,14 +34,14 @@ class _ExpandableNotificationState extends State<ExpandableNotification> {
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
             color: n.isRead
-                ? AppColors.primaryBlackShadow.withOpacity(0.3)
+                ? AppColors.primaryBlackShadow.withValues(alpha: 0.3)
                 : _borderColor(n.type),
             width: n.isRead ? 1 : 1.5,
           ),
 
           boxShadow: n.isRead ? null : [
             BoxShadow(
-              color: _borderColor(n.type).withOpacity(0.15),
+              color: _borderColor(n.type).withValues(alpha: 0.15),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -96,7 +96,7 @@ class _ExpandableNotificationState extends State<ExpandableNotification> {
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 15,
-                      color: n.isRead ? AppColors.primaryBlack.withOpacity(0.6) : AppColors.primaryBlack,
+                      color: n.isRead ? AppColors.primaryBlack.withValues(alpha: 0.6) : AppColors.primaryBlack,
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -111,7 +111,7 @@ class _ExpandableNotificationState extends State<ExpandableNotification> {
                     const Divider(height: 20),
                     Text(
                       n.body,
-                      style: TextStyle(color: AppColors.primaryBlack.withOpacity(0.8), fontSize: 13, height: 1.5),
+                      style: TextStyle(color: AppColors.primaryBlack.withValues(alpha: 0.8), fontSize: 13, height: 1.5),
                     ),
                   ],
                 ],
@@ -125,19 +125,19 @@ class _ExpandableNotificationState extends State<ExpandableNotification> {
 
   Color _headerColor(String? type) {
     switch (type) {
-      case 'BOOKING_CREATED': return Colors.green.withOpacity(0.06);
-      case 'BOOKING_CANCELLED': return Colors.red.withOpacity(0.06);
-      case 'BOOKING_UPDATED': return Colors.orange.withOpacity(0.06);
-      default: return AppColors.primaryBlue.withOpacity(0.06);
+      case 'BOOKING_CREATED': return Colors.green.withValues(alpha: 0.06);
+      case 'BOOKING_CANCELLED': return Colors.red.withValues(alpha: 0.06);
+      case 'BOOKING_UPDATED': return Colors.orange.withValues(alpha: 0.06);
+      default: return AppColors.primaryBlue.withValues(alpha: 0.06);
     }
   }
 
   Color _borderColor(String? type) {
     switch (type) {
-      case 'BOOKING_CREATED': return Colors.green.withOpacity(0.4);
-      case 'BOOKING_CANCELLED': return Colors.red.withOpacity(0.4);
-      case 'BOOKING_UPDATED': return Colors.orange.withOpacity(0.4);
-      default: return AppColors.primaryBlue.withOpacity(0.3);
+      case 'BOOKING_CREATED': return Colors.green.withValues(alpha: 0.4);
+      case 'BOOKING_CANCELLED': return Colors.red.withValues(alpha: 0.4);
+      case 'BOOKING_UPDATED': return Colors.orange.withValues(alpha: 0.4);
+      default: return AppColors.primaryBlue.withValues(alpha: 0.3);
     }
   }
 

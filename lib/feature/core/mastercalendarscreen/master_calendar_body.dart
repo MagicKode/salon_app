@@ -102,7 +102,7 @@ class _MasterCalendarBodyState extends State<MasterCalendarBody> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.coffee, size: 120, color: AppColors.primaryGrey.withOpacity(0.5)),
+          Icon(Icons.coffee, size: 120, color: AppColors.primaryGrey.withValues(alpha: 0.5)),
           const SizedBox(height: 16),
           const Text(AppStrings.noClientsForToday, style: TextStyle(fontSize: 16, color: AppColors.dateGrey)),
         ],
