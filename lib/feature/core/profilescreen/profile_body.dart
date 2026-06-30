@@ -125,9 +125,18 @@ class _ProfileBodyState extends State<ProfileBody> {
                 action: ProfileActionEntity(
                   icon: Icons.description_outlined,
                   title: AppStrings.privacyPolicy,
-                  onTap: () {
-                    // Логика открытия документа (пока заглушка для демо)
-                    print("Нажали: Политика конфиденциальности");
+                  onTap: () async {
+                    const privacyUrl = 'https://your-salon.com/privacy';  // замените на свой URL
+                    final uri = Uri.parse(privacyUrl);
+                    try {
+                      await launchUrl(uri, mode: LaunchMode.externalApplication);
+                    } catch (_) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Не удалось открыть страницу')),
+                        );
+                      }
+                    }
                   },
                 ),
               ),
