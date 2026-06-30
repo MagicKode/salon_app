@@ -183,6 +183,9 @@ class AppStrings {
   static const String darkTheme = "Темная";
   static const String privacyPolicy = "Политика конфиденциальности";
 
+  static const String supportPhoneNumber = "375293810538";
+  static const String supportTelegram = 'pavel_yaroshenko';
+
   // Feedback screen
   static const String leaveFeedback = "Напишите отзыв";
   static const String sendFeedback = "Отправить отзыв";

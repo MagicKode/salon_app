@@ -8,6 +8,7 @@ import 'package:salon_flutter/feature/core/profilescreen/sections/support/suppor
 import 'package:salon_flutter/feature/core/profilescreen/sections/userinfo/user_info_section.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../auth/authblock/bloc/auth_block.dart';
 import '../../auth/authblock/bloc/auth_event.dart';
@@ -102,9 +103,17 @@ class _ProfileBodyState extends State<ProfileBody> {
                 action: ProfileActionEntity(
                   icon: Icons.headset_mic_outlined,
                   title: AppStrings.supportTeam,
-                  onTap: () {
-                    // Здесь будет логика открытия чата или почты
-                    print("Нажали: Служба поддержки");
+                  onTap: () async {
+                    final uri = Uri.parse('https://t.me/${AppStrings.supportTelegram}');
+                    try {
+                      await launchUrl(uri, mode: LaunchMode.externalApplication);
+                    } catch (_) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Не удалось открыть Telegram')),
+                        );
+                      }
+                    }
                   },
                 ),
               ),
