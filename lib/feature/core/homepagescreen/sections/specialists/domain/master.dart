@@ -3,13 +3,13 @@ class Master {
   final String name;
   final String position;
   final String description;
-  final String imagePath;
+  final String imageUrl;
 
   const Master({
     required this.id,
     required this.name,
     required this.position,
     required this.description,
-    required this.imagePath,
+    required this.imageUrl,
   });
 }

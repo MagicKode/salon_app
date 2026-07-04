@@ -29,8 +29,8 @@ import '../../feature/core/notificationscreen/repository/notification_repository
 import '../../feature/navigation/app_root_router.dart';
 
 /// Переключай одной кнопкой: true — для эмулятора, false — для смартфона
-// const bool isEmulator = false;
-const bool isEmulator = true;
+const bool isEmulator = false;
+// const bool isEmulator = true;
 
 // Определяем базовый IP и порты для сервисов
 const String _host = isEmulator ? '10.0.2.2' : '192.168.1.223';
@@ -44,6 +44,9 @@ const String historyBaseUrl = 'http://$_host:8084/api/v1/history';
 const String reviewBaseUrl = 'http://$_host:8086/api/v1/reviews';
 const String clientBaseUrl = 'http://$_host:8082/api/v1/clients';
 const String notificationBaseUrl = 'http://$_host:8085/api/v1/notifications';
+const String catalogImagesBaseUrl = 'http://$_host:8081/api/v1/catalog/images';
+const String catalogServicesBaseUrl = 'http://$_host:8081/api/v1/catalog/services';
+const String catalogCategoriesBaseUrl = 'http://$_host:8081/api/v1/catalog/categories';
 
 //P и порты для сервисов для запуска ПК как Сервера для дистанционной демонстрации приложения.
 const String ngrokHost = 'gnarly-bounce-paper.ngrok-free.dev';
@@ -57,6 +60,7 @@ const String ngrokHost = 'gnarly-bounce-paper.ngrok-free.dev';
 // const String reviewBaseUrl = 'https://$ngrokHost/api/v1/reviews';
 // const String clientBaseUrl = 'https://$ngrokHost/api/v1/clients';
 // const String notificationBaseUrl = 'https://$ngrokHost/api/v1/notifications';
+// const String catalogImagesBaseUrl = 'http://$ngrokHost/api/v1/catalog/images';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 FlutterLocalNotificationsPlugin();
@@ -125,6 +129,9 @@ void main() async {
   final catalogRemoteDataSource = CatalogRemoteDataSourceImpl(
     dio: dio,
     baseUrl: catalogBaseUrl,
+    imagesBaseUrl: catalogImagesBaseUrl,
+    servicesBaseUrl: catalogServicesBaseUrl,
+    categoriesBaseUrl: catalogCategoriesBaseUrl,
   );
   final catalogRepository = CatalogRepositoryImpl(
     remoteDataSource: catalogRemoteDataSource,

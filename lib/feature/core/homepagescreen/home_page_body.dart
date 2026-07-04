@@ -39,36 +39,17 @@ class HomePageBody extends StatefulWidget {
 
 class _HomePageBodyState extends State<HomePageBody> {
   final ScrollController _scrollController = ScrollController();
-  bool _isAtBottom = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _scrollController.addListener(_onScroll);
-  }
 
   @override
   void dispose() {
-    _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     super.dispose();
   }
 
-  void _onScroll() {
-    final maxScroll = _scrollController.position.maxScrollExtent;
-    final currentScroll = _scrollController.position.pixels;
-    // ✅ Считаем, что "низ" — когда осталось меньше 100px
-    final atBottom = (maxScroll - currentScroll) <= 100;
-    if (atBottom != _isAtBottom) {
-      setState(() => _isAtBottom = atBottom);
-    }
-  }
-
-  // Вынес навигацию в отдельный метод внутри StatelessWidget
   void _navigateToNearbyMap(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const NearbyMapScreen()),
+      MaterialPageRoute(builder: (_) => const NearbyMapScreen()),
     );
   }
 
@@ -76,7 +57,7 @@ class _HomePageBodyState extends State<HomePageBody> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => BookingServiceScreen(selectedServices: const []),
+        builder: (_) => BookingServiceScreen(selectedServices: const []),
       ),
     );
   }
@@ -144,16 +125,13 @@ class _HomePageBodyState extends State<HomePageBody> {
               final salon = state.salon;
 
               // Идея с кастомным или дефолтным названием студии:
-              final displaySalonName =
-                  salon.name.isEmpty || salon.name == "Дмитрий"
-                      ? "Студия Павла Ярошенко"
-                      : salon.name;
+              final displaySalonName = "Студия Павла Ярошенко";
 
               return Stack(
                 children: [
                   SingleChildScrollView(
                     controller: _scrollController,
-                    padding: EdgeInsets.only(bottom: widget.isMaster ? 20 : 80),
+                    padding: EdgeInsets.only(bottom: widget.isMaster ? 20 : 100),
                     child: Column(
                       children: [
                         if (!widget.isMaster)
@@ -247,16 +225,12 @@ class _HomePageBodyState extends State<HomePageBody> {
                   if (!widget.isMaster)
                     Positioned(
                       bottom: 16,
-                      left: _isAtBottom ? 16 : 32, // ✅ Расширяется внизу
-                      right: _isAtBottom ? 16 : 32, // ✅ Расширяется внизу
-                      child: AnimatedOpacity(
-                        duration: const Duration(milliseconds: 200),
-                        opacity: 1.0,
-                        child: HomeBookingButtonSection(
-                          key: const ValueKey('persistent_booking_button'),
-                          onPressed: () => _onBookingTap(context),
-                          expanded: _isAtBottom, // ✅ Флаг для дочернего виджета
-                        ),
+                      left: 16,
+                      right: 16,
+                      child: HomeBookingButtonSection(
+                        key: const ValueKey('persistent_booking_button'),
+                        onPressed: () => _onBookingTap(context),
+                        scrollController: _scrollController,
                       ),
                     ),
                 ],

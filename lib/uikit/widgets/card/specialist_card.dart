@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../../uikit/colors/app_colors.dart';
 import '../../../feature/core/homepagescreen/sections/specialists/domain/master.dart';
+import 'networkimagewithplaceholder.dart';
 
 class SpecialistCard extends StatelessWidget {
   final Master master;
@@ -21,7 +22,13 @@ class SpecialistCard extends StatelessWidget {
           // 1. Фото
           CircleAvatar(
             radius: 28,
-            backgroundImage: AssetImage(master.imagePath),
+            child: NetworkImageWithPlaceholder(
+              url: master.imageUrl,
+              fit: BoxFit.cover,
+              width: 56,
+              height: 56,
+              errorWidget: const Icon(Icons.person, size: 28, color: Colors.grey),
+            ),
           ),
           const SizedBox(width: 8),
 

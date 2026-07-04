@@ -1,47 +1,26 @@
 import 'package:flutter/material.dart';
 
-import '../homepagescreen/domain/home_models.dart';
 import 'domain/service_detail_data.dart';
 import 'service_detail_body.dart';
 
 class ServiceDetailScreen extends StatelessWidget {
-  final ServiceCategory category;
-  final bool isModal;
+  final ServiceDetail service;
   final bool isMaster;
 
   const ServiceDetailScreen({
     super.key,
-    required this.category,
-    this.isModal = true,
+    required this.service,
     this.isMaster = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    // 1. Ищем данные.
-    final detail = ServiceDetailData.allDetails.firstWhere(
-      (element) => element.title == category.title,
-      orElse: () => ServiceDetailData.mensHaircut,
-    );
-
-    // 2. Создаем контент напрямую
-    final Widget content = ServiceDetailBody(
-      service: detail,
-      isMaster: isMaster,
-      onServiceSelected: (selectedService) {
-        // Когда внутри Body нажали кнопку, закрываем экран и передаем объект в GridSection
-        Navigator.pop(context, selectedService);
-      },
-    );
-
-    // 3. Возвращаем результат
-    if (isModal) {
-      return content;
-    }
-
     return Scaffold(
-      appBar: AppBar(title: Text(category.title), centerTitle: true),
-      body: content,
+      appBar: AppBar(title: Text(service.title), centerTitle: true),
+      body: ServiceDetailBody(
+        service: service,
+        isMaster: isMaster,
+      ),
     );
   }
 }

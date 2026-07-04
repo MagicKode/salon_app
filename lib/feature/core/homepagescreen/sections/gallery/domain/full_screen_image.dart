@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
+import '../../../../../../uikit/widgets/card/networkimagewithplaceholder.dart';
+
 class FullScreenImage extends StatelessWidget {
-  final String assetPath;
+  final String url;
   final String tag;
 
-  const FullScreenImage({
-    super.key,
-    required this.assetPath,
-    required this.tag,
-  });
+  const FullScreenImage({super.key, required this.url, required this.tag});
 
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -23,7 +22,7 @@ class FullScreenImage extends StatelessWidget {
           GestureDetector(
             onTap: () => Navigator.pop(context),
             child: Container(
-              color: Colors.black.withValues(alpha: 0.8),
+              color: Colors.black.withOpacity(0.85),
               width: double.infinity,
               height: double.infinity,
             ),
@@ -31,20 +30,20 @@ class FullScreenImage extends StatelessWidget {
 
           // 2. Центрированная картинка на 90% экрана
           Center(
-            child: InteractiveViewer(
-              clipBehavior: Clip.none,
-              // Позволяет картинке выходить за границы при зуме
-              minScale: 1.0,
-              maxScale: 4.0,
-              child: Hero(
-                tag: tag,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  // Скругляем углы раскрытой картинки
-                  child: Image.asset(
-                    assetPath,
-                    width: screenWidth * 0.9,
-                    fit: BoxFit.contain, // Сохраняем пропорции
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(24),
+              child: InteractiveViewer(
+                clipBehavior: Clip.none,
+                minScale: 1.0,
+                maxScale: 4.0,
+                child: Hero(
+                  tag: tag,
+                  child: NetworkImageWithPlaceholder(
+                    url: url,
+                    fit: BoxFit.contain,
+                    width: screenWidth * 0.95,
+                    height: screenHeight * 0.8,
+                    errorWidget: const Icon(Icons.broken_image, color: Colors.white, size: 48),
                   ),
                 ),
               ),
@@ -56,10 +55,10 @@ class FullScreenImage extends StatelessWidget {
             top: MediaQuery.of(context).padding.top + 20,
             right: 20,
             child: Material(
-              color: Colors.white.withValues(alpha: 0.2), // Подложка под крестик
+              color: Colors.white.withOpacity(0.2),
               shape: const CircleBorder(),
               child: IconButton(
-                icon: const Icon(Icons.close, color: AppColors.primaryWhite, size: 24),
+                icon: const Icon(Icons.close, color: Colors.white, size: 24),
                 onPressed: () => Navigator.pop(context),
               ),
             ),

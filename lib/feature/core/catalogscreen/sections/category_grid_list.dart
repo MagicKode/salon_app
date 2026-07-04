@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../../../../uikit/colors/app_colors.dart';
-import '../domain/catalog_category.dart';
+import '../../../../uikit/widgets/card/networkimagewithplaceholder.dart';
+import '../../../catalog/data/models/category_dto.dart';
 
 class CategoryGridList extends StatelessWidget {
-  final List<CatalogCategory> categories;
-  final Function(CatalogCategory) onCategorySelected;
+  final List<CategoryDto> categories;
+  final Function(CategoryDto) onCategorySelected;
 
   const CategoryGridList({
     super.key,
@@ -27,7 +28,6 @@ class CategoryGridList extends StatelessWidget {
             onTap: () => onCategorySelected(category),
             child: Container(
               height: 140,
-              // Оптимальная высота для красивой плитки
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
@@ -38,31 +38,27 @@ class CategoryGridList extends StatelessWidget {
                   ),
                 ],
               ),
-              // ClipRRect нужен, чтобы картинка не вылезала за скругленные углы контейнера
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
                 child: Stack(
                   children: [
-                    // 1. Задний фон — Фотография из ассетов
+                    // Фото категории из сети
                     Positioned.fill(
-                      child: Image.asset(
-                        category.imagePath,
+                      child: category.image != null
+                          ? NetworkImageWithPlaceholder(
+                        url: category.image!.url,
                         fit: BoxFit.cover,
-                        // Растягиваем фото по всей плитке
-                        // Заглушка на случай, если картинка еще не добавлена в pubspec.yaml
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: AppColors.primaryBlue.withValues(alpha: 0.2),
-                            child: const Icon(
-                              Icons.image_not_supported_rounded,
-                              color: AppColors.primaryGrey,
-                            ),
-                          );
-                        },
+                        errorWidget: Container(
+                          color: AppColors.primaryBlue.withValues(alpha: 0.2),
+                          child: const Icon(Icons.image_not_supported_rounded, color: AppColors.primaryGrey),
+                        ),
+                      )
+                          : Container(
+                        color: AppColors.primaryBlue.withValues(alpha: 0.2),
+                        child: const Icon(Icons.image_not_supported_rounded, color: AppColors.primaryGrey),
                       ),
                     ),
-
-                    // 2. Градиентное затемнение поверх фото (чтобы текст не сливался с картинкой)
+                    // Градиент
                     Positioned.fill(
                       child: Container(
                         decoration: BoxDecoration(
@@ -71,16 +67,13 @@ class CategoryGridList extends StatelessWidget {
                             end: Alignment.centerRight,
                             colors: [
                               Colors.black.withValues(alpha: 0.65),
-                              // Плотное затемнение слева под текст
                               Colors.black.withValues(alpha: 0.1),
-                              // Легкое затемнение справа для объема
                             ],
                           ),
                         ),
                       ),
                     ),
-
-                    // 3. Контент плитки (Название зала)
+                    // Название
                     Positioned(
                       left: 20,
                       top: 0,
@@ -96,13 +89,12 @@ class CategoryGridList extends StatelessWidget {
                                 fontSize: 22,
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.primaryWhite,
-                                // Белый текст поверх темного градиента
                                 letterSpacing: 0.5,
                               ),
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              '${category.services.length} услуг',
+                              'Услуги',
                               style: TextStyle(
                                 fontSize: 13,
                                 color: AppColors.primaryWhite.withValues(alpha: 0.8),
@@ -112,8 +104,7 @@ class CategoryGridList extends StatelessWidget {
                         ),
                       ),
                     ),
-
-                    // Иконка стрелочки вправо для индикации перехода
+                    // Стрелка
                     Positioned(
                       right: 20,
                       top: 0,

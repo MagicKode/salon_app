@@ -18,20 +18,4 @@ class ServiceDetail {
   });
 }
 
-class ServiceDetailData {
-  // Статическая константа для конкретной услуги (например, для тестов или дефолтного отображения)
-  static const ServiceDetail mensHaircut = ServiceDetail(
-    id: '1',
-    title: AppStrings.dummyServiceTitle,
-    imageUrl: 'assets/images/services/man/man-style.jpg',
-    duration: '45-60 ${AppStrings.durationUnit}',
-    price: '30 ${AppStrings.currency}',
-    description: AppStrings.dummyServiceDescription,
-  );
-
-  // Здесь в будущем может быть список всех детальных описаний
-  static const List<ServiceDetail> allDetails = [
-    mensHaircut,
-    // ... другие услуги
-  ];
-}
+class ServiceDetailData {}

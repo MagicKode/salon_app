@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 
-import '../../domain/home_models.dart';
+import '../../../../../uikit/colors/app_colors.dart';
+import '../../../../../uikit/widgets/card/networkimagewithplaceholder.dart';
 
 class ServiceItem extends StatelessWidget {
-  final ServiceCategory category;
+  final String imageUrl;   // ✅ заменили category на прямую ссылку
+  final String title;
+  final String subtitle;
 
-  const ServiceItem({super.key, required this.category});
+  const ServiceItem({super.key, required this.imageUrl,
+    required this.title,
+    required this.subtitle,});
 
   @override
   Widget build(BuildContext context) {
@@ -15,9 +20,15 @@ class ServiceItem extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           // 1. Фото
-          Image.asset(
-            category.imagePath,
+          NetworkImageWithPlaceholder(
+            url: imageUrl,
             fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+            errorWidget: Container(
+              color: Colors.grey[300],
+              child: const Icon(Icons.broken_image, color: AppColors.primaryGrey),
+            ),
           ),
 
           // 2. ТЕМНЫЙ ОВЕРЛЕЙ (Вместо засвета)
@@ -41,11 +52,11 @@ class ServiceItem extends StatelessWidget {
             child: Align(
               alignment: Alignment.bottomLeft,
               child: Text(
-                category.title,
+                title,
                 style: const TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
-                  color: Colors.white,
+                  color: AppColors.primaryWhite,
                   letterSpacing: 0.3,
                   // Очень мягкая тень для отделения от фона
                   shadows: [
