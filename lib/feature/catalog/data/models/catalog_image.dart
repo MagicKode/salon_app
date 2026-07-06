@@ -5,9 +5,10 @@ class CatalogImage {
   const CatalogImage({required this.id, required this.url});
 
   factory CatalogImage.fromJson(Map<String, dynamic> json, {required String imagesBaseUrl}) {
+    print('🖼️ [CatalogImage] input json: $json');
     final int id = _toInt(json['id']);
     final String fullUrl = '$imagesBaseUrl/$id';
-    print('🖼️ [CatalogImage] id=$id, fullUrl=$fullUrl'); // 👈 лог
+    print('🖼️ [CatalogImage] id=$id, fullUrl=$fullUrl');
     return CatalogImage(
       id: id,
       url: fullUrl,

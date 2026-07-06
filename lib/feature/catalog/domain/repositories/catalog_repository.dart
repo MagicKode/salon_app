@@ -9,4 +9,5 @@ abstract class CatalogRepository {
   Future<List<ServiceDto>> getServices();
   Future<List<CategoryDto>> getCategories();
   Future<List<ServiceDto>> getServicesByCategory(int categoryId);
+  Future<void> deleteImage(int imageId);
 }

@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/gallery/gallery_screen.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/gallery/sections/gallery_grid_preview.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/gallery/sections/add_photo_sheet.dart';
+import 'package:salon_flutter/feature/catalog/data/repositories/catalog_repository_impl.dart';
+import 'package:salon_flutter/feature/catalog/domain/repositories/catalog_repository.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../../../../app/main/main.dart';
 
 class GallerySection extends StatefulWidget {
   final bool isMaster;
@@ -15,12 +20,21 @@ class GallerySection extends StatefulWidget {
 }
 
 class _GallerySectionState extends State<GallerySection> {
+  int _refreshCounter = 0;
+
   void _refreshGallery() {
-    setState(() {});
+    final repo = context.read<CatalogRepository>();
+    if (repo is CatalogRepositoryImpl) {
+      repo.clearCache();
+      print('🗑️ Кеш очищен при обновлении галереи');
+    }
+    setState(() {
+      _refreshCounter++;
+    });
   }
 
   void _showUploadDialog(BuildContext context) async {
-    const String uploadUrl = 'http://10.0.2.2:8081/api/v1/catalog/images/upload';
+    const String uploadUrl = catalogImagesUploadUrl;
     final result = await AddPhotoSheet.show(context, uploadUrl);
     if (result == true) {
       _refreshGallery();
@@ -39,21 +53,26 @@ class _GallerySectionState extends State<GallerySection> {
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
-        const GalleryGridPreview(),
+        // ✅ Увеличиваем высоту до 360, чтобы поместить 2 ряда картинок
+        SizedBox(
+          height: 360,
+          child: GalleryGridPreview(key: ValueKey(_refreshCounter)),
+        ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 12),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // ✅ Только для мастера – кликабельная надпись вместо кнопки
               if (widget.isMaster)
                 TextButton(
                   onPressed: () => _showUploadDialog(context),
                   style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    minimumSize: Size.zero,
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    foregroundColor: AppColors.primaryBlue,
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    backgroundColor: Colors.grey.shade200, // слабый серый фон
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    foregroundColor: AppColors.primaryBlue, // цвет текста и иконки
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -62,27 +81,33 @@ class _GallerySectionState extends State<GallerySection> {
                       const SizedBox(width: 4),
                       const Text(
                         'Добавить фото',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                       ),
                     ],
                   ),
                 ),
               const SizedBox(width: 12),
+
               OutlinedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const GalleryScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => GalleryScreen(
+                        isMaster: widget.isMaster,
+                        onRefresh: _refreshGallery,
+                      ),
+                    ),
                   );
                 },
                 style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: AppColors.primaryBlue),
+                  backgroundColor: AppColors.primaryBlue.withOpacity(0.15), // полупрозрачный фон
+                  side: BorderSide(color: AppColors.primaryBlue.withOpacity(0.2)), // полупрозрачная граница
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
+                  foregroundColor: AppColors.primaryBlue, // светлый текст
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 ),
                 child: const Text(AppStrings.seeAllGallery),
               ),

@@ -1,7 +1,8 @@
 import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:http/http.dart' as http;
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
 class AddPhotoSheet extends StatefulWidget {
@@ -57,6 +58,7 @@ class _AddPhotoSheetState extends State<AddPhotoSheet> {
       _totalCount = _selectedImages.length;
     });
 
+    final Dio dio = Dio();
     int successCount = 0;
     int failCount = 0;
 
@@ -71,21 +73,44 @@ class _AddPhotoSheetState extends State<AddPhotoSheet> {
         final fileSize = await file.length();
         print('📁 Загружаем файл: ${file.path}, размер: $fileSize байт');
 
-        // Создаём multipart запрос через http
-        final request = http.MultipartRequest('POST', Uri.parse(widget.uploadUrl));
-        request.files.add(await http.MultipartFile.fromPath('file', file.path));
-        request.fields['relatedType'] = 'gallery';
-        request.fields['relatedId'] = '0';
-        request.headers['Accept'] = 'application/json';
+        final multipartFile = await MultipartFile.fromFile(file.path, filename: 'photo_$i.jpg');
+        print('📎 MultipartFile создан: ${multipartFile.filename}, длина: ${multipartFile.length}');
+
+        final formData = FormData.fromMap({
+          'file': multipartFile,
+          'relatedType': 'gallery',
+          'relatedId': 0,
+        });
 
         print('🌐 Отправка запроса на: ${widget.uploadUrl}');
-        print('📦 Поля: ${request.fields}');
-        print('📎 Файл: ${request.files.first.filename}');
+        print('📦 FormData: ${formData.fields}'); // только поля, файл не выводим
 
-        final streamedResponse = await request.send();
-        final response = await http.Response.fromStream(streamedResponse);
+        final response = await dio.post(
+          widget.uploadUrl,
+          data: formData,
+          onSendProgress: (sent, total) {
+            print('📤 Отправлено: $sent / $total');
+          },
+          onReceiveProgress: (received, total) {
+            print('📥 Получено: $received / $total');
+          },
+          options: Options(
+            contentType: 'multipart/form-data',
+            headers: {
+              'Accept': 'application/json',
+            },
+            sendTimeout: const Duration(seconds: 60),
+            receiveTimeout: const Duration(seconds: 60),
+            connectTimeout: const Duration(seconds: 60),
+          ),
+        ).timeout(
+          const Duration(seconds: 70),
+          onTimeout: () {
+            throw Exception('Превышено время ожидания ответа от сервера');
+          },
+        );
 
-        print('✅ Ответ: статус ${response.statusCode}, тело: ${response.body}');
+        print('✅ Ответ: статус ${response.statusCode}, тело: ${response.data}');
 
         if (response.statusCode == 200) {
           successCount++;

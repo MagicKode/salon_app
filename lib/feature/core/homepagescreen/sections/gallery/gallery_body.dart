@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../uikit/widgets/card/networkimagewithplaceholder.dart';
-import '../../../../catalog/bloc/catalog_bloc.dart';
+
+import '../../../../../uikit/widgets/card/gallery_image_card.dart';
 import '../../../../catalog/data/models/catalog_image.dart';
 import '../../../../catalog/domain/repositories/catalog_repository.dart';
-import 'domain/full_screen_image.dart';
 
 class GalleryBody extends StatelessWidget {
-  const GalleryBody({super.key});
+  final bool isMaster;
+  final VoidCallback onRefresh;
+
+  const GalleryBody({
+    super.key,
+    required this.isMaster,
+    required this.onRefresh,
+  });
 
   @override
   Widget build(BuildContext context) {
-    // получаем репозиторий через Bloc (можно напрямую, если есть доступ)
-    // Лучше добавить метод в Bloc, но для примера используем репозиторий напрямую
     final repository = context.read<CatalogRepository>();
 
     return FutureBuilder<List<CatalogImage>>(
@@ -30,7 +34,7 @@ class GalleryBody extends StatelessWidget {
         }
 
         return GridView.builder(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(12),
           physics: const BouncingScrollPhysics(),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
@@ -41,35 +45,11 @@ class GalleryBody extends StatelessWidget {
           itemCount: images.length,
           itemBuilder: (context, index) {
             final item = images[index];
-            final heroTag = 'image_${item.id}';
-
-            return GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(
-                  PageRouteBuilder(
-                    opaque: false,
-                    barrierColor: Colors.black.withOpacity(0.5),
-                    transitionDuration: const Duration(milliseconds: 350),
-                    pageBuilder: (_, __, ___) => FullScreenImage(
-                      url: item.url,   // теперь полный URL
-                      tag: 'image_${item.id}',
-                    ),
-                    transitionsBuilder: (_, animation, __, child) =>
-                        FadeTransition(opacity: animation, child: child),
-                  ),
-                );
-              },
-              child: Hero(
-                tag: 'image_${item.id}',
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: NetworkImageWithPlaceholder(
-                    url: item.url,
-                    fit: BoxFit.cover,
-                    errorWidget: const Icon(Icons.broken_image, color: Colors.grey),
-                  ),
-                ),
-              ),
+            return GalleryImageCard(
+              image: item,
+              heroTag: 'image_${item.id}',
+              enableDelete: isMaster,
+              onRefresh: onRefresh,
             );
           },
         );

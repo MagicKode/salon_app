@@ -5,7 +5,14 @@ import 'package:salon_flutter/uikit/strings/app_strings.dart';
 import '../../../../../uikit/colors/app_colors.dart';
 
 class GalleryScreen extends StatelessWidget {
-  const GalleryScreen({super.key});
+  final bool isMaster;
+  final VoidCallback onRefresh;
+
+  const GalleryScreen({
+    super.key,
+    required this.isMaster,
+    required this.onRefresh,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +39,10 @@ class GalleryScreen extends StatelessWidget {
         centerTitle: true,
         elevation: 0,
       ),
-      body: const GalleryBody(),
+      body: GalleryBody(
+        isMaster: isMaster,
+        onRefresh: onRefresh,
+      ),
     );
   }
 }

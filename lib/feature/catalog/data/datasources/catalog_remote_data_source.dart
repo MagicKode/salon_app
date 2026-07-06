@@ -12,6 +12,7 @@ abstract class CatalogRemoteDataSource {
   Future<List<ServiceDto>> getServices();
   Future<List<CategoryDto>> getCategories();
   Future<List<ServiceDto>> getServicesByCategory(int categoryId);
+  Future<void> deleteImage(int imageId);
 }
 
 class CatalogRemoteDataSourceImpl implements CatalogRemoteDataSource {
@@ -34,12 +35,21 @@ class CatalogRemoteDataSourceImpl implements CatalogRemoteDataSource {
     if (response.statusCode != 200 || response.data == null) {
       throw Exception('Ошибка сервера: ${response.statusCode}');
     }
-    final data = response.data['data'];
-    print('🌐 Extracted data: $data');
-    if (data == null) {
-      throw Exception('Данные отсутствуют');
+    print('📄 response.data type = ${response.data.runtimeType}');
+    if (response.data is List) {
+      print('📄 response.data is List, returning directly');
+      return response.data;
     }
-    return data;
+    // Если это Map, пытаемся извлечь поле 'data'
+    if (response.data is Map) {
+      final data = response.data['data'];
+      print('📄 extracted data from map = $data');
+      if (data == null) {
+        throw Exception('Данные отсутствуют');
+      }
+      return data;
+    }
+    throw Exception('Неизвестный формат ответа: ${response.data.runtimeType}');
   }
 
   @override
@@ -56,14 +66,28 @@ class CatalogRemoteDataSourceImpl implements CatalogRemoteDataSource {
 
   @override
   Future<List<CatalogImage>> getImages(String relatedType, int relatedId) async {
+    print('📸 getImages: START for $relatedType, $relatedId');
     final response = await dio.get(
       '$imagesBaseUrl/by-related',
       queryParameters: {'relatedType': relatedType, 'relatedId': relatedId},
     );
+    print('📸 response.statusCode = ${response.statusCode}');
     final data = _extractData(response);
-    return (data as List)
+    print('📸 data type = ${data.runtimeType}');
+    if (data is List) {
+      print('📸 data is List, length = ${data.length}');
+      if (data.isNotEmpty) {
+        print('📸 first element type = ${data[0].runtimeType}');
+      }
+    } else {
+      print('📸 data is NOT a List');
+      throw Exception('Ожидался список, получено: ${data.runtimeType}');
+    }
+    final result = (data as List)
         .map((json) => CatalogImage.fromJson(json, imagesBaseUrl: imagesBaseUrl))
         .toList();
+    print('📸 result type = ${result.runtimeType}, length = ${result.length}');
+    return result;
   }
 
   @override
@@ -106,5 +130,10 @@ class CatalogRemoteDataSourceImpl implements CatalogRemoteDataSource {
     } on DioException catch (e) {
       throw Exception(e.response?.data['message'] ?? 'Ошибка загрузки услуг категории');
     }
+  }
+
+  @override
+  Future<void> deleteImage(int imageId) async {
+    await dio.delete('$imagesBaseUrl/$imageId');
   }
 }

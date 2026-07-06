@@ -21,15 +21,22 @@ class NetworkImageWithPlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print('🖼️ NetworkImageWithPlaceholder: url=$url');
-    return CachedNetworkImage(
-      imageUrl: url,
+    return Image.network(
+      url,
       width: width,
       height: height,
       fit: fit ?? BoxFit.cover,
-      placeholder: (context, url) => const _LoadingPlaceholder(),
-      errorWidget: (context, url, error) {
-        print('❌ CachedNetworkImage error: $error, URL: $url');
-        return _DefaultErrorWidget();
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) {
+          print('✅ Картинка загружена: $url');
+          return child;
+        }
+        print('⏳ Загрузка: ${loadingProgress.cumulativeBytesLoaded}/${loadingProgress.expectedTotalBytes}');
+        return const _LoadingPlaceholder();
+      },
+      errorBuilder: (context, error, stackTrace) {
+        print('❌ Ошибка загрузки: $error, URL: $url');
+        return const _DefaultErrorWidget();
       },
     );
   }

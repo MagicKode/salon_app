@@ -31,8 +31,8 @@ import '../../feature/core/notificationscreen/repository/notification_repository
 import '../../feature/navigation/app_root_router.dart';
 
 /// Переключай одной кнопкой: true — для эмулятора, false — для смартфона
-// const bool isEmulator = false;
-const bool isEmulator = true;
+const bool isEmulator = false;
+// const bool isEmulator = true;
 
 // Определяем базовый IP и порты для сервисов
 const String _host = isEmulator ? '10.0.2.2' : '192.168.1.223';
@@ -49,6 +49,7 @@ const String notificationBaseUrl = 'http://$_host:8085/api/v1/notifications';
 const String catalogImagesBaseUrl = 'http://$_host:8081/api/v1/catalog/images';
 const String catalogServicesBaseUrl = 'http://$_host:8081/api/v1/catalog/services';
 const String catalogCategoriesBaseUrl = 'http://$_host:8081/api/v1/catalog/categories';
+const String catalogImagesUploadUrl = 'http://$_host:8081/api/v1/catalog/images/upload';
 
 //P и порты для сервисов для запуска ПК как Сервера для дистанционной демонстрации приложения.
 const String ngrokHost = 'gnarly-bounce-paper.ngrok-free.dev';
@@ -63,6 +64,9 @@ const String ngrokHost = 'gnarly-bounce-paper.ngrok-free.dev';
 // const String clientBaseUrl = 'https://$ngrokHost/api/v1/clients';
 // const String notificationBaseUrl = 'https://$ngrokHost/api/v1/notifications';
 // const String catalogImagesBaseUrl = 'http://$ngrokHost/api/v1/catalog/images';
+// const String catalogServicesBaseUrl = 'http://$ngrokHost/api/v1/catalog/services';
+// const String catalogCategoriesBaseUrl = 'http://$ngrokHost/api/v1/catalog/categories';
+// const String catalogImagesUploadUrl = 'http://$ngrokHost/api/v1/catalog/images/upload';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 FlutterLocalNotificationsPlugin();
