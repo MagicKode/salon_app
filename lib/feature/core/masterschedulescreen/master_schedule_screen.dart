@@ -6,6 +6,7 @@ import '../../auth/authblock/bloc/auth_block.dart';
 import '../../auth/authblock/bloc/auth_state.dart';
 import 'bloc/master_schedule_bloc.dart';
 import 'bloc/master_schedule_event.dart';
+import 'bloc/master_schedule_state.dart';
 import 'domain/master_schedule_repository.dart';
 import 'master_schedule_body.dart';
 

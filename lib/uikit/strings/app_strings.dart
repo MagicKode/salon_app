@@ -243,6 +243,13 @@ class AppStrings {
   static const String deleteBookedService = "Удалить";
   static const String deletedSuccessfully = "Запись успешно удалена";
 
+  static const String dayOffMessage = 'Сегодня выходной';
+  static const String todayIsDayOff = 'Сегодня выходной';
+  static const String dayOff = 'Выходной';
+  static const String noAppointmentsToday = 'На сегодня записей нет';
+  static const String noAppointmentsOnThisDay = 'На этот день записей нет';
+  static const String noAppointmentsForSelectedDay = 'На этот день записей нет';
+
   // Master schedule screen
   static const String dayIsFull = "День занят";
   static const String chosenDay = "Выбрано";

@@ -17,10 +17,7 @@ class DailyScheduleModel {
     print('Parsing DailySchedule: $json'); // Отладка
     return DailyScheduleModel(
       bookings: (json['bookings'] as List<dynamic>?)
-          ?.map((e) {
-        print('Parsing booking: $e'); // Отладка
-        return AppointmentModel.fromJson(e as Map<String, dynamic>);
-      })
+          ?.map((e) => AppointmentModel.fromJson(e as Map<String, dynamic>))
           .toList() ?? [],
       firstClientTime: json['firstClientTime'] as String? ?? '-',
       lastClientTime: json['lastClientTime'] as String? ?? '-',

@@ -30,22 +30,26 @@ class CatalogRemoteDataSourceImpl implements CatalogRemoteDataSource {
     required this.categoriesBaseUrl
   });
 
+  dynamic _extractData(Response response) {
+    if (response.statusCode != 200 || response.data == null) {
+      throw Exception('Ошибка сервера: ${response.statusCode}');
+    }
+    final data = response.data['data'];
+    print('🌐 Extracted data: $data');
+    if (data == null) {
+      throw Exception('Данные отсутствуют');
+    }
+    return data;
+  }
+
   @override
   Future<SalonModel> getSalonInfo() async {
     try {
       final response = await dio.get(baseUrl);
-
-      if (response.statusCode == 200 && response.data != null) {
-        // Парсим в соответствии со структурой ответа бэкенда: response.data['data']
-        final Map<String, dynamic> dataBody =
-            response.data['data'] as Map<String, dynamic>;
-        return SalonModel.fromJson(dataBody);
-      } else {
-        throw Exception(AppStrings.errorInLoadingCatalogData);
-      }
+      final data = _extractData(response);
+      return SalonModel.fromJson(data);
     } on DioException catch (e) {
-      final errorMessage =
-          e.response?.data['message'] ?? AppStrings.errorNetworkInGettingCatalog;
+      final errorMessage = e.response?.data['message'] ?? AppStrings.errorNetworkInGettingCatalog;
       throw Exception(errorMessage);
     }
   }
@@ -54,37 +58,53 @@ class CatalogRemoteDataSourceImpl implements CatalogRemoteDataSource {
   Future<List<CatalogImage>> getImages(String relatedType, int relatedId) async {
     final response = await dio.get(
       '$imagesBaseUrl/by-related',
-      queryParameters: {
-        'relatedType': relatedType,
-        'relatedId': relatedId,
-      },
+      queryParameters: {'relatedType': relatedType, 'relatedId': relatedId},
     );
-    return (response.data as List)
+    final data = _extractData(response);
+    return (data as List)
         .map((json) => CatalogImage.fromJson(json, imagesBaseUrl: imagesBaseUrl))
         .toList();
   }
 
   @override
   Future<List<ServiceDto>> getServices() async{
-    final response = await dio.get(servicesBaseUrl);
-    return (response.data as List)
-        .map((j) => ServiceDto.fromJson(j, imagesBaseUrl: imagesBaseUrl))
-        .toList();
+    try {
+      final response = await dio.get(servicesBaseUrl);
+      final data = _extractData(response);
+      if (data is! List) {
+        throw Exception('Неверный формат данных');
+      }
+      return data.map((json) => ServiceDto.fromJson(json, imagesBaseUrl: imagesBaseUrl)).toList();
+    } on DioException catch (e) {
+      throw Exception(e.response?.data['message'] ?? 'Ошибка загрузки услуг');
+    }
   }
 
   @override
   Future<List<CategoryDto>> getCategories() async {
-    final response = await dio.get(categoriesBaseUrl);
-    return (response.data as List)
-        .map((j) => CategoryDto.fromJson(j, imagesBaseUrl: imagesBaseUrl))
-        .toList();
+    try {
+      final response = await dio.get(categoriesBaseUrl);
+      final data = _extractData(response);
+      if (data is! List) {
+        throw Exception('Неверный формат данных');
+      }
+      return data.map((json) => CategoryDto.fromJson(json, imagesBaseUrl: imagesBaseUrl)).toList();
+    } on DioException catch (e) {
+      throw Exception(e.response?.data['message'] ?? 'Ошибка загрузки категорий');
+    }
   }
 
   @override
   Future<List<ServiceDto>> getServicesByCategory(int categoryId) async {
-    final response = await dio.get('$servicesBaseUrl/by-category/$categoryId');
-    return (response.data as List)
-        .map((j) => ServiceDto.fromJson(j, imagesBaseUrl: imagesBaseUrl))
-        .toList();
+    try {
+      final response = await dio.get('$servicesBaseUrl/by-category/$categoryId');
+      final data = _extractData(response);
+      if (data is! List) {
+        throw Exception('Неверный формат данных');
+      }
+      return data.map((json) => ServiceDto.fromJson(json, imagesBaseUrl: imagesBaseUrl)).toList();
+    } on DioException catch (e) {
+      throw Exception(e.response?.data['message'] ?? 'Ошибка загрузки услуг категории');
+    }
   }
 }

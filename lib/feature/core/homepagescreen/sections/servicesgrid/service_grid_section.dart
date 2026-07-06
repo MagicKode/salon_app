@@ -21,62 +21,6 @@ class ServiceGridSection extends StatelessWidget {
     this.onQuickBookRequested,
   });
 
-  Future<List<ServiceItemData>> _loadServices(BuildContext context) async {
-    final repo = context.read<CatalogRepository>();
-    final List<CatalogImage> images = await repo.getImages('service', 0);
-
-    // Пока у нас нет реальной таблицы услуг, мы создадим ServiceItemData вручную,
-    // связывая изображения с предопределёнными названиями услуг.
-    // В будущем это будет приходить с сервера.
-    final List<ServiceItemData> services = [];
-
-    // Пример для мужских услуг (первые 4 изображения)
-    if (images.length >= 4) {
-      services.addAll([
-        ServiceItemData(
-          title: 'Мужская стрижка',
-          subtitle: 'от 25 Br',
-          imageUrl: images[0].url,
-          detailImageUrl: images[0].url,
-          category: 'man',
-          services: ['Мужская стрижка'],
-          prices: [25],
-          durations: [60],
-        ),
-        ServiceItemData(
-          title: 'Мужское окрашивание',
-          subtitle: 'от 80 Br',
-          imageUrl: images[1].url,
-          detailImageUrl: images[1].url,
-          category: 'man',
-          services: ['Мужское окрашивание'],
-          prices: [80],
-          durations: [120],
-        ),
-        // добавьте остальные
-      ]);
-    }
-
-    // Женские услуги (следующие 4 изображения)
-    if (images.length >= 8) {
-      services.addAll([
-        ServiceItemData(
-          title: 'Женская стрижка',
-          subtitle: 'от 30 Br',
-          imageUrl: images[4].url,
-          detailImageUrl: images[4].url,
-          category: 'woman',
-          services: ['Женская стрижка'],
-          prices: [30],
-          durations: [60],
-        ),
-        // остальные...
-      ]);
-    }
-
-    return services;
-  }
-
   @override
   Widget build(BuildContext context) {
     final repo = context.read<CatalogRepository>();

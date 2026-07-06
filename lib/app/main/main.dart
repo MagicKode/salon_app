@@ -23,14 +23,15 @@ import '../../feature/checkout/domain/repository/booking_repository.dart';
 import '../../feature/core/bookingservicescreen/bookingblock/booking_slots_bloc.dart';
 import '../../feature/core/homepagescreen/sections/feedback/bloc/review_bloc.dart';
 import '../../feature/core/homepagescreen/sections/feedback/data/review_api_service.dart';
+import '../../feature/core/mastercalendarscreen/bloc/master_calendar_bloc.dart';
 import '../../feature/core/mastercalendarscreen/domain/master_calendar_repository.dart';
 import '../../feature/core/masterschedulescreen/domain/master_schedule_repository.dart';
 import '../../feature/core/notificationscreen/repository/notification_repository.dart';
 import '../../feature/navigation/app_root_router.dart';
 
 /// Переключай одной кнопкой: true — для эмулятора, false — для смартфона
-const bool isEmulator = false;
-// const bool isEmulator = true;
+// const bool isEmulator = false;
+const bool isEmulator = true;
 
 // Определяем базовый IP и порты для сервисов
 const String _host = isEmulator ? '10.0.2.2' : '192.168.1.223';
@@ -196,6 +197,10 @@ void main() async {
             create: (_) => BookingSlotsBloc(bookingRepository: bookingRepository),
           ),
           BlocProvider<ReviewBloc>(create: (_) => ReviewBloc(reviewApiService)),
+          BlocProvider<MasterCalendarBloc>(create: (context) => MasterCalendarBloc(
+              context.read<MasterCalendarRepository>(),
+            ),
+          ),
         ],
         child: const MyApp(),
       ),

@@ -15,12 +15,14 @@ class CategoryDto {
 
   factory CategoryDto.fromJson(Map<String, dynamic> json, {required String imagesBaseUrl}) {
     return CategoryDto(
-      id: json['id'] as int,
-      name: json['name'] as String,
+      id: _toInt(json['id']),
+      name: json['name'] as String? ?? '',
       image: json['image'] != null
           ? CatalogImage.fromJson(json['image'], imagesBaseUrl: imagesBaseUrl)
           : null,
-      sortOrder: json['sortOrder'] as int? ?? 0,
+      sortOrder: _toInt(json['sortOrder']),
     );
   }
+
+  static int _toInt(dynamic value) => int.tryParse(value?.toString() ?? '') ?? 0;
 }

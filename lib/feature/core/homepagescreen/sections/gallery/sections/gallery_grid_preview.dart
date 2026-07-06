@@ -21,7 +21,7 @@ class GalleryGridPreview extends StatelessWidget {
         }
         if (snapshot.hasError ||
             !snapshot.hasData ||
-            snapshot.data!.length < 5) {
+            snapshot.data!.length < 6) {
           return const SizedBox.shrink();
         }
 
@@ -43,11 +43,11 @@ class GalleryGridPreview extends StatelessWidget {
               // Второй ряд
               Row(
                 children: [
+                  Expanded(child: _buildTile(images[2].url)),
+                  const SizedBox(width: 8),
                   Expanded(child: _buildTile(images[3].url)),
                   const SizedBox(width: 8),
                   Expanded(child: _buildTile(images[4].url)),
-                  const SizedBox(width: 8),
-                  Expanded(child: _buildTile(images[5].url)),
                 ],
               ),
             ],
@@ -60,17 +60,13 @@ class GalleryGridPreview extends StatelessWidget {
   // Вспомогательный метод для отрисовки плитки
   Widget _buildTile(String url) => ClipRRect(
     borderRadius: BorderRadius.circular(12),
-    child: ClipRRect(
-      borderRadius: BorderRadius.circular(12),
-      child: NetworkImageWithPlaceholder(
-        url: url,
-        fit: BoxFit.cover,
-        width: double.infinity,
-        errorWidget: Container(
-          color: Colors.grey[200],
-          child: const Icon(Icons.broken_image,
-              color: AppColors.primaryGrey),
-        ),
+    child: NetworkImageWithPlaceholder(
+      url: url,
+      fit: BoxFit.cover,
+      width: double.infinity,
+      errorWidget: Container(
+        color: Colors.grey[200],
+        child: const Icon(Icons.broken_image, color: AppColors.primaryGrey),
       ),
     ),
   );

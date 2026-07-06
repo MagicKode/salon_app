@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
-import '../../../../uikit/colors/app_colors.dart';
+import '../../../uikit/colors/app_colors.dart';
 import '../../../uikit/widgets/card/calendar_view_card.dart';
 import '../../../uikit/widgets/card/day_summary_card.dart';
 import '../../auth/authblock/bloc/auth_block.dart';
@@ -60,9 +60,14 @@ class MasterScheduleBody extends StatelessWidget {
         }
 
         if (state is MasterScheduleSuccess) {
+          // 🔥 Формируем карту с ключами в UTC (без времени)
           final availabilityMap = <DateTime, DayStatus>{
             for (var item in state.availability)
-              DateTime.parse(item.date): item.status,
+              DateTime.utc(
+                DateTime.parse(item.date).year,
+                DateTime.parse(item.date).month,
+                DateTime.parse(item.date).day,
+              ): item.status,
           };
 
           final dayAppointments = state.allAppointments.where((a) =>
@@ -102,6 +107,7 @@ class MasterScheduleBody extends StatelessWidget {
                 DaySummaryCard(
                   appointments: dayAppointments,
                   selectedDate: state.selectedDay,
+                  availability: availabilityMap,
                 ),
               ],
             ),

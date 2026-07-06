@@ -39,15 +39,15 @@ class SalonModel extends SalonEntity {
   // Фабричный метод для парсинга вложенного объекта "data" из твоего JSON-ответа
   factory SalonModel.fromJson(Map<String, dynamic> json) {
     return SalonModel(
-      id: json['id'] as int,
-      name: json['name'] as String,
-      address: json['address'] as String,
-      description: json['description'] as String,
-      latitude: (json['latitude'] as num).toDouble(),
-      longitude: (json['longitude'] as num).toDouble(),
-      phoneNumber: json['phoneNumber'] as String,
-      rating: (json['rating'] as num).toDouble(),
-      workingHours: json['workingHours'] as String,
+      id: json['id'] as int? ?? 0,
+      name: json['name'] as String? ?? '',
+      address: json['address'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      latitude: (json['latitude'] as num?)?.toDouble() ?? 0.0,
+      longitude: (json['longitude'] as num?)?.toDouble() ?? 0.0,
+      phoneNumber: json['phoneNumber'] as String? ?? '',
+      rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
+      workingHours: json['workingHours'] as String? ?? '',
     );
   }
 }

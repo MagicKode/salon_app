@@ -6,7 +6,6 @@ class AppointmentModel {
   final DateTime endTime;
   final String? notes;
   final double totalPrice;
-  final String totalPriceFormatted;
   final String? status;
 
   const AppointmentModel({
@@ -17,7 +16,6 @@ class AppointmentModel {
     required this.endTime,
     this.notes,
     required this.totalPrice,
-    required this.totalPriceFormatted,
     this.status,
   });
 
@@ -25,20 +23,19 @@ class AppointmentModel {
     final price = (json['totalPrice'] as num?)?.toDouble() ?? 0.0;
     return AppointmentModel(
       id: json['id']?.toString() ?? '',
-      clientName: json['clientName'] ?? '',
+      clientName: json['clientName'] as String? ?? '',
       servicesNames: List<String>.from(json['servicesNames'] ?? []),
-      startTime: DateTime.parse(json['startTime']),
-      endTime: DateTime.parse(json['endTime']),
+      startTime: DateTime.parse(json['startTime'] as String),
+      endTime: DateTime.parse(json['endTime'] as String),
       notes: json['notes'] as String?,
       totalPrice: price,
-      totalPriceFormatted: _format(price),
       status: json['status'] as String?,
     );
   }
 
-  static String _format(double p) {
-    if (p == 0) return '0.00';
-    final parts = p.toStringAsFixed(2).split('.');
+  String get totalPriceFormatted {
+    if (totalPrice == 0) return '0.00';
+    final parts = totalPrice.toStringAsFixed(2).split('.');
     final ints = parts[0].replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => ' ');
     return '$ints.${parts[1]}';
   }
