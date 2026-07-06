@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../uikit/colors/app_colors.dart';
 import '../../../../../../uikit/widgets/card/networkimagewithplaceholder.dart';
 import '../../../../../catalog/data/models/catalog_image.dart';
+import '../../../../../catalog/data/repositories/catalog_repository_impl.dart';
 import '../../../../../catalog/domain/repositories/catalog_repository.dart';
 import '../domain/gallery_item.dart';
 
@@ -12,6 +13,10 @@ class GalleryGridPreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final repo = context.read<CatalogRepository>();
+
+    if (repo is CatalogRepositoryImpl) {
+      repo.clearCache(); // очищаем весь кеш (или можно только images)
+    }
 
     return FutureBuilder<List<CatalogImage>>(
       future: repo.getImages('gallery', 0),

@@ -27,7 +27,10 @@ class NetworkImageWithPlaceholder extends StatelessWidget {
       height: height,
       fit: fit ?? BoxFit.cover,
       placeholder: (context, url) => const _LoadingPlaceholder(),
-      errorWidget: (context, url, error) => _DefaultErrorWidget(),
+      errorWidget: (context, url, error) {
+        print('❌ CachedNetworkImage error: $error, URL: $url');
+        return _DefaultErrorWidget();
+      },
     );
   }
 }

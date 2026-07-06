@@ -171,7 +171,7 @@ class _HomePageBodyState extends State<HomePageBody> {
 
                         const SizedBox(height: 16),
 
-                        const GallerySection(),
+                        GallerySection(isMaster: widget.isMaster),
 
                         const SizedBox(height: 16),
 

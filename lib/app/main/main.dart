@@ -23,6 +23,7 @@ import '../../feature/checkout/domain/repository/booking_repository.dart';
 import '../../feature/core/bookingservicescreen/bookingblock/booking_slots_bloc.dart';
 import '../../feature/core/homepagescreen/sections/feedback/bloc/review_bloc.dart';
 import '../../feature/core/homepagescreen/sections/feedback/data/review_api_service.dart';
+import '../../feature/core/homepagescreen/sections/gallery/bloc/gallery_bloc.dart';
 import '../../feature/core/mastercalendarscreen/bloc/master_calendar_bloc.dart';
 import '../../feature/core/mastercalendarscreen/domain/master_calendar_repository.dart';
 import '../../feature/core/masterschedulescreen/domain/master_schedule_repository.dart';
@@ -200,6 +201,9 @@ void main() async {
           BlocProvider<MasterCalendarBloc>(create: (context) => MasterCalendarBloc(
               context.read<MasterCalendarRepository>(),
             ),
+          ),
+          BlocProvider<GalleryBloc>(
+            create: (context) => GalleryBloc(context.read<CatalogRepository>()),
           ),
         ],
         child: const MyApp(),
