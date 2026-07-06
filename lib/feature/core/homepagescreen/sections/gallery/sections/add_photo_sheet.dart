@@ -3,7 +3,12 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:salon_flutter/uikit/colors/app_colors.dart';
+
+import '../../../../../../uikit/widgets/card/addphoto/action_buttons.dart';
+import '../../../../../../uikit/widgets/card/addphoto/drag_handle.dart';
+import '../../../../../../uikit/widgets/card/addphoto/header_widget.dart';
+import '../../../../../../uikit/widgets/card/addphoto/image_picker_area.dart';
+import '../../../../../../uikit/widgets/card/addphoto/progress_widget.dart';
 
 class AddPhotoSheet extends StatefulWidget {
   final String uploadUrl;
@@ -18,8 +23,9 @@ class AddPhotoSheet extends StatefulWidget {
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
+      backgroundColor: Colors.transparent,
       builder: (context) => AddPhotoSheet(uploadUrl: uploadUrl),
     );
   }
@@ -66,61 +72,31 @@ class _AddPhotoSheetState extends State<AddPhotoSheet> {
       final file = _selectedImages[i];
       try {
         if (!await file.exists()) {
-          print('❌ Файл не существует: ${file.path}');
           failCount++;
           continue;
         }
-        final fileSize = await file.length();
-        print('📁 Загружаем файл: ${file.path}, размер: $fileSize байт');
-
-        final multipartFile = await MultipartFile.fromFile(file.path, filename: 'photo_$i.jpg');
-        print('📎 MultipartFile создан: ${multipartFile.filename}, длина: ${multipartFile.length}');
-
         final formData = FormData.fromMap({
-          'file': multipartFile,
+          'file': await MultipartFile.fromFile(
+            file.path,
+            filename: 'photo_$i.jpg',
+          ),
           'relatedType': 'gallery',
           'relatedId': 0,
         });
 
-        print('🌐 Отправка запроса на: ${widget.uploadUrl}');
-        print('📦 FormData: ${formData.fields}'); // только поля, файл не выводим
-
-        final response = await dio.post(
+        await dio.post(
           widget.uploadUrl,
           data: formData,
-          onSendProgress: (sent, total) {
-            print('📤 Отправлено: $sent / $total');
-          },
-          onReceiveProgress: (received, total) {
-            print('📥 Получено: $received / $total');
-          },
           options: Options(
             contentType: 'multipart/form-data',
-            headers: {
-              'Accept': 'application/json',
-            },
-            sendTimeout: const Duration(seconds: 60),
-            receiveTimeout: const Duration(seconds: 60),
-            connectTimeout: const Duration(seconds: 60),
+            headers: {'Accept': 'application/json'},
+            sendTimeout: const Duration(seconds: 30),
+            receiveTimeout: const Duration(seconds: 30),
           ),
-        ).timeout(
-          const Duration(seconds: 70),
-          onTimeout: () {
-            throw Exception('Превышено время ожидания ответа от сервера');
-          },
         );
-
-        print('✅ Ответ: статус ${response.statusCode}, тело: ${response.data}');
-
-        if (response.statusCode == 200) {
-          successCount++;
-        } else {
-          failCount++;
-          print('❌ Ошибка загрузки фото $i: статус ${response.statusCode}');
-        }
+        successCount++;
       } catch (e) {
         failCount++;
-        print('❌ Исключение при загрузке фото $i: $e');
       }
 
       setState(() {
@@ -135,13 +111,15 @@ class _AddPhotoSheetState extends State<AddPhotoSheet> {
     if (failCount == 0) {
       message = '✅ Все $_totalCount фото успешно загружены!';
     } else {
-      message = '⚠️ Загружено $successCount из $_totalCount, ошибок: $failCount';
+      message =
+          '⚠️ Загружено $successCount из $_totalCount, ошибок: $failCount';
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
         backgroundColor: failCount == 0 ? Colors.green : Colors.orange,
+        behavior: SnackBarBehavior.floating,
       ),
     );
 
@@ -153,129 +131,41 @@ class _AddPhotoSheetState extends State<AddPhotoSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
-      constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height * 0.8,
+      padding: const EdgeInsets.only(top: 12),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Добавить фото в портфолио',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'Выберите изображения (можно несколько)',
-            style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+          const DragHandle(),
+          const SizedBox(height: 16),
+          HeaderWidget(
+            count: _selectedImages.length,
+            isUploading: _isUploading,
           ),
           const SizedBox(height: 16),
-          if (_selectedImages.isNotEmpty)
-            Container(
-              height: 120,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: _selectedImages.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 8),
-                itemBuilder: (context, index) {
-                  return Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.file(
-                          _selectedImages[index],
-                          width: 100,
-                          height: 120,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Positioned(
-                        right: 4,
-                        top: 4,
-                        child: GestureDetector(
-                          onTap: () => _removeImage(index),
-                          child: Container(
-                            decoration: const BoxDecoration(
-                              color: Colors.black54,
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(Icons.close, color: AppColors.primaryWhite, size: 18),
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            )
-          else
-            Container(
-              height: 80,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Center(
-                child: Text('Нажмите кнопку "Выбрать фото", чтобы добавить изображения'),
-              ),
-            ),
-          const SizedBox(height: 16),
+          ImagePickerArea(
+            images: _selectedImages,
+            isUploading: _isUploading,
+            onPick: _pickImages,
+            onRemove: _removeImage,
+          ),
           if (_isUploading) ...[
-            LinearProgressIndicator(value: _uploadProgress),
-            const SizedBox(height: 8),
-            Text(
-              'Загружено $_uploadedCount из $_totalCount',
-              style: const TextStyle(fontSize: 14),
+            const SizedBox(height: 16),
+            ProgressWidget(
+              uploadedCount: _uploadedCount,
+              totalCount: _totalCount,
+              progress: _uploadProgress,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
           ],
-          Wrap(
-            spacing: 6,
-            runSpacing: 6,
-            alignment: WrapAlignment.center,
-            children: [
-              ElevatedButton.icon(
-                onPressed: _isUploading ? null : _pickImages,
-                icon: const Icon(Icons.photo_library, size: 16),
-                label: const Text('Выбрать фото', style: TextStyle(fontSize: 12)),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey.shade200,
-                  foregroundColor: AppColors.primaryBlack,
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                  minimumSize: Size.zero,
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  textStyle: const TextStyle(fontSize: 12),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: _isUploading || _selectedImages.isEmpty ? null : _uploadAllImages,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryBlue,
-                  foregroundColor: AppColors.primaryWhite,
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                  minimumSize: Size.zero,
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  textStyle: const TextStyle(fontSize: 12),
-                ),
-                child: _isUploading
-                    ? const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(color: AppColors.primaryWhite, strokeWidth: 2),
-                )
-                    : const Text('Загрузить все', style: TextStyle(fontSize: 12)),
-              ),
-              TextButton(
-                onPressed: _isUploading ? null : () => Navigator.pop(context, false),
-                style: TextButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                  minimumSize: Size.zero,
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                ),
-                child: const Text('Отмена', style: TextStyle(fontSize: 12)),
-              ),
-            ],
+          ActionButtons(
+            isUploading: _isUploading,
+            hasImages: _selectedImages.isNotEmpty,
+            onCancel: () => Navigator.pop(context, false),
+            onUpload: _uploadAllImages,
           ),
         ],
       ),

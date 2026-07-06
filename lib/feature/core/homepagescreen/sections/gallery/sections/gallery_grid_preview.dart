@@ -4,7 +4,6 @@ import '../../../../../../uikit/colors/app_colors.dart';
 import '../../../../../../uikit/widgets/card/networkimagewithplaceholder.dart';
 import '../../../../../catalog/data/models/catalog_image.dart';
 import '../../../../../catalog/domain/repositories/catalog_repository.dart';
-import '../../../../../catalog/data/repositories/catalog_repository_impl.dart';
 
 class GalleryGridPreview extends StatelessWidget {
   const GalleryGridPreview({super.key});
@@ -12,9 +11,6 @@ class GalleryGridPreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final repo = context.read<CatalogRepository>();
-    if (repo is CatalogRepositoryImpl) {
-      repo.clearCache();
-    }
 
     return FutureBuilder<List<CatalogImage>>(
       future: repo.getImages('gallery', 0),

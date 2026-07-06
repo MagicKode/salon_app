@@ -16,9 +16,20 @@ class CalendarViewCard extends StatelessWidget {
     required this.availability,
   });
 
+  // Возвращает статус дня, а если статус не определён, но это суббота или воскресенье – считаем выходным
+  DayStatus? _getDayStatus(DateTime day) {
+    final dayKey = DateTime.utc(day.year, day.month, day.day);
+    final status = availability[dayKey];
+    if (status == null && (day.weekday == DateTime.saturday || day.weekday == DateTime.sunday)) {
+      return DayStatus.dayOff;
+    }
+    return status;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.grey.shade200,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -47,15 +58,11 @@ class CalendarViewCard extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             defaultTextStyle: const TextStyle(color: AppColors.primaryBlack),
-            weekendTextStyle: const TextStyle(color: AppColors.primaryRed), // выходные по умолчанию красные
+            weekendTextStyle: const TextStyle(color: AppColors.primaryRed),
             outsideTextStyle: const TextStyle(color: AppColors.primaryGrey),
           ),
           onDaySelected: (selectedDay, focusedDay) {
-            // Приводим к началу дня для сравнения
-            final dayKey = DateTime.utc(selectedDay.year, selectedDay.month, selectedDay.day);
-            final status = availability[dayKey];
-
-            // Если день выходной – блокируем и показываем сообщение
+            final status = _getDayStatus(selectedDay);
             if (status == DayStatus.dayOff) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -64,29 +71,22 @@ class CalendarViewCard extends StatelessWidget {
                   duration: const Duration(seconds: 2),
                 ),
               );
-              return; // ❌ НЕ вызываем onDaySelected
+              return;
             }
-
-            // Для всех остальных (включая FULL) – разрешаем
             onDaySelected(selectedDay);
           },
-          selectedDayPredicate: (day) {
-            return isSameDay(day, focusedDay);
-          },
+          selectedDayPredicate: (day) => isSameDay(day, focusedDay),
           calendarBuilders: CalendarBuilders(
             defaultBuilder: (context, day, focusedDay) {
-              // Приводим к началу дня
-              final dayKey = DateTime.utc(day.year, day.month, day.day);
-              final status = availability[dayKey];
+              final status = _getDayStatus(day);
 
-              // Определяем цвета
-              Color? textColor = AppColors.primaryBlack;
+              Color textColor = AppColors.primaryBlack;
               Color? dotColor;
               if (status == DayStatus.dayOff) {
-                textColor = AppColors.primaryRed;      // 🔴 красный текст
-                dotColor = AppColors.primaryRed;       // 🔴 красный кружок
+                textColor = AppColors.primaryRed;
+                // точки не показываем
               } else if (status == DayStatus.full) {
-                dotColor = AppColors.primaryGrey;      // ⚪ серый кружок
+                dotColor = AppColors.primaryGrey;
               }
 
               return Container(
@@ -103,9 +103,7 @@ class CalendarViewCard extends StatelessWidget {
                       '${day.day}',
                       style: TextStyle(
                         color: textColor,
-                        fontWeight: status == DayStatus.dayOff
-                            ? FontWeight.bold
-                            : FontWeight.normal,
+                        fontWeight: FontWeight.normal, // всегда обычный
                       ),
                     ),
                     if (dotColor != null)

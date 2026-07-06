@@ -26,7 +26,6 @@ class _GallerySectionState extends State<GallerySection> {
     final repo = context.read<CatalogRepository>();
     if (repo is CatalogRepositoryImpl) {
       repo.clearCache();
-      print('🗑️ Кеш очищен при обновлении галереи');
     }
     setState(() {
       _refreshCounter++;
@@ -107,7 +106,7 @@ class _GallerySectionState extends State<GallerySection> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   foregroundColor: AppColors.primaryBlue, // светлый текст
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 ),
                 child: const Text(AppStrings.seeAllGallery),
               ),
