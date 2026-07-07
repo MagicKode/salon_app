@@ -4,8 +4,8 @@ import 'user_role.dart';
 class AuthUser {
   final String token;
   final String role;
-  final String name; // "Павел"
-  final String phoneNumber; // "+375291234567"
+  final String name;
+  final String phoneNumber;
   final String email;
 
   AuthUser({

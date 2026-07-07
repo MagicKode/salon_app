@@ -7,7 +7,6 @@ import 'package:salon_flutter/feature/auth/loginscreen/sections/login_buttons_se
 import 'package:salon_flutter/feature/auth/loginscreen/sections/login_form_section.dart';
 import 'package:salon_flutter/feature/auth/loginscreen/sections/sign_up_section.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
-
 import '../../../uikit/colors/app_colors.dart';
 import '../../../uikit/widgets/welcome/welcome_section.dart';
 import '../../navigation/main_navigation_screen.dart';
@@ -26,81 +25,143 @@ class _LoginBodyState extends State<LoginBody> {
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _isPasswordVisible = ValueNotifier<bool>(false);
+  final _formKey = GlobalKey<FormState>();
+
+  String? _phoneError;
+  String? _passwordError;
+
+  @override
+  void initState() {
+    super.initState();
+    // Слушаем изменения текста, чтобы сбрасывать ошибки при вводе
+    _phoneController.addListener(_clearPhoneError);
+    _passwordController.addListener(_clearPasswordError);
+  }
+
+  @override
+  void dispose() {
+    _phoneController.removeListener(_clearPhoneError);
+    _passwordController.removeListener(_clearPasswordError);
+    _phoneController.dispose();
+    _passwordController.dispose();
+    _isPasswordVisible.dispose();
+    super.dispose();
+  }
+
+  void _clearPhoneError() {
+    if (_phoneError != null) {
+      setState(() => _phoneError = null);
+    }
+  }
+
+  void _clearPasswordError() {
+    if (_passwordError != null) {
+      setState(() => _passwordError = null);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AuthBloc, AuthState>(
+    return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthSuccess) {
-          // УСПЕХ: Токен сохранен на устройстве. Проверяем роль и пускаем в приложение
-          if (state.user.role == 'MASTER') {
-            // Бэкенд возвращает капсом: CLIENT / MASTER
-            _showDemoMessage("Вход как Мастер");
-            _navigateToMain();
-          } else {
-            _navigateToMain();
-          }
+          setState(() {
+            _phoneError = null;
+            _passwordError = null;
+          });
+          _navigateToMain();
         }
-
         if (state is AuthFailure) {
-          // ОШИБКА: Показываем точное сообщение от нашего GlobalExceptionHandler бэкенда
+          _handleError(state.errorMessage);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.errorMessage),
               backgroundColor: AppColors.primaryRed,
+              duration: const Duration(seconds: 3),
             ),
           );
         }
       },
-      builder: (context, state) {
-        return Scaffold(
-          backgroundColor: AppColors.primaryWhite,
-          body: SafeArea(
-            child: SingleChildScrollView(
-              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 24),
-                  WelcomeSection(
-                    title: AppStrings.loginTitle,
-                    subtitle: AppStrings.loginSubtitle,
+      child: Scaffold(
+        backgroundColor: AppColors.primaryWhite,
+        body: SafeArea(
+          child: BlocBuilder<AuthBloc, AuthState>(
+            builder: (context, state) {
+              final isLoading = state is AuthLoading;
+
+              return SingleChildScrollView(
+                keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 24),
+                      WelcomeSection(
+                        title: AppStrings.loginTitle,
+                        subtitle: AppStrings.loginSubtitle,
+                      ),
+                      const SizedBox(height: 118.0),
+                      // ✅ Правильный вызов с параметрами
+                      LoginFormSection(
+                        phoneController: _phoneController,
+                        passwordController: _passwordController,
+                        isPasswordVisible: _isPasswordVisible,
+                        phoneError: _phoneError,
+                        passwordError: _passwordError,
+                        onPhoneChanged: (_) => _clearPhoneError(),
+                        onPasswordChanged: (_) => _clearPasswordError(),
+                      ),
+                      ForgotPasswordSection(onPressed: _navigateToForgotPassword),
+                      const SizedBox(height: 100.0),
+                      LoginButtonsSection(
+                        isLoading: isLoading,
+                        onSignInPressed: _dispatchLoginEvent,
+                      ),
+                      SignUpSection(onJoinNowPressed: _navigateToCreateAccount),
+                    ],
                   ),
-
-                  const SizedBox(height: 118.0),
-
-                  LoginFormSection(
-                    phoneController: _phoneController,
-                    passwordController: _passwordController,
-                    isPasswordVisible: _isPasswordVisible,
-                  ),
-
-                  ForgotPasswordSection(onPressed: _navigateToForgotPassword),
-
-                  const SizedBox(height: 100.0),
-
-                  LoginButtonsSection(
-                    isLoading: state is AuthLoading,
-                    onSignInPressed: _dispatchLoginEvent,
-                  ),
-
-                  SignUpSection(onJoinNowPressed: _navigateToCreateAccount),
-                ],
-              ),
-            ),
+                ),
+              );
+            },
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
   void _dispatchLoginEvent() {
+    setState(() {
+      _phoneError = null;
+      _passwordError = null;
+    });
+
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
     context.read<AuthBloc>().add(
       AuthLoginRequested(
         phoneNumber: _phoneController.text.trim(),
         password: _passwordController.text.trim(),
       ),
     );
+  }
+
+  void _handleError(String errorMessage) {
+    final msg = errorMessage.toLowerCase();
+    setState(() {
+      if (msg.contains('номер') || msg.contains('телефон') || msg.contains('phone')) {
+        _phoneError = errorMessage;
+        _passwordError = null;
+      } else if (msg.contains('пароль') || msg.contains('password')) {
+        _passwordError = errorMessage;
+        _phoneError = null;
+      } else {
+        _phoneError = null;
+        _passwordError = null;
+      }
+    });
   }
 
   void _navigateToMain() {
@@ -122,19 +183,5 @@ class _LoginBodyState extends State<LoginBody> {
       context,
       MaterialPageRoute(builder: (context) => const CreateAccountScreen()),
     );
-  }
-
-  void _showDemoMessage(String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
-  }
-
-  @override
-  void dispose() {
-    _phoneController.dispose();
-    _passwordController.dispose();
-    _isPasswordVisible.dispose();
-    super.dispose();
   }
 }

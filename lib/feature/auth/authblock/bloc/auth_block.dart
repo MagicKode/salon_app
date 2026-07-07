@@ -10,7 +10,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository authRepository;
 
   AuthBloc({required this.authRepository}) : super(AuthInitial()) {
-    // Регистрируем обработчики событий
     on<AuthCheckStatusRequested>(_onCheckStatusRequested);
     on<AuthRegisterRequested>(_onRegisterRequested);
     on<AuthLoginRequested>(_onLoginRequested);
@@ -19,10 +18,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   // Проверка сессии при старте приложения
   Future<void> _onCheckStatusRequested(
-    AuthCheckStatusRequested event,
-    Emitter<AuthState> emit,
-  ) async {
-    emit(AuthInitial());
+      AuthCheckStatusRequested event,
+      Emitter<AuthState> emit,
+      ) async {
+    final user = await authRepository.getAuthenticatedUser();
+    if (user != null) {
+      emit(AuthSuccess(user: user));
+    } else {
+      emit(AuthInitial());
+    }
   }
 
   Future<void> _onRegisterRequested(
@@ -61,9 +65,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthSuccess(user: user));
     } on DioException catch (e) {
       // Если бэк вернул 401 Unauthorized с текстом, вытаскиваем его
-      final backendMessage =
-          e.response?.data['message'] ?? AppStrings.incorrectNumberOrPassword;
-      emit(AuthFailure(errorMessage: backendMessage));
+      final message = e.response?.data['message']
+          ?? e.response?.data['error']
+          ?? e.response?.data['detail']
+          ?? AppStrings.incorrectNumberOrPassword;
+      emit(AuthFailure(errorMessage: message));
     } catch (e) {
       emit(AuthFailure(errorMessage: 'Не удалось войти: $e'));
     }

@@ -4,10 +4,18 @@ import '../../domain/entities/auth_user.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_remote_data_source.dart';
 import '../models/auth_request_model.dart';
+import '../models/auth_response_model.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
   final FlutterSecureStorage secureStorage;
+
+  // 🔥 Единые ключи для хранения (исправлено: везде используем _tokenKey)
+  static const String _tokenKey = 'auth_token';
+  static const String _roleKey = 'user_role';
+  static const String _nameKey = 'user_name';
+  static const String _phoneKey = 'user_phone';
+  static const String _emailKey = 'user_email';
 
   AuthRepositoryImpl({
     required this.remoteDataSource,
@@ -30,22 +38,8 @@ class AuthRepositoryImpl implements AuthRepository {
 
     // 1. Делаем сетевой запрос через DataSource
     final response = await remoteDataSource.register(requestModel);
-
-    // 2. Сохраняем токен в безопасное хранилище устройства
-    await secureStorage.write(key: 'jwt_token', value: response.token);
-    await secureStorage.write(key: 'user_role', value: response.role);
-    await secureStorage.write(key: 'user_name', value: response.firstName);
-    await secureStorage.write(key: 'user_phone', value: response.phoneNumber);
-    await secureStorage.write(key: 'user_email', value: response.email);
-
-    // 3. Возвращаем чистую сущность в доменный слой
-    return AuthUser(
-      token: response.token,
-      role: response.role,
-      name: response.firstName,
-      phoneNumber: response.phoneNumber,
-      email: response.email,
-    );
+    await _saveUserData(response);
+    return _toAuthUser(response);
   }
 
   @override
@@ -60,22 +54,8 @@ class AuthRepositoryImpl implements AuthRepository {
 
     // 1. Делаем сетевой запрос
     final response = await remoteDataSource.login(requestModel);
-
-    // 2. Сохраняем токен
-    await secureStorage.write(key: 'auth_token', value: response.token);
-    await secureStorage.write(key: 'user_role', value: response.role);
-    await secureStorage.write(key: 'user_name', value: response.firstName);
-    await secureStorage.write(key: 'user_phone', value: response.phoneNumber);
-    await secureStorage.write(key: 'user_email', value: response.email);
-
-    // 3. Возвращаем чистую сущность
-    return AuthUser(
-      token: response.token,
-      role: response.role,
-      name: response.firstName,
-      phoneNumber: response.phoneNumber,
-      email: response.email,
-    );
+    await _saveUserData(response); // ✅ единый метод
+    return _toAuthUser(response);
   }
 
   @override
@@ -102,6 +82,24 @@ class AuthRepositoryImpl implements AuthRepository {
       name: name,
       phoneNumber: phone,
       email: email,
+    );
+  }
+
+  Future<void> _saveUserData(AuthResponseModel response) async {
+    await secureStorage.write(key: _tokenKey, value: response.token);
+    await secureStorage.write(key: _roleKey, value: response.role);
+    await secureStorage.write(key: _nameKey, value: response.firstName);
+    await secureStorage.write(key: _phoneKey, value: response.phoneNumber);
+    await secureStorage.write(key: _emailKey, value: response.email);
+  }
+
+  AuthUser _toAuthUser(AuthResponseModel response) {
+    return AuthUser(
+      token: response.token,
+      role: response.role,
+      name: response.firstName,
+      phoneNumber: response.phoneNumber,
+      email: response.email,
     );
   }
 
