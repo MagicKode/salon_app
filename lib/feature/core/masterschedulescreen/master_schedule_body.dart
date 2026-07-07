@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 import '../../../uikit/colors/app_colors.dart';
 import '../../../uikit/widgets/card/calendar_view_card.dart';
-import '../../../uikit/widgets/card/day_summary_card.dart';
+import '../../../uikit/widgets/card/daysummery/day_summary_card.dart';
 import '../../auth/authblock/bloc/auth_block.dart';
 import '../../auth/authblock/bloc/auth_state.dart';
 import 'bloc/master_schedule_bloc.dart';
@@ -108,6 +108,18 @@ class MasterScheduleBody extends StatelessWidget {
                   appointments: dayAppointments,
                   selectedDate: state.selectedDay,
                   availability: availabilityMap,
+                  onRefresh: () {
+                    // обновляем данные – можно просто заново загрузить месяц
+                    final auth = context.read<AuthBloc>().state;
+                    if (auth is AuthSuccess) {
+                      context.read<MasterScheduleBloc>().add(
+                        LoadScheduleMonth(
+                          masterName: auth.user.masterName,
+                          month: state.selectedDay,
+                        ),
+                      );
+                    }
+                  },
                 ),
               ],
             ),
