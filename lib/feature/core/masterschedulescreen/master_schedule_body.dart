@@ -60,7 +60,6 @@ class MasterScheduleBody extends StatelessWidget {
         }
 
         if (state is MasterScheduleSuccess) {
-          // 🔥 Формируем карту с ключами в UTC (без времени)
           final availabilityMap = <DateTime, DayStatus>{
             for (var item in state.availability)
               DateTime.utc(
@@ -69,12 +68,6 @@ class MasterScheduleBody extends StatelessWidget {
                 DateTime.parse(item.date).day,
               ): item.status,
           };
-
-          final dayAppointments = state.allAppointments.where((a) =>
-          a.startTime.year == state.selectedDay.year &&
-              a.startTime.month == state.selectedDay.month &&
-              a.startTime.day == state.selectedDay.day,
-          ).toList();
 
           return RefreshIndicator(
             color: AppColors.primaryBlue,
@@ -89,37 +82,52 @@ class MasterScheduleBody extends StatelessWidget {
                 );
               }
             },
-            child: ListView(
+            child: CustomScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
-              children: [
-                CalendarViewCard(
-                  focusedDay: state.selectedDay,
-                  onDaySelected: (day) {
-                    context.read<MasterScheduleBloc>().add(ChangeSelectedDay(day));
-                  },
-                  availability: availabilityMap,
+              slivers: [
+                // Календарь – фиксированная часть (не скроллится)
+                SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      CalendarViewCard(
+                        focusedDay: state.selectedDay,
+                        onDaySelected: (day) {
+                          final auth = context.read<AuthBloc>().state;
+                          if (auth is AuthSuccess) {
+                            context.read<MasterScheduleBloc>().add(
+                              ChangeSelectedDay(auth.user.masterName, day),
+                            );
+                          }
+                        },
+                        availability: availabilityMap,
+                      ),
+                      _buildLegend(),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                        child: Divider(color: AppColors.lightBorder),
+                      ),
+                    ],
+                  ),
                 ),
-                _buildLegend(),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                  child: Divider(color: AppColors.lightBorder),
-                ),
-                DaySummaryCard(
-                  appointments: dayAppointments,
-                  selectedDate: state.selectedDay,
-                  availability: availabilityMap,
-                  onRefresh: () {
-                    // обновляем данные – можно просто заново загрузить месяц
-                    final auth = context.read<AuthBloc>().state;
-                    if (auth is AuthSuccess) {
-                      context.read<MasterScheduleBloc>().add(
-                        LoadScheduleMonth(
-                          masterName: auth.user.masterName,
-                          month: state.selectedDay,
-                        ),
-                      );
-                    }
-                  },
+                // Список записей – занимает всё оставшееся место, скроллится независимо
+                SliverFillRemaining(
+                  hasScrollBody: true,
+                  child: DaySummaryCard(
+                    appointments: state.selectedDayAppointments,
+                    selectedDate: state.selectedDay,
+                    availability: availabilityMap,
+                    onRefresh: () {
+                      final auth = context.read<AuthBloc>().state;
+                      if (auth is AuthSuccess) {
+                        context.read<MasterScheduleBloc>().add(
+                          LoadScheduleMonth(
+                            masterName: auth.user.masterName,
+                            month: state.selectedDay,
+                          ),
+                        );
+                      }
+                    },
+                  ),
                 ),
               ],
             ),

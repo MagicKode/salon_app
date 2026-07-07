@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:salon_flutter/feature/core/mastercalendarscreen/domain/appointment_model.dart';
 import 'package:salon_flutter/feature/core/masterschedulescreen/domain/day_availability_model.dart';
+import 'package:salon_flutter/feature/core/mastercalendarscreen/domain/appointment_model.dart';
+import 'package:salon_flutter/uikit/widgets/card/master_appointment_card.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
-
 import '../../../../feature/core/mastercalendarscreen/master_calendar_screen.dart';
 import 'day_off_widget.dart';
 import 'empty_day_widget.dart';
@@ -38,67 +38,67 @@ class DaySummaryCard extends StatelessWidget {
     final sorted = List<AppointmentModel>.from(appointments)
       ..sort((a, b) => a.startTime.compareTo(b.startTime));
 
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      color: Colors.grey.shade50,
-      child: ListView.separated(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        padding: EdgeInsets.zero,
-        itemCount: sorted.length,
-        separatorBuilder:
-            (_, __) => Divider(height: 0.5, color: Colors.grey.shade200),
-        itemBuilder: (context, index) {
-          final appointment = sorted[index];
-          return _buildCompactCard(context, appointment);
-        },
-      ),
+    // ✅ Теперь это обычный ListView без shrinkWrap
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      itemCount: sorted.length,
+      itemBuilder: (context, index) {
+        final appointment = sorted[index];
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: _buildCompactCard(context, appointment),
+        );
+      },
     );
   }
 
   Widget _buildCompactCard(BuildContext context, AppointmentModel appointment) {
+    // ... (код карточки без изменений)
     final now = DateTime.now();
     final isPast = appointment.endTime.isBefore(now);
-    final isCurrent =
-        appointment.startTime.isBefore(now) && appointment.endTime.isAfter(now);
+    final isCurrent = appointment.startTime.isBefore(now) && appointment.endTime.isAfter(now);
     final isFuture = appointment.startTime.isAfter(now);
 
-    Color backgroundColor;
+    Color statusColor;
     if (isPast) {
-      backgroundColor = Colors.grey.shade200;
+      statusColor = Colors.grey.shade400;
     } else if (isCurrent) {
-      backgroundColor = Colors.green.shade100;
+      statusColor = Colors.green.shade500;
     } else if (isFuture) {
-      backgroundColor = Colors.blue.shade50;
+      statusColor = Colors.blue.shade500;
     } else {
-      backgroundColor = Colors.transparent;
+      statusColor = Colors.grey.shade300;
     }
 
     final timeStr = DateFormat('HH:mm', 'ru').format(appointment.startTime);
 
-    return Material(
-      color: Colors.transparent,
+    return Card(
+      margin: EdgeInsets.zero,
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: InkWell(
         onTap: () {
-          // Переход на экран с MasterAppointmentCard
           Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => const MasterCalendarScreen()),
           );
         },
         borderRadius: BorderRadius.circular(8),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: BorderRadius.circular(8),
-          ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           child: Row(
             children: [
+              Container(
+                width: 4,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: statusColor,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(width: 10),
               SizedBox(
-                width: 40,
+                width: 38,
                 child: Text(
                   timeStr,
                   style: const TextStyle(

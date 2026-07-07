@@ -87,6 +87,7 @@ class _GalleryImageCardState extends State<GalleryImageCard> {
                 if (widget.onRefresh != null) {
                   widget.onRefresh!();
                 }
+                Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Фото удалено')),
                 );

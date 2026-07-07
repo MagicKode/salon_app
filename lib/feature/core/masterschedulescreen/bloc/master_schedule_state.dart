@@ -8,12 +8,12 @@ class MasterScheduleLoading extends MasterScheduleState {}
 
 class MasterScheduleSuccess extends MasterScheduleState {
   final List<DayAvailability> availability;
-  final List<AppointmentModel> allAppointments;
+  final List<AppointmentModel> selectedDayAppointments;
   final DateTime selectedDay;
 
   MasterScheduleSuccess({
     required this.availability,
-    required this.allAppointments,
+    required this.selectedDayAppointments,
     required this.selectedDay,
   });
 }

@@ -18,16 +18,12 @@ class GalleryGridPreview extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         }
-        if (snapshot.hasError) {
-          return const SizedBox.shrink();
-        }
-        if (!snapshot.hasData) {
+        if (snapshot.hasError || !snapshot.hasData) {
           return const SizedBox.shrink();
         }
 
         final data = snapshot.data!;
-        if (data is! List) return const SizedBox.shrink();
-        if (data.isNotEmpty && data[0] is! CatalogImage) {
+        if (data is! List || data.isEmpty || data[0] is! CatalogImage) {
           return const SizedBox.shrink();
         }
 

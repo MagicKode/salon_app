@@ -1,72 +1,130 @@
 import 'package:flutter/material.dart';
-import '../../../../uikit/colors/app_colors.dart';
+import 'package:salon_flutter/uikit/colors/app_colors.dart';
 import '../domain/notification_model.dart';
 
 class NotificationTile extends StatelessWidget {
   final NotificationModel notification;
-  final bool isExpanded;
   final VoidCallback? onTap;
 
   const NotificationTile({
     super.key,
     required this.notification,
-    this.isExpanded = false,
     this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        decoration: BoxDecoration(
-          color: notification.isRead ? AppColors.boxDecorationColor : AppColors.primaryBackgroundColor,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: notification.isRead ? AppColors.primaryBlackShadow : AppColors.primaryBlue.withValues(alpha: 0.3),
+    final isUnread = !notification.isRead;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
           ),
+        ],
+        border: Border.all(
+          color: isUnread ? AppColors.primaryBlue.withValues(alpha: 0.2) : Colors.grey.shade200,
+          width: isUnread ? 1.5 : 1,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  if (!notification.isRead)
-                    Container(
-                      margin: const EdgeInsets.only(right: 8),
-                      width: 8, height: 8,
-                      decoration: const BoxDecoration(color: AppColors.primaryBlue, shape: BoxShape.circle),
-                    ),
-                  Expanded(
-                    child: Text(notification.title,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 14,
-                        color: notification.isRead ? AppColors.primaryBlack.withValues(alpha: 0.5) : AppColors.primaryBlack,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Padding(
+            padding: const EdgeInsets.all(14),
+            child: Row(
+              children: [
+                // Иконка
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: _accentColor(notification.type).withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(_typeIcon(notification.type), size: 20, color: _accentColor(notification.type)),
+                ),
+                const SizedBox(width: 12),
+                // Текст
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        notification.title,
+                        style: TextStyle(
+                          fontWeight: isUnread ? FontWeight.bold : FontWeight.w400,
+                          fontSize: 14,
+                          color: isUnread ? Colors.black87 : Colors.grey.shade600,
+                        ),
                       ),
-                    ),
-                  ),
-                  Text(notification.timeAgo,
-                    style: TextStyle(color: AppColors.primaryGrey, fontSize: 11),
-                  ),
-                ],
-              ),
-            ),
-            if (isExpanded)
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                child: Text(notification.body,
-                  style: TextStyle(
-                    color: AppColors.primaryBlack.withValues(alpha: 0.8),
-                    fontSize: 13, height: 1.4,
+                      const SizedBox(height: 2),
+                      Text(
+                        notification.body,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade500,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-          ],
+                // Время и индикатор
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      notification.timeAgo,
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Colors.grey.shade500,
+                      ),
+                    ),
+                    if (isUnread)
+                      Container(
+                        margin: const EdgeInsets.only(top: 4),
+                        width: 6,
+                        height: 6,
+                        decoration: BoxDecoration(
+                          color: _accentColor(notification.type),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
+  }
+
+  Color _accentColor(String? type) {
+    switch (type) {
+      case 'BOOKING_CREATED': return Colors.green.shade600;
+      case 'BOOKING_CANCELLED': return Colors.red.shade600;
+      case 'BOOKING_UPDATED': return Colors.orange.shade700;
+      default: return AppColors.primaryBlue;
+    }
+  }
+
+  IconData _typeIcon(String? type) {
+    switch (type) {
+      case 'BOOKING_CREATED': return Icons.event_available;
+      case 'BOOKING_CANCELLED': return Icons.event_busy;
+      case 'BOOKING_UPDATED': return Icons.edit_calendar;
+      default: return Icons.notifications_outlined;
+    }
   }
 }

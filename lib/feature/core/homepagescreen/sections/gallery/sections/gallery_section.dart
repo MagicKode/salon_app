@@ -23,12 +23,15 @@ class _GallerySectionState extends State<GallerySection> {
   int _refreshCounter = 0;
 
   void _refreshGallery() {
+    print('🔄 _refreshGallery вызван, _refreshCounter до: $_refreshCounter');
     final repo = context.read<CatalogRepository>();
     if (repo is CatalogRepositoryImpl) {
       repo.clearCache();
+      print('🗑️ Кеш очищен');
     }
     setState(() {
       _refreshCounter++;
+      print('🔄 _refreshCounter после: $_refreshCounter');
     });
   }
 
@@ -53,10 +56,8 @@ class _GallerySectionState extends State<GallerySection> {
           ),
         ),
         // ✅ Увеличиваем высоту до 360, чтобы поместить 2 ряда картинок
-        SizedBox(
-          height: 360,
-          child: GalleryGridPreview(key: ValueKey(_refreshCounter)),
-        ),
+
+        GalleryGridPreview(key: ValueKey(_refreshCounter)),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 12),
           child: Row(

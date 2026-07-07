@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import '../../mastercalendarscreen/domain/appointment_model.dart';
+import '../../mastercalendarscreen/domain/daily_schedule_model.dart';
 import 'day_availability_model.dart';
 
 class MasterScheduleRepository {
@@ -19,6 +20,8 @@ class MasterScheduleRepository {
       int year,
       int month,
       ) async {
+    print('📡 Запрос availability: $masterName, $year-$month');
+
     final key = '${masterName}_${year}_${month}';
     final cached = _cache[key];
     if (cached != null) {
@@ -41,7 +44,7 @@ class MasterScheduleRepository {
         availability: result,
         appointments: [],
       );
-
+      print('✅ Availability получена');
       return result;
     } on DioException catch (e) {
       throw Exception(e.message ?? 'Ошибка загрузки сетки календаря');
@@ -53,6 +56,7 @@ class MasterScheduleRepository {
       int year,
       int month,
       ) async {
+    print('📡 Запрос appointments: $masterName, $year-$month');
     final key = '${masterName}_${year}_${month}';
     final cached = _cache[key];
     if (cached != null && cached.appointments.isNotEmpty) {
@@ -82,10 +86,37 @@ class MasterScheduleRepository {
           appointments: result,
         );
       }
-
+      print('✅ Appointments получены');
       return result;
     } on DioException catch (e) {
       throw Exception(e.message ?? 'Ошибка загрузки списка записей');
+    }
+  }
+
+  Future<DailyScheduleModel> getScheduleForDate(String masterName, DateTime date) async {
+    final dateStr = '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+    return _getSchedule('$scheduleBaseUrl/date?date=$dateStr', masterName);
+  }
+
+  // Приватный метод _getSchedule
+  Future<DailyScheduleModel> _getSchedule(String url, String masterName) async {
+    try {
+      final response = await _dio.get(
+        url,
+        options: Options(headers: {'X-User-Name': masterName}),
+      );
+
+      if (response.statusCode == 200) {
+        return DailyScheduleModel.fromJson(response.data as Map<String, dynamic>);
+      } else {
+        throw Exception('Ошибка загрузки: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      throw Exception(
+        e.response?.data?['message'] ??
+            e.message ??
+            'Ошибка сети при получении расписания',
+      );
     }
   }
 
