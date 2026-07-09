@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../../../feature/core/nearbymapscreen/domain/location_model.dart';
 import '../../../colors/app_colors.dart';
 
@@ -10,17 +9,15 @@ class InfoCardTextContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool hasDistance = shopLocation.distanceInKm != null;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        // Первая строка: Расстояние
+        // Адрес крупно
         Text(
-          hasDistance
-              ? 'В ${shopLocation.formattedDistance} от вас'
-              : 'Считаем путь...',
+          shopLocation.address,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
           style: const TextStyle(
             color: AppColors.primaryWhite,
             fontSize: 18,
@@ -28,15 +25,14 @@ class InfoCardTextContent extends StatelessWidget {
             letterSpacing: -0.5,
           ),
         ),
-
         const SizedBox(height: 4),
-
-        // Вторая строка: Адрес
+        // Подсказка или расстояние
         Text(
-          shopLocation.address,
+          shopLocation.distanceInKm != null
+              ? '${shopLocation.formattedDistance} от вас'
+              : 'Мы находимся здесь',
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          // Обрезаем, если адрес слишком длинный
           style: TextStyle(
             color: AppColors.primaryWhite.withValues(alpha: 0.9),
             fontSize: 14,
