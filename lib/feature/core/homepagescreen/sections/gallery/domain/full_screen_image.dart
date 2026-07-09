@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
-import '../../../../../../uikit/widgets/card/networkimagewithplaceholder.dart';
+import '../../../../../../uikit/widgets/card/images/networkimagewithplaceholder.dart';
 
 class FullScreenImage extends StatelessWidget {
   final String url;

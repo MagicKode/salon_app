@@ -40,7 +40,11 @@ class _AddPhotoSheetState extends State<AddPhotoSheet> {
   int _totalCount = 0;
 
   Future<void> _pickImages() async {
-    final List<XFile>? pickedFiles = await _picker.pickMultiImage();
+    final List<XFile>? pickedFiles = await _picker.pickMultiImage(
+      maxWidth: 1024,
+      maxHeight: 1024,
+      imageQuality: 80,
+    );
     if (pickedFiles != null && pickedFiles.isNotEmpty) {
       setState(() {
         _selectedImages.addAll(pickedFiles.map((f) => File(f.path)));

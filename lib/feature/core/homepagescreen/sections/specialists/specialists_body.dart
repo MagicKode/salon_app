@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../uikit/widgets/card/specialist_card.dart';
+import '../../../../../uikit/widgets/card/specialist/specialist_card.dart';
 import '../../../../catalog/domain/repositories/catalog_repository.dart';
 import '../../../../catalog/data/models/catalog_image.dart';
 import 'domain/master.dart';
@@ -17,7 +17,7 @@ class SpecialistsBody extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
         if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
-          return const SizedBox.shrink(); // или покажите заглушку
+          return const SizedBox.shrink();
         }
 
         final imageUrl = snapshot.data!.first.url;

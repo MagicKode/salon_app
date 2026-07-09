@@ -15,6 +15,8 @@ class CatalogImage {
     );
   }
 
+  Map<String, dynamic> toJson() => {'id': id, 'url': url};
+
   static int _toInt(dynamic value) => int.tryParse(value?.toString() ?? '') ?? 0;
 
   @override

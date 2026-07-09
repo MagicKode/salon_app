@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
+import '../../mastercalendarscreen/master_calendar_screen.dart';
 import '../domain/notification_model.dart';
 
 class ExpandableNotification extends StatefulWidget {
@@ -17,26 +18,43 @@ class ExpandableNotification extends StatefulWidget {
 }
 
 class _ExpandableNotificationState extends State<ExpandableNotification> {
-  bool _isExpanded = false;
+  bool _expanded = false;
 
   @override
   Widget build(BuildContext context) {
-    final n = widget.notification;
-    final isUnread = !n.isRead;
+    final notification = widget.notification;
+    final isUnread = !notification.isRead;
+
+    // Парсим тело уведомления для записей
+    String clientLine = '';
+    String bookingLine = '';
+    if (notification.type == 'BOOKING_CREATED' || notification.type == 'BOOKING_UPDATED') {
+      final body = notification.body;
+      final index = body.indexOf(' записался на ');
+      if (index != -1) {
+        clientLine = body.substring(0, index).trim();
+        bookingLine = body.substring(index + 1).trim();
+      } else {
+        clientLine = body;
+      }
+    } else {
+      clientLine = notification.body;
+    }
 
     return Container(
+      margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
           ),
         ],
         border: Border.all(
-          color: isUnread ? _accentColor(n.type) : Colors.grey.shade200,
+          color: isUnread ? AppColors.primaryGreen : AppColors.primaryGrey.withOpacity(0.2),
           width: isUnread ? 1.5 : 1,
         ),
       ),
@@ -44,112 +62,114 @@ class _ExpandableNotificationState extends State<ExpandableNotification> {
         color: Colors.transparent,
         child: InkWell(
           onTap: () {
-            if (!n.isRead) widget.onRead(n.id);
-            setState(() => _isExpanded = !_isExpanded);
+            // setState(() => _expanded = !_expanded);
+            if (isUnread) widget.onRead(notification.id);
+            // Переход на экран записей (замените на свой маршрут)
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const MasterCalendarScreen()),
+            );
+
           },
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(12),
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(14),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Верхняя строка: иконка, тип, время, статус
                 Row(
                   children: [
-                    // Иконка типа
+                    // Иконка
                     Container(
-                      width: 32,
-                      height: 32,
+                      width: 40,
+                      height: 40,
                       decoration: BoxDecoration(
-                        color: _accentColor(n.type).withValues(alpha: 0.12),
+                        color: _accentColor(notification.type).withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(
-                        _typeIcon(n.type),
-                        size: 18,
-                        color: _accentColor(n.type),
-                      ),
+                      child: Icon(_typeIcon(notification.type), size: 20, color: _accentColor(notification.type)),
                     ),
                     const SizedBox(width: 12),
-                    // Тип уведомления
+                    // Основной текст
                     Expanded(
-                      child: Text(
-                        _typeLabel(n.type),
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13,
-                          color: _accentColor(n.type),
-                        ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Заголовок
+                          Text(
+                            notification.title,
+                            style: TextStyle(
+                              fontWeight: isUnread ? FontWeight.bold : FontWeight.w400,
+                              fontSize: 14,
+                              color: isUnread ? Colors.black87 : Colors.grey.shade600,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          // Тело: две строки или одна
+                          if (bookingLine.isNotEmpty) ...[
+                            Text(
+                              clientLine,
+                              style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            Text(
+                              bookingLine,
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.grey.shade700,
+                              ),
+                            ),
+                          ] else ...[
+                            Text(
+                              clientLine,
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.grey.shade700,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ],
                       ),
                     ),
-                    // Время
-                    Text(
-                      n.timeAgo,
-                      style: TextStyle(
-                        color: Colors.grey.shade500,
-                        fontSize: 12,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    // Индикатор непрочитанного
-                    if (isUnread)
-                      Container(
-                        width: 8,
-                        height: 8,
-                        decoration: BoxDecoration(
-                          color: _accentColor(n.type),
-                          shape: BoxShape.circle,
+                    // Время и индикатор
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          notification.timeAgo,
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.grey.shade500,
+                          ),
                         ),
-                      ),
+                        if (isUnread)
+                          Container(
+                            margin: const EdgeInsets.only(top: 4),
+                            width: 6,
+                            height: 6,
+                            decoration: BoxDecoration(
+                              color: AppColors.primaryGreen,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                      ],
+                    ),
                   ],
                 ),
-                const SizedBox(height: 10),
-                // Заголовок
-                Text(
-                  n.title,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    color: isUnread ? Colors.black87 : Colors.grey.shade600,
+                // Разворачиваемая часть (если нужно полное тело)
+                if (_expanded && notification.body.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(
+                      notification.body,
+                      style: TextStyle(fontSize: 13, color: Colors.grey.shade700),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 6),
-                // Краткое тело (всегда показываем первую строку)
-                Text(
-                  n.body,
-                  maxLines: _isExpanded ? null : 2,
-                  overflow: _isExpanded ? null : TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: isUnread ? Colors.black54 : Colors.grey.shade500,
-                    height: 1.4,
-                  ),
-                ),
-                // Развернутая часть
-                if (_isExpanded) ...[
-                  const SizedBox(height: 12),
-                  Divider(color: Colors.grey.shade200, height: 1),
-                  const SizedBox(height: 12),
-                  // Дополнительная информация (можно добавить)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Icon(
-                        Icons.chevron_right,
-                        size: 16,
-                        color: Colors.grey.shade400,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        'Скрыть ▲',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey.shade500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
               ],
             ),
           ),
@@ -160,40 +180,19 @@ class _ExpandableNotificationState extends State<ExpandableNotification> {
 
   Color _accentColor(String? type) {
     switch (type) {
-      case 'BOOKING_CREATED':
-        return Colors.green.shade600;
-      case 'BOOKING_CANCELLED':
-        return Colors.red.shade600;
-      case 'BOOKING_UPDATED':
-        return Colors.orange.shade700;
-      default:
-        return AppColors.primaryBlue;
+      case 'BOOKING_CREATED': return Colors.green.shade600;
+      case 'BOOKING_CANCELLED': return Colors.red.shade600;
+      case 'BOOKING_UPDATED': return Colors.orange.shade700;
+      default: return AppColors.primaryBlue;
     }
   }
 
   IconData _typeIcon(String? type) {
     switch (type) {
-      case 'BOOKING_CREATED':
-        return Icons.event_available;
-      case 'BOOKING_CANCELLED':
-        return Icons.event_busy;
-      case 'BOOKING_UPDATED':
-        return Icons.edit_calendar;
-      default:
-        return Icons.notifications_outlined;
-    }
-  }
-
-  String _typeLabel(String? type) {
-    switch (type) {
-      case 'BOOKING_CREATED':
-        return 'Новая запись';
-      case 'BOOKING_CANCELLED':
-        return 'Запись отменена';
-      case 'BOOKING_UPDATED':
-        return 'Запись изменена';
-      default:
-        return 'Уведомление';
+      case 'BOOKING_CREATED': return Icons.event_available;
+      case 'BOOKING_CANCELLED': return Icons.event_busy;
+      case 'BOOKING_UPDATED': return Icons.edit_calendar;
+      default: return Icons.notifications_outlined;
     }
   }
 }

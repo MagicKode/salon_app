@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../uikit/colors/app_colors.dart';
 import '../../../../../uikit/strings/app_strings.dart';
-import '../../../../../uikit/widgets/card/networkimagewithplaceholder.dart';
+import '../../../../../uikit/widgets/card/images/networkimagewithplaceholder.dart';
 import '../../../../catalog/data/models/catalog_image.dart';
 import '../../../../catalog/domain/repositories/catalog_repository.dart';
 

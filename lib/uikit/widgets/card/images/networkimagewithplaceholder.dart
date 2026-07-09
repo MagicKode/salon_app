@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import '../../colors/app_colors.dart';
+import '../../../colors/app_colors.dart';
 
 class NetworkImageWithPlaceholder extends StatelessWidget {
   final String url;
@@ -20,24 +20,18 @@ class NetworkImageWithPlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('🖼️ NetworkImageWithPlaceholder: url=$url');
-    return Image.network(
-      url,
-      width: width,
-      height: height,
+    final effectiveWidth = (width != null && width!.isFinite) ? width : null;
+    final effectiveHeight = (height != null && height!.isFinite) ? height : null;
+
+    return CachedNetworkImage(
+      imageUrl: url,
+      width: effectiveWidth,
+      height: effectiveHeight,
       fit: fit ?? BoxFit.cover,
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) {
-          print('✅ Картинка загружена: $url');
-          return child;
-        }
-        print('⏳ Загрузка: ${loadingProgress.cumulativeBytesLoaded}/${loadingProgress.expectedTotalBytes}');
-        return const _LoadingPlaceholder();
-      },
-      errorBuilder: (context, error, stackTrace) {
-        print('❌ Ошибка загрузки: $error, URL: $url');
-        return const _DefaultErrorWidget();
-      },
+      memCacheWidth: effectiveWidth?.toInt() ?? 400,
+      memCacheHeight: effectiveHeight?.toInt() ?? 300,
+      placeholder: (context, url) => const _LoadingPlaceholder(),
+      errorWidget: (context, url, error) => const _DefaultErrorWidget(),
     );
   }
 }

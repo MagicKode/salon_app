@@ -20,44 +20,33 @@ class CatalogRepositoryImpl implements CatalogRepository {
       if (cached is SalonEntity) {
         return Future.value(cached);
       } else {
-        print('⚠️ Кеш салона содержит неправильный тип: ${cached.runtimeType}');
         _cache.remove(key);
       }
     }
-    print('🌐 Загружаем салон с бэка');
     final data = await remoteDataSource.getSalonInfo();
     _cache[key] = data;
     return data;
   }
 
   @override
-  Future<List<CatalogImage>> getImages(String relatedType, int relatedId) async {
-    print('🔍 getImages: $relatedType, $relatedId');
-    final key = 'images_${relatedType}_$relatedId';
+  Future<List<CatalogImage>> getImages(String relatedType, int relatedId, {int limit = 6}) async {
+    final key = 'images_${relatedType}_${relatedId}_limit_$limit';
     if (_cache.containsKey(key)) {
       final cached = _cache[key];
-      print('🔍 cache hit, type = ${cached.runtimeType}');
       if (cached is List<CatalogImage>) {
-        print('🔍 returning cached List<CatalogImage>');
         return Future.value(cached);
       } else {
-        print('🔍 cache invalid, removing');
         _cache.remove(key);
       }
     }
-    print('🔍 fetching from remote');
     final data = await remoteDataSource.getImages(relatedType, relatedId);
-    print('🔍 remote data type = ${data.runtimeType}');
     if (data is List) {
-      print('🔍 remote data length = ${data.length}');
       if (data.isNotEmpty) {
-        print('🔍 first element type = ${data[0].runtimeType}');
       }
     } else {
       throw Exception('remote data is not a List: ${data.runtimeType}');
     }
     _cache[key] = data;
-    print('🔍 returning data');
     return data;
   }
 
@@ -85,7 +74,6 @@ class CatalogRepositoryImpl implements CatalogRepository {
       if (cached is List<CategoryDto>) {
         return Future.value(cached);
       } else {
-        print('⚠️ Кеш категорий содержит неправильный тип, удаляем');
         _cache.remove(key);
       }
     }
@@ -102,7 +90,6 @@ class CatalogRepositoryImpl implements CatalogRepository {
       if (cached is List<ServiceDto>) {
         return Future.value(cached);
       } else {
-        print('⚠️ Кеш услуг категории содержит неправильный тип, удаляем');
         _cache.remove(key);
       }
     }
@@ -116,6 +103,20 @@ class CatalogRepositoryImpl implements CatalogRepository {
     await remoteDataSource.deleteImage(imageId);
     // очищаем локальный кеш изображений
     _cache.removeWhere((key, value) => key.startsWith('images_'));
+  }
+
+  @override
+  Future<ServiceDto> updateService(ServiceDto service) async {
+    final updated = await remoteDataSource.updateService(service);
+    // Очищаем кеш услуг
+    _cache.removeWhere((key, value) => key.startsWith('services_'));
+    return updated;
+  }
+
+  @override
+  void clearGalleryCache() {
+    _cache.removeWhere((key, value) => key.startsWith('images_'));
+    print('🗑️ Gallery cache cleared');
   }
 
   void clearCache() {

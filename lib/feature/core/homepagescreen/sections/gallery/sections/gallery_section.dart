@@ -23,15 +23,12 @@ class _GallerySectionState extends State<GallerySection> {
   int _refreshCounter = 0;
 
   void _refreshGallery() {
-    print('🔄 _refreshGallery вызван, _refreshCounter до: $_refreshCounter');
     final repo = context.read<CatalogRepository>();
     if (repo is CatalogRepositoryImpl) {
-      repo.clearCache();
-      print('🗑️ Кеш очищен');
+      repo.clearGalleryCache();
     }
     setState(() {
       _refreshCounter++;
-      print('🔄 _refreshCounter после: $_refreshCounter');
     });
   }
 
@@ -55,7 +52,6 @@ class _GallerySectionState extends State<GallerySection> {
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
-        // ✅ Увеличиваем высоту до 360, чтобы поместить 2 ряда картинок
 
         GalleryGridPreview(key: ValueKey(_refreshCounter)),
         Padding(
@@ -68,11 +64,11 @@ class _GallerySectionState extends State<GallerySection> {
                   onPressed: () => _showUploadDialog(context),
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                    backgroundColor: Colors.grey.shade200, // слабый серый фон
+                    backgroundColor: Colors.grey.shade200,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    foregroundColor: AppColors.primaryBlue, // цвет текста и иконки
+                    foregroundColor: AppColors.primaryBlue,
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -101,12 +97,12 @@ class _GallerySectionState extends State<GallerySection> {
                   );
                 },
                 style: OutlinedButton.styleFrom(
-                  backgroundColor: AppColors.primaryBlue.withOpacity(0.15), // полупрозрачный фон
-                  side: BorderSide(color: AppColors.primaryBlue.withOpacity(0.2)), // полупрозрачная граница
+                  backgroundColor: AppColors.primaryBlue.withOpacity(0.15),
+                  side: BorderSide(color: AppColors.primaryBlue.withOpacity(0.2)),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  foregroundColor: AppColors.primaryBlue, // светлый текст
+                  foregroundColor: AppColors.primaryBlue,
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 ),
                 child: const Text(AppStrings.seeAllGallery),

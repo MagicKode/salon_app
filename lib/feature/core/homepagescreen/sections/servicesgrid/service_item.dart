@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../uikit/colors/app_colors.dart';
-import '../../../../../uikit/widgets/card/networkimagewithplaceholder.dart';
+import '../../../../../uikit/widgets/card/images/networkimagewithplaceholder.dart';
 
 class ServiceItem extends StatelessWidget {
   final String imageUrl;   // ✅ заменили category на прямую ссылку
@@ -23,8 +23,6 @@ class ServiceItem extends StatelessWidget {
           NetworkImageWithPlaceholder(
             url: imageUrl,
             fit: BoxFit.cover,
-            width: double.infinity,
-            height: double.infinity,
             errorWidget: Container(
               color: Colors.grey[300],
               child: const Icon(Icons.broken_image, color: AppColors.primaryGrey),

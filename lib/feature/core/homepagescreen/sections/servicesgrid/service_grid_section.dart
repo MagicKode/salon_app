@@ -14,15 +14,18 @@ import '../../domain/service_item_data.dart';
 class ServiceGridSection extends StatelessWidget {
   final bool isMaster;
   final Function(CatalogService service)? onQuickBookRequested;
+  final VoidCallback? onServiceUpdated;
 
   const ServiceGridSection({
     super.key,
     required this.isMaster,
     this.onQuickBookRequested,
+    this.onServiceUpdated,
   });
 
   @override
   Widget build(BuildContext context) {
+    print('🟢 ServiceGridSection.build вызван, key: $key');
     final repo = context.read<CatalogRepository>();
     return FutureBuilder<List<ServiceDto>>(
       future: repo.getServices(),
@@ -98,6 +101,8 @@ class ServiceGridSection extends StatelessWidget {
       builder: (_) => ServiceDetailBody(
         service: detail,
         isMaster: isMaster,
+        onServiceSelected: onQuickBookRequested,
+        onServiceUpdated: onServiceUpdated,
       ),
     ).then((result) {
       if (result != null && context.mounted) {

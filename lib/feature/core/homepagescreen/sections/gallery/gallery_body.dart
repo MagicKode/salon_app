@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../uikit/widgets/card/gallery_image_card.dart';
+import '../../../../../uikit/widgets/card/images/gallery_image_card.dart';
 import '../../../../catalog/data/models/catalog_image.dart';
 import '../../../../catalog/domain/repositories/catalog_repository.dart';
 

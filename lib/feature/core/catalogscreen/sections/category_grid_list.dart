@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../uikit/colors/app_colors.dart';
-import '../../../../uikit/widgets/card/networkimagewithplaceholder.dart';
+import '../../../../uikit/widgets/card/images/networkimagewithplaceholder.dart';
 import '../../../catalog/data/models/category_dto.dart';
 
 class CategoryGridList extends StatelessWidget {

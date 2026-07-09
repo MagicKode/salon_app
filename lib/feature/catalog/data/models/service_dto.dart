@@ -11,9 +11,14 @@ class ServiceDto {
   final CatalogImage? image;
 
   const ServiceDto({
-    required this.id, required this.name, required this.description,
-    required this.price, required this.durationMinutes, this.categoryId,
-    required this.sortOrder, this.image,
+    required this.id,
+    required this.name,
+    required this.description,
+    required this.price,
+    required this.durationMinutes,
+    this.categoryId,
+    required this.sortOrder,
+    this.image,
   });
 
   factory ServiceDto.fromJson(Map<String, dynamic> json, {required String imagesBaseUrl}) {
@@ -29,6 +34,19 @@ class ServiceDto {
           ? CatalogImage.fromJson(json['image'], imagesBaseUrl: imagesBaseUrl)
           : null,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'price': price,
+      'durationMinutes': durationMinutes,
+      'categoryId': categoryId,
+      'sortOrder': sortOrder,
+      'image': image?.toJson(),
+    };
   }
 
   static int _toInt(dynamic value) => int.tryParse(value?.toString() ?? '') ?? 0;

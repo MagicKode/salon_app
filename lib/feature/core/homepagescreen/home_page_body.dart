@@ -39,6 +39,14 @@ class HomePageBody extends StatefulWidget {
 
 class _HomePageBodyState extends State<HomePageBody> {
   final ScrollController _scrollController = ScrollController();
+  int _servicesRefreshCounter = 0;
+
+  void _refreshServices() {
+    print('🔄 Обновление услуг, счётчик: $_servicesRefreshCounter');
+    setState(() {
+      _servicesRefreshCounter++;
+    });
+  }
 
   @override
   void dispose() {
@@ -157,11 +165,10 @@ class _HomePageBodyState extends State<HomePageBody> {
                         const SizedBox(height: 16),
 
                         ServiceGridSection(
+                          key: ValueKey(_servicesRefreshCounter),
                           isMaster: widget.isMaster,
-                          onQuickBookRequested:
-                              widget.isMaster
-                                  ? null
-                                  : widget.onQuickBookRequested,
+                          onQuickBookRequested: widget.isMaster ? null : widget.onQuickBookRequested,
+                          onServiceUpdated: _refreshServices,
                         ),
 
                         const SizedBox(height: 16),

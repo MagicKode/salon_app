@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../uikit/widgets/card/networkimagewithplaceholder.dart';
-import '../../../feature/catalog/data/models/catalog_image.dart';
-import '../../../feature/catalog/domain/repositories/catalog_repository.dart';
-import '../../../feature/core/homepagescreen/sections/gallery/domain/full_screen_image.dart';
+import 'networkimagewithplaceholder.dart';
+import '../../../../feature/catalog/data/models/catalog_image.dart';
+import '../../../../feature/catalog/domain/repositories/catalog_repository.dart';
+import '../../../../feature/core/homepagescreen/sections/gallery/domain/full_screen_image.dart';
 
 class GalleryImageCard extends StatefulWidget {
   final CatalogImage image;

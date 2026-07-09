@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../uikit/colors/app_colors.dart';
-import '../../../feature/core/homepagescreen/sections/specialists/domain/master.dart';
-import 'networkimagewithplaceholder.dart';
+import '../../../../../../uikit/colors/app_colors.dart';
+import '../../../../feature/core/homepagescreen/sections/specialists/domain/master.dart';
+import '../images/networkimagewithplaceholder.dart';
 
 class SpecialistCard extends StatelessWidget {
   final Master master;
@@ -12,7 +12,7 @@ class SpecialistCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: AppColors.primaryBackgroundColor,
         borderRadius: BorderRadius.circular(12),
@@ -20,13 +20,12 @@ class SpecialistCard extends StatelessWidget {
       child: Row(
         children: [
           // 1. Фото
-          CircleAvatar(
-            radius: 28,
+          ClipOval(
             child: NetworkImageWithPlaceholder(
               url: master.imageUrl,
               fit: BoxFit.cover,
-              width: 56,
-              height: 56,
+              width: 70,
+              height: 70,
               errorWidget: const Icon(Icons.person, size: 28, color: Colors.grey),
             ),
           ),
