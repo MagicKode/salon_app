@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+
 import '../../../../../../uikit/colors/app_colors.dart';
 import '../../../feature/checkout/domain/booking_entity.dart';
 import '../../../feature/checkout/domain/repository/booking_repository.dart';
@@ -28,17 +29,8 @@ class _HistoryBookingCardState extends State<HistoryBookingCard> {
   bool _isCollapsing = false;
   late String? _currentNotes;
 
-  // ✅ Геттер для списка услуг
-  List<String> get _servicesList {
-    final dynamic data = widget.booking.serviceNames;
-    if (data is List) {
-      return data.map((e) => e.toString()).toList();
-    }
-    if (data is String) {
-      return data.split(',').map((s) => s.trim()).toList();
-    }
-    return [];
-  }
+  List<String> get _servicesList =>
+      widget.booking.services.map((s) => s.name).toList();
 
   @override
   void initState() {
@@ -55,16 +47,25 @@ class _HistoryBookingCardState extends State<HistoryBookingCard> {
   }
 
   bool get _isCanceled => widget.booking.status.toUpperCase() == 'CANCELED';
-  bool get _isPast => widget.booking.dateTime.isBefore(DateTime.now());
+
+  bool get _isPast {
+    final end = widget.booking.dateTime.add(
+      Duration(minutes: widget.booking.durationMinutes),
+    );
+    return end.isBefore(DateTime.now());
+  }
 
   bool get _canCancel {
     if (_isCanceled || _isPast) return false;
-    final hoursUntil = widget.booking.dateTime.difference(DateTime.now()).inHours;
+    final hoursUntil =
+        widget.booking.dateTime.difference(DateTime.now()).inHours;
     return hoursUntil > 12;
   }
 
   bool get _canEditComment => !_isCanceled && !_isPast;
-  bool get _hasDetails => (_currentNotes?.isNotEmpty ?? false) || _servicesList.length > 1;
+
+  bool get _hasDetails =>
+      (_currentNotes?.isNotEmpty ?? false) || _servicesList.length > 1;
 
   @override
   Widget build(BuildContext context) {
@@ -75,35 +76,38 @@ class _HistoryBookingCardState extends State<HistoryBookingCard> {
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
         alignment: Alignment.topCenter,
-        child: _isCollapsing
-            ? const SizedBox(height: 0, width: double.infinity)
-            : Opacity(
-          opacity: _isPast ? 0.5 : 1.0,
-          child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 8),
-            decoration: BoxDecoration(
-              color: AppColors.boxDecorationColor,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: _isExpanded ? AppColors.primaryBlue : AppColors.primaryBlue.withValues(alpha: 0.3),
-                width: _isExpanded ? 1.5 : 1,
-              ),
-            ),
-            child: Column(
-              children: [
-                _buildHeader(),
-                _buildBody(),
-                if (_isExpanded && _hasDetails) _buildExpanded(),
-                if (_hasDetails) _buildFooter(),
-              ],
-            ),
-          ),
-        ),
+        child:
+            _isCollapsing
+                ? const SizedBox(height: 0, width: double.infinity)
+                : Opacity(
+                  opacity: _isPast ? 0.5 : 1.0,
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    decoration: BoxDecoration(
+                      color: AppColors.boxDecorationColor,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color:
+                            _isExpanded
+                                ? AppColors.primaryBlue
+                                : AppColors.primaryBlue.withAlpha(50),
+                        width: _isExpanded ? 1.5 : 1,
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        _buildHeader(),
+                        _buildBody(),
+                        if (_isExpanded && _hasDetails) _buildExpanded(),
+                        if (_hasDetails) _buildFooter(),
+                      ],
+                    ),
+                  ),
+                ),
       ),
     );
   }
 
-  // ─── ХЕДЕР ───────────────────────────────────
   Widget _buildHeader() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -122,13 +126,14 @@ class _HistoryBookingCardState extends State<HistoryBookingCard> {
             _buildActionIcon(Icons.delete_outline, Colors.red, () {
               showDialog(
                 context: context,
-                builder: (_) => CancelBookingDialog(
-                  bookingId: '${widget.booking.id}',
-                  onCancelSuccess: () {
-                    widget.onCancelSuccess?.call();
-                    setState(() => _isCollapsing = true);
-                  },
-                ),
+                builder:
+                    (_) => CancelBookingDialog(
+                      bookingId: '${widget.booking.id}',
+                      onCancelSuccess: () {
+                        widget.onCancelSuccess?.call();
+                        setState(() => _isCollapsing = true);
+                      },
+                    ),
               );
             })
           else if (!_isCanceled && !_isPast && !_canCancel)
@@ -140,18 +145,49 @@ class _HistoryBookingCardState extends State<HistoryBookingCard> {
     );
   }
 
-  // ─── ТЕЛО ────────────────────────────────────
   Widget _buildBody() {
-    final dateStr = DateFormat('d MMMM yyyy (EEEE)', 'ru').format(widget.booking.dateTime);
-    final mainService = _servicesList.isNotEmpty ? _servicesList.first : 'Услуга';
+    final dateStr = DateFormat(
+      'd MMMM yyyy (EEEE)',
+      'ru',
+    ).format(widget.booking.dateTime);
+    final mainService =
+        _servicesList.isNotEmpty ? _servicesList.first : 'Услуга';
     final extraCount = _servicesList.length - 1;
-    final servicesText = extraCount > 0 ? '$mainService + ещё $extraCount' : mainService;
+    final servicesText =
+        extraCount > 0 ? '$mainService + ещё $extraCount' : mainService;
 
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Клиент (Имя + телефон серым)
+          Row(
+            children: [
+              const Icon(
+                Icons.person_outline,
+                color: AppColors.primaryBlue,
+                size: 16,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                widget.booking.clientName.isNotEmpty
+                    ? widget.booking.clientName
+                    : 'Клиент',
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(width: 4),
+              if (widget.booking.clientPhone.isNotEmpty)
+                Text(
+                  '(${widget.booking.clientPhone})',
+                  style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                ),
+            ],
+          ),
+          const SizedBox(height: 10),
 
           // Услуги
           Row(
@@ -159,10 +195,22 @@ class _HistoryBookingCardState extends State<HistoryBookingCard> {
             children: [
               const Padding(
                 padding: EdgeInsets.only(top: 1),
-                child: Icon(Icons.content_cut, color: AppColors.primaryBlue, size: 18),
+                child: Icon(
+                  Icons.content_cut,
+                  color: AppColors.primaryBlue,
+                  size: 18,
+                ),
               ),
               const SizedBox(width: 8),
-              Expanded(child: Text(servicesText, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15))),
+              Expanded(
+                child: Text(
+                  servicesText,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15,
+                  ),
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 10),
@@ -170,9 +218,16 @@ class _HistoryBookingCardState extends State<HistoryBookingCard> {
           // Мастер
           Row(
             children: [
-              const Icon(Icons.person_outline, color: AppColors.primaryBlue, size: 16),
+              const Icon(
+                Icons.assignment_ind,
+                color: AppColors.primaryBlue,
+                size: 16,
+              ),
               const SizedBox(width: 8),
-              Text('Мастер: ${widget.booking.masterName}', style: const TextStyle(fontSize: 14)),
+              Text(
+                'Мастер: ${widget.booking.masterName}',
+                style: const TextStyle(fontSize: 14),
+              ),
             ],
           ),
           const SizedBox(height: 8),
@@ -180,9 +235,19 @@ class _HistoryBookingCardState extends State<HistoryBookingCard> {
           // Дата
           Row(
             children: [
-              const Icon(Icons.calendar_today, color: AppColors.primaryBlue, size: 14),
+              const Icon(
+                Icons.calendar_today,
+                color: AppColors.primaryBlue,
+                size: 14,
+              ),
               const SizedBox(width: 8),
-              Text(dateStr, style: const TextStyle(fontSize: 14, color: AppColors.primaryBlack)),
+              Text(
+                dateStr,
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: AppColors.primaryBlack,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 8),
@@ -190,12 +255,29 @@ class _HistoryBookingCardState extends State<HistoryBookingCard> {
           // Время + Цена
           Row(
             children: [
-              const Icon(Icons.access_time, color: AppColors.primaryBlue, size: 14),
+              const Icon(
+                Icons.access_time,
+                color: AppColors.primaryBlue,
+                size: 14,
+              ),
               const SizedBox(width: 8),
-              Text(_timeRange, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+              Text(
+                _timeRange,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
               const Spacer(),
-              if ((widget.booking.price ?? 0) > 0)
-                Text('${widget.booking.price} Br', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.primaryBlue)),
+              if (widget.booking.price > 0)
+                Text(
+                  '${widget.booking.price} Br',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryBlue,
+                  ),
+                ),
             ],
           ),
           const SizedBox(height: 12),
@@ -205,19 +287,34 @@ class _HistoryBookingCardState extends State<HistoryBookingCard> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.chat_bubble_outline, size: 14, color: AppColors.primaryGrey),
+                const Icon(
+                  Icons.chat_bubble_outline,
+                  size: 14,
+                  color: AppColors.primaryGrey,
+                ),
                 const SizedBox(width: 6),
                 Expanded(
                   child: Text(
                     _currentNotes!,
-                    maxLines: _isExpanded ? null : 1,                    // ✅ 1 строка или всё
-                    overflow: _isExpanded ? null : TextOverflow.ellipsis, // ✅ многоточие
-                    style: const TextStyle(fontSize: 13, fontStyle: FontStyle.italic, color: AppColors.primaryBlack),
+                    maxLines: _isExpanded ? null : 1,
+                    overflow: _isExpanded ? null : TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontStyle: FontStyle.italic,
+                      color: AppColors.primaryBlack,
+                    ),
                   ),
                 ),
                 if (_canEditComment) ...[
                   const SizedBox(width: 8),
-                  GestureDetector(onTap: _editComment, child: const Icon(Icons.edit, color: AppColors.primaryBlue, size: 18)),
+                  GestureDetector(
+                    onTap: _editComment,
+                    child: const Icon(
+                      Icons.edit,
+                      color: AppColors.primaryBlue,
+                      size: 18,
+                    ),
+                  ),
                 ],
               ],
             )
@@ -226,9 +323,19 @@ class _HistoryBookingCardState extends State<HistoryBookingCard> {
               onTap: _editComment,
               child: const Row(
                 children: [
-                  Icon(Icons.add_comment_outlined, size: 14, color: AppColors.primaryBlue),
+                  Icon(
+                    Icons.add_comment_outlined,
+                    size: 14,
+                    color: AppColors.primaryBlue,
+                  ),
                   SizedBox(width: 6),
-                  Text('Добавить комментарий', style: TextStyle(color: AppColors.primaryBlue, fontSize: 13)),
+                  Text(
+                    'Добавить комментарий',
+                    style: TextStyle(
+                      color: AppColors.primaryBlue,
+                      fontSize: 13,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -237,7 +344,6 @@ class _HistoryBookingCardState extends State<HistoryBookingCard> {
     );
   }
 
-  // ─── РАСКРЫТЫЕ ДЕТАЛИ ─────────────────────
   Widget _buildExpanded() {
     return Container(
       width: double.infinity,
@@ -247,10 +353,13 @@ class _HistoryBookingCardState extends State<HistoryBookingCard> {
         children: [
           const Divider(),
           if (_servicesList.length > 1) ...[
-            const Text('Все услуги:', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+            const Text(
+              'Все услуги:',
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+            ),
             const SizedBox(height: 4),
             ..._servicesList.map(
-                  (s) => Padding(
+              (s) => Padding(
                 padding: const EdgeInsets.only(left: 8, bottom: 2),
                 child: Text('• $s', style: const TextStyle(fontSize: 13)),
               ),
@@ -261,7 +370,6 @@ class _HistoryBookingCardState extends State<HistoryBookingCard> {
     );
   }
 
-  // ─── ФУТЕР ─────────────────────────────────
   Widget _buildFooter() {
     return GestureDetector(
       onTap: () => setState(() => _isExpanded = !_isExpanded),
@@ -269,20 +377,28 @@ class _HistoryBookingCardState extends State<HistoryBookingCard> {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          color: AppColors.primaryBlue.withValues(alpha: 0.03),
-          borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(12), bottomRight: Radius.circular(12)),
+          color: AppColors.primaryBlue.withAlpha(8),
+          borderRadius: const BorderRadius.only(
+            bottomLeft: Radius.circular(12),
+            bottomRight: Radius.circular(12),
+          ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(_isExpanded ? 'Скрыть ▲' : 'Подробнее ▼', style: const TextStyle(color: AppColors.primaryBlue, fontSize: 12)),
+            Text(
+              _isExpanded ? 'Скрыть ▲' : 'Подробнее ▼',
+              style: const TextStyle(
+                color: AppColors.primaryBlue,
+                fontSize: 12,
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  // ─── СТАТУС ЧИП ───────────────────────────
   Widget _buildStatusChip() {
     String label;
     Color bg;
@@ -305,8 +421,18 @@ class _HistoryBookingCardState extends State<HistoryBookingCard> {
     }
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(12)),
-      child: Text(label, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.white)),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.w600,
+          color: Colors.white,
+        ),
+      ),
     );
   }
 
@@ -315,40 +441,42 @@ class _HistoryBookingCardState extends State<HistoryBookingCard> {
       color: Colors.transparent,
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
-        splashColor: color.withValues(alpha: 0.2),
+        splashColor: color.withAlpha(30),
         onTap: onTap,
-        child: Padding(padding: const EdgeInsets.all(4), child: Icon(icon, color: color, size: 18)),
+        child: Padding(
+          padding: const EdgeInsets.all(4),
+          child: Icon(icon, color: color, size: 18),
+        ),
       ),
     );
   }
 
   void _editComment() async {
-    final bookingRepository = context.read<BookingRepository>();
+    final repo = context.read<BookingRepository>();
     final updated = await showDialog<String>(
       context: context,
-      builder: (_) => EditCommentDialog(
-        bookingId: '${widget.booking.id}',
-        initialComment: _currentNotes ?? '',
-        bookingRepository: bookingRepository,
-        onUpdateSuccess: widget.onUpdateSuccess,
-      ),
+      builder:
+          (_) => EditCommentDialog(
+            bookingId: '${widget.booking.id}',
+            initialComment: _currentNotes ?? '',
+            bookingRepository: repo,
+            onUpdateSuccess: widget.onUpdateSuccess,
+          ),
     );
-    if (updated != null && mounted) {
-      setState(() => _currentNotes = updated);
-    }
+    if (updated != null && mounted) setState(() => _currentNotes = updated);
   }
 
   String get _timeRange {
     final start = widget.booking.dateTime;
-    final end = start.add(Duration(minutes: widget.booking.durationMinutes ?? 60));
+    final end = start.add(Duration(minutes: widget.booking.durationMinutes));
     final s = '${start.hour}:${start.minute.toString().padLeft(2, '0')}';
     final e = '${end.hour}:${end.minute.toString().padLeft(2, '0')}';
     return '$s — $e';
   }
 
   Color _headerColor() {
-    if (_isCanceled) return Colors.red.withValues(alpha: 0.08);
-    if (_isPast) return Colors.grey.withValues(alpha: 0.05);
-    return Colors.green.withValues(alpha: 0.08);
+    if (_isCanceled) return Colors.red.withAlpha(20);
+    if (_isPast) return Colors.grey.withAlpha(13);
+    return Colors.green.withAlpha(20);
   }
 }

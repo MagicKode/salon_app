@@ -7,7 +7,12 @@ import 'bloc/notification_event.dart';
 import 'bloc/notification_state.dart';
 
 class NotificationsBody extends StatelessWidget {
-  const NotificationsBody({super.key});
+  final bool isMaster;
+
+  const NotificationsBody({
+    super.key,
+    required this.isMaster
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +41,7 @@ class NotificationsBody extends StatelessWidget {
                 onRead: (id) {
                   context.read<NotificationsBloc>().add(MarkAsRead(id));
                 },
+                isMaster: isMaster,
               );
             },
           );

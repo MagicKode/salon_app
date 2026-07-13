@@ -39,7 +39,7 @@ class NotificationsScreen extends StatelessWidget {
               centerTitle: true,
             ),
 
-            body: const NotificationsBody(),
+            body: NotificationsBody(isMaster: isMaster),
 
             floatingActionButton: isMaster
                 ? FloatingActionButton(

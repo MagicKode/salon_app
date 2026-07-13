@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../../../uikit/colors/app_colors.dart';
 import '../../../../uikit/strings/app_strings.dart';
 import '../../checkout/domain/booking_entity.dart';
@@ -20,9 +19,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   void initState() {
     super.initState();
-    // Инициируем загрузку через отдельный асинхронный метод
-    final bookingRepository = context.read<BookingRepository>();
-    _historyFuture = bookingRepository.fetchBookingHistory();
+    _loadHistory();
+  }
+
+  void _loadHistory() {
+    final repo = context.read<BookingRepository>();
+    _historyFuture = repo.fetchBookingHistory();
   }
 
   @override
@@ -32,10 +34,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       appBar: AppBar(
         title: const Text(
           AppStrings.serviceHistory,
-          style: TextStyle(
-            color: AppColors.primaryBlack,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: AppColors.primaryBlack, fontWeight: FontWeight.bold),
         ),
         backgroundColor: AppColors.primaryWhite,
         elevation: 0,
@@ -45,35 +44,24 @@ class _HistoryScreenState extends State<HistoryScreen> {
         future: _historyFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(color: AppColors.primaryBlue),
-            );
+            return const Center(child: CircularProgressIndicator(color: AppColors.primaryBlue));
           } else if (snapshot.hasError) {
             return Center(
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16),
                 child: Text(
                   "Ошибка: ${snapshot.error}",
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: AppColors.primaryRed,
-                    fontSize: 16,
-                  ),
+                  style: const TextStyle(color: Colors.red, fontSize: 16),
                 ),
               ),
             );
           } else {
             final data = snapshot.data ?? [];
-
             return HistoryBody(
               allBookings: data,
               onRefresh: () async {
-                setState(() {
-                  // Перезапускаем Future запрос к бэкенду
-                  _historyFuture =
-                      context.read<BookingRepository>().fetchBookingHistory();
-                });
-                // Ждем завершения запроса, чтобы крутилка (индикатор) пропала вовремя
+                setState(() => _loadHistory());
                 await _historyFuture;
               },
             );

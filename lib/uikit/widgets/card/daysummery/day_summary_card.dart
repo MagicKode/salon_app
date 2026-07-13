@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:salon_flutter/feature/core/masterschedulescreen/domain/day_availability_model.dart';
 import 'package:salon_flutter/feature/core/mastercalendarscreen/domain/appointment_model.dart';
-import 'package:salon_flutter/uikit/widgets/card/master_appointment_card.dart';
+import 'package:salon_flutter/feature/core/masterschedulescreen/domain/day_availability_model.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
+
 import '../../../../feature/core/mastercalendarscreen/master_calendar_screen.dart';
 import 'day_off_widget.dart';
 import 'empty_day_widget.dart';
@@ -56,7 +56,8 @@ class DaySummaryCard extends StatelessWidget {
     // ... (код карточки без изменений)
     final now = DateTime.now();
     final isPast = appointment.endTime.isBefore(now);
-    final isCurrent = appointment.startTime.isBefore(now) && appointment.endTime.isAfter(now);
+    final isCurrent =
+        appointment.startTime.isBefore(now) && appointment.endTime.isAfter(now);
     final isFuture = appointment.startTime.isAfter(now);
 
     Color statusColor;
@@ -119,18 +120,19 @@ class DaySummaryCard extends StatelessWidget {
                           appointment.displayClientName,
                           style: const TextStyle(
                             fontSize: 13,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.bold,
                             color: AppColors.primaryBlack,
                           ),
                         ),
                         const SizedBox(width: 4),
-                        Text(
-                          '(${appointment.clientPhone})',
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: Colors.grey.shade600,
+                        if (appointment.clientPhone.isNotEmpty) // ✅ показываем только если есть
+                          Text(
+                            '(${appointment.clientPhone})',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.grey.shade600,    // ✅ серое
+                            ),
                           ),
-                        ),
                       ],
                     ),
                     const SizedBox(height: 1),

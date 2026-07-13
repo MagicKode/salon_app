@@ -5,6 +5,8 @@ import '../../core/bookingservicescreen/domain/add_service_data.dart';
 
 class BookingEntity {
   final int id;
+  final String clientName;
+  final String clientPhone;
   final List<AddServiceData> services;
   final String masterName;
   final DateTime dateTime;
@@ -15,6 +17,8 @@ class BookingEntity {
 
   BookingEntity({
     this.id = 0,
+    required this.clientName,
+    required this.clientPhone,
     required this.services,
     required this.masterName,
     required this.dateTime,
@@ -27,8 +31,6 @@ class BookingEntity {
   /// ИСПРАВЛЕНО: Фабричный метод для создания объекта из JSON ответа бэкенда
   factory BookingEntity.fromJson(Map<String, dynamic> json) {
     // 1. Безопасно парсим дату и время.
-    // Если прилетает чистый ISO String ("2026-06-02T16:00:00"), парсим напрямую через DateTime.parse.
-    // Если прилетает отдельно дата и время ("2026-06-02" и "16:00:00"), склеиваем их.
     DateTime parsedDateTime;
     try {
       if (json['bookingDateTime'] != null) {
@@ -39,10 +41,9 @@ class BookingEntity {
         parsedDateTime = DateTime.parse('${rawDate}T$rawTime');
       }
     } catch (e) {
-      parsedDateTime = DateTime.now(); // Фолбэк на случай непредвиденного формата
+      parsedDateTime = DateTime.now();
     }
 
-    // Извлекаем общую цену бронирования (в базе это total_price)
     final double totalPrice = (json['totalPrice'] ?? json['total_price'] ?? 0).toDouble();
 
     // 2. Парсим список услуг на основе логов Hibernate (booking_services -> service_name)
@@ -51,7 +52,6 @@ class BookingEntity {
     if (json['services'] != null && json['services'] is List) {
       final List<dynamic> rawServices = json['services'];
       servicesList = rawServices.map((s) {
-        // Если внутри массива лежит объект, ищем serviceName/name. Если просто строка — берем её.
         String currentName = 'Услуга';
         String currentId = UniqueKey().toString();
 
@@ -65,8 +65,8 @@ class BookingEntity {
         return AddServiceData(
           id: currentId,
           name: currentName,
-          price: 0, // На фронте для истории цена лежит в общем инвойсе, внутри AddServiceData ставим 0
-          durationMinutes: 30, // Дефолт-заглушка для верстки
+          price: 0,
+          durationMinutes: 30,
         );
       }).toList();
     }
@@ -89,6 +89,8 @@ class BookingEntity {
     // 3. Собираем финальную сущность для отображения во Flutter
     return BookingEntity(
       id: json['id'] as int? ?? 0,
+      clientName: json['clientName'] as String? ?? 'Клиент',
+      clientPhone: json['clientPhone'] as String? ?? '',
       services: servicesList,
       masterName: json['masterName'] ?? json['master_name'] ?? 'Мастер',
       dateTime: parsedDateTime,
@@ -140,7 +142,7 @@ extension ServiceListExtension on List<AddServiceData> {
       ),
       price: totalPrice,
       durationMinutes: totalDuration,
-      notes: notes,
+      notes: notes, clientName: '', clientPhone: '',
     );
   }
 }

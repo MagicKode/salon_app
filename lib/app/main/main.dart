@@ -31,8 +31,8 @@ import '../../feature/core/notificationscreen/repository/notification_repository
 import '../../feature/navigation/app_root_router.dart';
 
 /// Переключай одной кнопкой: true — для эмулятора, false — для смартфона
-const bool isEmulator = false;
-// const bool isEmulator = true;
+// const bool isEmulator = false;
+const bool isEmulator = true;
 
 
 // Определяем базовый IP и порты для сервисов

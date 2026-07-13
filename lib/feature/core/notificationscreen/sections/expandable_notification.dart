@@ -6,11 +6,13 @@ import '../domain/notification_model.dart';
 class ExpandableNotification extends StatefulWidget {
   final NotificationModel notification;
   final Function(int) onRead;
+  final bool isMaster;
 
   const ExpandableNotification({
     super.key,
     required this.notification,
     required this.onRead,
+    required this.isMaster,
   });
 
   @override
@@ -28,11 +30,13 @@ class _ExpandableNotificationState extends State<ExpandableNotification> {
     // Парсим тело уведомления для записей
     String clientLine = '';
     String bookingLine = '';
-    if (notification.type == 'BOOKING_CREATED' || notification.type == 'BOOKING_UPDATED') {
+    if (notification.type == 'BOOKING_CREATED' ||
+        notification.type == 'BOOKING_UPDATED') {
       final body = notification.body;
       final index = body.indexOf(' записался на ');
       if (index != -1) {
-        clientLine = body.substring(0, index).trim();
+        final rawClient = body.substring(0, index).trim();
+        clientLine = _formatClientInfo(rawClient);
         bookingLine = body.substring(index + 1).trim();
       } else {
         clientLine = body;
@@ -54,7 +58,10 @@ class _ExpandableNotificationState extends State<ExpandableNotification> {
           ),
         ],
         border: Border.all(
-          color: isUnread ? AppColors.primaryGreen : AppColors.primaryGrey.withOpacity(0.2),
+          color:
+              isUnread
+                  ? AppColors.primaryGreen
+                  : AppColors.primaryGrey.withOpacity(0.2),
           width: isUnread ? 1.5 : 1,
         ),
       ),
@@ -64,12 +71,16 @@ class _ExpandableNotificationState extends State<ExpandableNotification> {
           onTap: () {
             // setState(() => _expanded = !_expanded);
             if (isUnread) widget.onRead(notification.id);
-            // Переход на экран записей (замените на свой маршрут)
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const MasterCalendarScreen()),
-            );
-
+            if (widget.isMaster) {
+              // Переход на экран расписания для Мастера
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const MasterCalendarScreen()),
+              );
+            } else {
+              // Для Клиента – просто раскрываем/сворачиваем уведомление
+              setState(() => _expanded = !_expanded);
+            }
           },
           borderRadius: BorderRadius.circular(12),
           child: Padding(
@@ -84,10 +95,16 @@ class _ExpandableNotificationState extends State<ExpandableNotification> {
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: _accentColor(notification.type).withValues(alpha: 0.1),
+                        color: _accentColor(
+                          notification.type,
+                        ).withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(_typeIcon(notification.type), size: 20, color: _accentColor(notification.type)),
+                      child: Icon(
+                        _typeIcon(notification.type),
+                        size: 20,
+                        color: _accentColor(notification.type),
+                      ),
                     ),
                     const SizedBox(width: 12),
                     // Основной текст
@@ -99,9 +116,13 @@ class _ExpandableNotificationState extends State<ExpandableNotification> {
                           Text(
                             notification.title,
                             style: TextStyle(
-                              fontWeight: isUnread ? FontWeight.bold : FontWeight.w400,
+                              fontWeight:
+                                  isUnread ? FontWeight.bold : FontWeight.w400,
                               fontSize: 14,
-                              color: isUnread ? Colors.black87 : Colors.grey.shade600,
+                              color:
+                                  isUnread
+                                      ? Colors.black87
+                                      : Colors.grey.shade600,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -167,7 +188,10 @@ class _ExpandableNotificationState extends State<ExpandableNotification> {
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
                       notification.body,
-                      style: TextStyle(fontSize: 13, color: Colors.grey.shade700),
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey.shade700,
+                      ),
                     ),
                   ),
               ],
@@ -178,21 +202,61 @@ class _ExpandableNotificationState extends State<ExpandableNotification> {
     );
   }
 
+  String _formatClientInfo(String raw) {
+    // raw = "Клиент Иван +375291234567" или "Клиент +375291234567"
+    if (!raw.startsWith('Клиент')) return raw;
+
+    // Убираем "Клиент "
+    String withoutPrefix = raw.substring('Клиент'.length).trim();
+
+    // Ищем номер телефона (начинается с + или цифры)
+    // Регулярка для белорусского номера: +375 или +37529...
+    RegExp phoneRegex = RegExp(r'(\+\d{10,15})');
+    Match? match = phoneRegex.firstMatch(withoutPrefix);
+    String? phone;
+    String name = '';
+    if (match != null) {
+      phone = match.group(0);
+      // Имя — всё, что до номера
+      name = withoutPrefix.substring(0, match.start).trim();
+    } else {
+      // Если номера нет, значит, это просто текст
+      name = withoutPrefix;
+    }
+
+    // Форматируем результат
+    if (name.isNotEmpty && phone != null) {
+      return 'Клиент: $name ($phone)';
+    } else if (phone != null) {
+      return 'Клиент: $phone';
+    } else {
+      return 'Клиент: $name';
+    }
+  }
+
   Color _accentColor(String? type) {
     switch (type) {
-      case 'BOOKING_CREATED': return Colors.green.shade600;
-      case 'BOOKING_CANCELLED': return Colors.red.shade600;
-      case 'BOOKING_UPDATED': return Colors.orange.shade700;
-      default: return AppColors.primaryBlue;
+      case 'BOOKING_CREATED':
+        return Colors.green.shade600;
+      case 'BOOKING_CANCELLED':
+        return Colors.red.shade600;
+      case 'BOOKING_UPDATED':
+        return Colors.orange.shade700;
+      default:
+        return AppColors.primaryBlue;
     }
   }
 
   IconData _typeIcon(String? type) {
     switch (type) {
-      case 'BOOKING_CREATED': return Icons.event_available;
-      case 'BOOKING_CANCELLED': return Icons.event_busy;
-      case 'BOOKING_UPDATED': return Icons.edit_calendar;
-      default: return Icons.notifications_outlined;
+      case 'BOOKING_CREATED':
+        return Icons.event_available;
+      case 'BOOKING_CANCELLED':
+        return Icons.event_busy;
+      case 'BOOKING_UPDATED':
+        return Icons.edit_calendar;
+      default:
+        return Icons.notifications_outlined;
     }
   }
 }

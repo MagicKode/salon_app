@@ -21,7 +21,7 @@ class GalleryGridPreview extends StatelessWidget {
     final bigWidth = (availableWidth - spacing) / 2;
     final smallWidth = (availableWidth - spacing * 2) / 3;
     // Задаём единое соотношение сторон для всех плиток (например, 3:4)
-    final aspectRatio = 0.75;
+    final aspectRatio = 1.15;
     final bigHeight = bigWidth * aspectRatio;
     final smallHeight = smallWidth * aspectRatio;
 

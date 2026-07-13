@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
-
-import '../../../feature/checkout/domain/booking_entity.dart';
-import '../../../feature/core/bookingservicescreen/bookingblock/booking_slots_bloc.dart';
-import '../../../feature/core/bookingservicescreen/bookingblock/booking_slots_event.dart';
-import '../../../feature/core/historyscreen/sections/historylist/history_list_section.dart';
-import '../../colors/app_colors.dart';
-import '../card/history_booking_card.dart';
-import '../emptyscreen/history_empty_screen.dart';
+import '../../../../uikit/colors/app_colors.dart';
+import '../../../../uikit/widgets/card/history_booking_card.dart';
+import '../../../../uikit/widgets/emptyscreen/history_empty_screen.dart';
+import '../../../checkout/domain/booking_entity.dart';
+import '../../bookingservicescreen/bookingblock/booking_slots_bloc.dart';
+import '../../bookingservicescreen/bookingblock/booking_slots_event.dart';
 
 class HistoryRefreshListView extends StatelessWidget {
   final List<BookingEntity> activeBookings;
@@ -24,12 +22,12 @@ class HistoryRefreshListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Пропускаем только со статусом CONFIRMED (отмененные CANCELED уходят)
+    // Показываем только CONFIRMED (отменённые скрываем)
     final displayActiveBookings =
-        activeBookings.where((b) => b.status == 'CONFIRMED').toList();
+    activeBookings.where((b) => b.status == 'CONFIRMED').toList();
 
     final displayPastBookings =
-        pastBookings.where((b) => b.status != 'CANCELED').toList();
+    pastBookings.where((b) => b.status != 'CANCELED').toList();
 
     final bool isEmpty =
         displayActiveBookings.isEmpty && displayPastBookings.isEmpty;
@@ -49,7 +47,7 @@ class HistoryRefreshListView extends StatelessWidget {
               child: const HistoryEmptyState(),
             )
           else ...[
-            // Блок активных записей
+            // Актуальные записи
             if (displayActiveBookings.isNotEmpty) ...[
               const Text(
                 AppStrings.activeBookings,
@@ -59,26 +57,19 @@ class HistoryRefreshListView extends StatelessWidget {
                   color: AppColors.primaryBlack,
                 ),
               ),
-
               const SizedBox(height: 12),
-
               ...displayActiveBookings.map(
-                (b) => Padding(
+                    (b) => Padding(
                   padding: const EdgeInsets.only(bottom: 12),
                   child: HistoryBookingCard(
                     booking: b,
-                    // проверяем затенение карточки только по текущему времени
-                    // isDimmed: b.dateTime.isBefore(DateTime.now()),
-
                     onCancelSuccess: () async {
-                      // Сначала пинаем Блок часов, пока контекст на 100% живой
                       context.read<BookingSlotsBloc>().add(
                         LoadBookingSlotsEvent(
                           masterName: b.masterName,
                           date: b.dateTime,
                         ),
                       );
-                      // 1. Сначала обновляем список истории на текущем экране
                       await onRefresh();
                     },
                   ),
@@ -87,9 +78,23 @@ class HistoryRefreshListView extends StatelessWidget {
               const SizedBox(height: 24),
             ],
 
-            // Блок истории (прошедших) записей
+            // Прошедшие записи (без HistoryListSection)
             if (displayPastBookings.isNotEmpty) ...[
-              HistoryListSection(bookings: displayPastBookings),
+              const Text(
+                AppStrings.pastBooking,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primaryBlack,
+                ),
+              ),
+              const SizedBox(height: 12),
+              ...displayPastBookings.map(
+                    (b) => Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: HistoryBookingCard(booking: b),
+                ),
+              ),
             ],
           ],
         ],

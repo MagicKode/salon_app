@@ -2,6 +2,7 @@ class AppointmentModel {
   final String id;
   final String clientName;
   final List<String> servicesNames;
+  final String clientPhone;
   final DateTime startTime;
   final DateTime endTime;
   final String? notes;
@@ -11,6 +12,7 @@ class AppointmentModel {
   const AppointmentModel({
     required this.id,
     required this.clientName,
+    required this.clientPhone,
     required this.servicesNames,
     required this.startTime,
     required this.endTime,
@@ -24,6 +26,7 @@ class AppointmentModel {
     return AppointmentModel(
       id: json['id']?.toString() ?? '',
       clientName: json['clientName'] as String? ?? '',
+      clientPhone: json['clientPhone'] as String? ?? '',
       servicesNames: List<String>.from(json['servicesNames'] ?? []),
       startTime: DateTime.parse(json['startTime'] as String),
       endTime: DateTime.parse(json['endTime'] as String),
@@ -40,12 +43,8 @@ class AppointmentModel {
     return '$ints.${parts[1]}';
   }
 
-  String get displayClientName {
-    const names = {'+375292624381': 'Зоя', '+37529123456': 'Вадим', '+375336045766': 'Дмитрий'};
-    return names[clientName] ?? 'Клиент';
-  }
+  String get displayClientName => clientName.isNotEmpty ? clientName : 'Клиент';
 
-  String get clientPhone => clientName;
   String get priceDisplay => totalPrice > 0 ? '$totalPriceFormatted Br' : '';
   String get mainService => servicesNames.isNotEmpty ? servicesNames.first : 'Услуга';
 }
