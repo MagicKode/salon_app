@@ -7,3 +7,10 @@ class MarkAsRead extends NotificationsEvent {
   final int id;
   MarkAsRead(this.id);
 }
+
+class DeleteNotification extends NotificationsEvent {
+  final int notificationId;
+  DeleteNotification(this.notificationId);
+  @override
+  List<Object?> get props => [notificationId];
+}

@@ -31,17 +31,36 @@ class NotificationsBody extends StatelessWidget {
             return const Center(child: Text("Нет уведомлений"));
           }
 
-          return ListView.separated(
+          return ListView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
             itemCount: state.notifications.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 12),
             itemBuilder: (context, index) {
-              return ExpandableNotification(
-                notification: state.notifications[index],
-                onRead: (id) {
-                  context.read<NotificationsBloc>().add(MarkAsRead(id));
+              final notification = state.notifications[index];
+              return Dismissible(
+                key: Key(notification.id.toString()),
+                direction: DismissDirection.endToStart,
+                onDismissed: (_) {
+                  context.read<NotificationsBloc>().add(DeleteNotification(notification.id));
                 },
-                isMaster: isMaster,
+                background: Container(
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.only(right: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(Icons.delete, color: Colors.white, size: 30),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: ExpandableNotification(
+                    notification: notification,
+                    onRead: (id) {
+                      context.read<NotificationsBloc>().add(MarkAsRead(id));
+                    },
+                    isMaster: isMaster,
+                  ),
+                ),
               );
             },
           );

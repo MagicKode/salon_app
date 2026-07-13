@@ -23,10 +23,21 @@ class HomeSearchBar extends StatelessWidget {
               child: TextField(
                 readOnly: true,
                 onTap: onTap,
+                style: const TextStyle(
+                  fontSize: 15,
+                  color: Colors.grey,
+                ),
                 decoration: InputDecoration(
                   hintText: AppStrings.hintServiceMasterSearch,
-                  hintStyle: const TextStyle(fontSize: 14),
-                  prefixIcon: const Icon(Icons.search, size: 20),
+                  hintStyle: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
+                  ),
+                  prefixIcon: const Icon(
+                    Icons.search,
+                    size: 20,
+                    color: AppColors.primaryBlue,
+                  ),
                   border: InputBorder.none,
                   contentPadding: const EdgeInsets.symmetric(vertical: 14),
                 ),

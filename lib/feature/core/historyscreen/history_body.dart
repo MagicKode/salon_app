@@ -1,48 +1,93 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/feature/core/historyscreen/sections/history_refresh_list_view.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../uikit/colors/app_colors.dart';
+import '../../../uikit/widgets/card/history_booking_card.dart';
 import '../../../uikit/widgets/emptyscreen/history_empty_screen.dart';
 import '../../checkout/domain/booking_entity.dart';
+import '../bookingservicescreen/bookingblock/booking_slots_bloc.dart';
+import '../bookingservicescreen/bookingblock/booking_slots_event.dart';
 
 class HistoryBody extends StatelessWidget {
-  final List<BookingEntity> allBookings;
+  final List<BookingEntity> bookings;
   final Future<void> Function() onRefresh;
+  final void Function(int) onDelete;
+  final bool enableDelete;
 
   const HistoryBody({
     super.key,
-    required this.allBookings,
+    required this.bookings,
     required this.onRefresh,
+    required this.onDelete,
+    this.enableDelete = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    if (allBookings.isEmpty) {
+    final displayBookings =
+        bookings.where((b) => b.status != 'CANCELED').toList();
+
+    if (displayBookings.isEmpty) {
       return const HistoryEmptyState();
     }
 
-    final now = DateTime.now();
+    Widget _buildDismissible(BookingEntity booking, Widget child) {
 
-    // Активные (ещё не закончились)
-    final activeBookings = allBookings
-        .where((b) {
-      final end = b.dateTime.add(Duration(minutes: b.durationMinutes));
-      return end.isAfter(now);
-    })
-        .toList()
-      ..sort((a, b) => a.dateTime.compareTo(b.dateTime));
+      if (!enableDelete) {
+        return child;
+      }
 
-    // Прошедшие
-    final pastBookings = allBookings
-        .where((b) {
-      final end = b.dateTime.add(Duration(minutes: b.durationMinutes));
-      return end.isBefore(now);
-    })
-        .toList()
-      ..sort((a, b) => b.dateTime.compareTo(a.dateTime));
+      return Dismissible(
+        key: Key(booking.id.toString()),
+        direction: DismissDirection.endToStart,
+        onDismissed: (_) {
+          onDelete(booking.id);
+        },
+        background: Container(
+          alignment: Alignment.centerRight,
+          padding: const EdgeInsets.only(right: 20),
+          decoration: BoxDecoration(
+            color: Colors.red,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: const Icon(Icons.delete, color: Colors.white, size: 30),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: child,
+        ),
+      );
+    }
 
-    return HistoryRefreshListView(
-      activeBookings: activeBookings,
-      pastBookings: pastBookings,
+    return RefreshIndicator(
       onRefresh: onRefresh,
+      color: AppColors.primaryBlue,
+      child: ListView(
+        padding: const EdgeInsets.all(20),
+        physics: const AlwaysScrollableScrollPhysics(
+          parent: BouncingScrollPhysics(),
+        ),
+        children:
+            displayBookings
+                .map(
+                  (b) => _buildDismissible(
+                    b,
+                    HistoryBookingCard(
+                      booking: b,
+                      onCancelSuccess: () async {
+                        context.read<BookingSlotsBloc>().add(
+                          LoadBookingSlotsEvent(
+                            masterName: b.masterName,
+                            date: b.dateTime,
+                          ),
+                        );
+                        await onRefresh();
+                      },
+                    ),
+                  ),
+                )
+                .toList(),
+      ),
     );
   }
 }

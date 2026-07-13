@@ -18,16 +18,14 @@ class BookingRepository {
     required this.baseUrl,
     required this.historyUrl,
   }) : _dio = dio,
-       _secureStorage = secureStorage;
-
-  /// ✅ Получение телефона текущего пользователя
-  Future<String> _getUserPhone() async {
-    final phone = await _secureStorage.read(key: 'user_phone');
-    return phone ?? '';
-  }
+        _secureStorage = secureStorage;
 
   Future<String?> _getToken() async {
-    return await _secureStorage.read(key: 'jwt_token');
+    return await _secureStorage.read(key: 'auth_token');
+  }
+
+  Future<String> _getUserPhone() async {
+    return await _secureStorage.read(key: 'user_phone') ?? '';
   }
 
   /// Метод отправки бронирования на сервер
@@ -60,8 +58,6 @@ class BookingRepository {
         if (e.response?.statusCode == 409) {
           throw Exception("Извините, это время уже занято другим клиентом!");
         }
-
-        // Вытаскиваем сообщение об ошибке валидации, если Spring его прислал
         final serverMessage =
             e.response?.data?['message'] ?? e.response?.data?['error'];
         if (serverMessage != null) {
@@ -75,9 +71,9 @@ class BookingRepository {
   }
 
   Future<List<TimeSlotModel>> fetchAvailableSlots(
-    String masterName,
-    DateTime date,
-  ) async {
+      String masterName,
+      DateTime date,
+      ) async {
     final String formattedDate =
         "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
 
@@ -97,7 +93,7 @@ class BookingRepository {
           return rawList
               .map(
                 (json) => TimeSlotModel.fromJson(json as Map<String, dynamic>),
-              )
+          )
               .toList();
         }
         return [];
@@ -107,51 +103,50 @@ class BookingRepository {
         );
       }
     } on DioException catch (e) {
-      // Если упала сетевая ошибка Dio — вытаскиваем сообщение бэка
       final serverMessage = e.response?.data?['message'];
       throw Exception(serverMessage ?? "Ошибка сети Dio: ${e.message}");
     }
   }
 
   Future<List<BookingEntity>> fetchBookingHistory() async {
-    final userPhone = await _getUserPhone();
-    final token = await _secureStorage.read(key: 'auth_token');
-
-    try {
-      final response = await _dio.get(
-        historyUrl,
-        options: Options(
-          headers: {'Authorization': 'Bearer $token',
-            'X-User-Name': userPhone,
-          },
-        ),
-      );
-
-      if (response.statusCode == 200) {
-        final List<dynamic> data = response.data;
-        return data
-            .map((json) => BookingEntity.fromJson(json as Map<String, dynamic>))
-            .toList();
-      } else {
-        throw Exception("Ошибка загрузки истории: ${response.statusCode}");
-      }
-    } on DioException catch (e) {
-      throw Exception(e.message ?? 'Ошибка сети');
+    final token = await _getToken();
+    final phone = await _getUserPhone();
+    if (token == null || phone.isEmpty) {
+      throw Exception('Нет токена или телефона');
+    }
+    final response = await _dio.get(
+      historyUrl,
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $token',
+          'X-User-Name': phone,
+        },
+      ),
+    );
+    if (response.statusCode == 200) {
+      final List<dynamic> data = response.data;
+      return data.map((json) => BookingEntity.fromJson(json as Map<String, dynamic>)).toList();
+    } else {
+      throw Exception("Ошибка загрузки истории: ${response.statusCode}");
     }
   }
 
   Future<bool> cancelBooking(String bookingId) async {
-    final userPhone = await _getUserPhone();
     final token = await _getToken();
-
+    final phone = await _getUserPhone();
+    if (token == null || phone.isEmpty) {
+      throw Exception('Нет токена или телефона');
+    }
     try {
       final response = await _dio.patch(
         '$baseUrl/$bookingId/cancel',
         options: Options(
-          headers: {'Authorization': 'Bearer $token', 'X-User-Name': userPhone},
+          headers: {
+            'Authorization': 'Bearer $token',
+            'X-User-Name': phone,
+          },
         ),
       );
-
       return response.statusCode == 200;
     } catch (e) {
       debugPrint("Ошибка при отмене бронирования: $e");
@@ -160,9 +155,11 @@ class BookingRepository {
   }
 
   Future<bool> updateBookingComment(String bookingId, String newComment) async {
-    final userPhone = await _getUserPhone();
     final token = await _getToken();
-
+    final phone = await _getUserPhone();
+    if (token == null || phone.isEmpty) {
+      throw Exception('Нет токена или телефона');
+    }
     try {
       final response = await _dio.patch(
         '$baseUrl/$bookingId/comment',
@@ -170,16 +167,56 @@ class BookingRepository {
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
-            'X-User-Name': userPhone,
+            'X-User-Name': phone,
             'Content-Type': 'application/json',
           },
         ),
       );
-
       return response.statusCode == 200;
     } on DioException catch (e) {
       debugPrint("Ошибка при обновлении комментария: $e");
       return false;
     }
+  }
+
+  Future<List<BookingEntity>> fetchActiveBookings() async {
+    final token = await _getToken();
+    final phone = await _getUserPhone();
+    if (token == null || phone.isEmpty) {
+      throw Exception('Нет токена или телефона');
+    }
+    final response = await _dio.get(
+      '$historyUrl/active',
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $token',
+          'X-User-Name': phone,
+        },
+      ),
+    );
+    return _parseBookings(response);
+  }
+
+  Future<List<BookingEntity>> fetchPastBookings() async {
+    final token = await _getToken();
+    final phone = await _getUserPhone();
+    if (token == null || phone.isEmpty) {
+      throw Exception('Нет токена или телефона');
+    }
+    final response = await _dio.get(
+      '$historyUrl/past',
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $token',
+          'X-User-Name': phone,
+        },
+      ),
+    );
+    return _parseBookings(response);
+  }
+
+  List<BookingEntity> _parseBookings(Response response) {
+    final List data = response.data;
+    return data.map((json) => BookingEntity.fromJson(json)).toList();
   }
 }

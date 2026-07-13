@@ -28,5 +28,20 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
         // Оставляем текущее состояние
       }
     });
+
+    on<DeleteNotification>((event, emit) async {
+      if (state is NotificationsLoaded) {
+        final currentState = state as NotificationsLoaded;
+        try {
+          await _repository.deleteNotification(event.notificationId);
+          final updatedList = currentState.notifications
+              .where((n) => n.id != event.notificationId)
+              .toList();
+          emit(currentState.copyWith(notifications: updatedList));
+        } catch (e) {
+          // можно показать ошибку, но для простоты проигнорируем
+        }
+      }
+    });
   }
 }

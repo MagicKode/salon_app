@@ -8,6 +8,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../feature/auth/authblock/bloc/auth_block.dart';
 import '../../feature/auth/authblock/bloc/auth_event.dart';
@@ -74,6 +75,7 @@ FlutterLocalNotificationsPlugin();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SharedPreferences.getInstance();
   await initializeDateFormatting('ru', null);
 
   // ✅ Даем время на инициализацию биндингов
@@ -120,6 +122,7 @@ void main() async {
     ),
   );
   dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
+
   const secureStorage = FlutterSecureStorage();
 
   // Auth
@@ -149,7 +152,7 @@ void main() async {
     dio: dio,
     baseUrl: bookingBaseUrl,
     historyUrl: historyBaseUrl,
-    secureStorage: const FlutterSecureStorage(),
+    secureStorage: secureStorage,
   );
 
   // Review

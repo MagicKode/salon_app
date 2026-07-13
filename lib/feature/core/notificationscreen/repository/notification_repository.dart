@@ -52,4 +52,8 @@ class NotificationRepository {
     );
     return response.data['data'] as int;
   }
+
+  Future<void> deleteNotification(int id) async {
+    await _dio.delete('$baseUrl/$id');
+  }
 }

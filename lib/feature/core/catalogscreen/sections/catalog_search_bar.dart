@@ -45,36 +45,33 @@ class _CatalogSearchBarState extends State<CatalogSearchBar> {
           controller: widget.controller,
           onChanged: widget.onChanged,
           autofocus: false,
-          style: const TextStyle(fontSize: 15, color: AppColors.primaryBlack),
+          style: const TextStyle(
+            fontSize: 15,
+            color: Colors.grey, // ✅ тусклый цвет, как hint
+          ),
           decoration: InputDecoration(
             hintText: AppStrings.hintServiceMasterSearch,
             hintStyle: const TextStyle(
               fontSize: 14,
-              color: AppColors.primaryGrey,
+              color: Colors.grey,
             ),
             prefixIcon: const Icon(
               Icons.search,
               size: 20,
               color: AppColors.primaryBlue,
             ),
-
-            // Динамический суффикс: если текст есть — показываем кликабельный крестик
-            suffixIcon:
-                widget.controller.text.isNotEmpty
-                    ? IconButton(
-                      icon: const Icon(
-                        Icons.clear_rounded,
-                        size: 20,
-                        color: AppColors.primaryGrey,
-                      ),
-                      onPressed: () {
-                        widget.controller
-                            .clear(); // Полностью очищаем поле ввода
-                      },
-                    )
-                    : null,
-
-            // Если пусто — ничего не показываем справа
+            suffixIcon: widget.controller.text.isNotEmpty
+                ? IconButton(
+              icon: const Icon(
+                Icons.clear_rounded,
+                size: 20,
+                color: AppColors.primaryGrey,
+              ),
+              onPressed: () {
+                widget.controller.clear();
+              },
+            )
+                : null,
             border: InputBorder.none,
             contentPadding: const EdgeInsets.symmetric(vertical: 14),
           ),

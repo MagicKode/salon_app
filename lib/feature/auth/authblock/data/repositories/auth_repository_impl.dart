@@ -1,5 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:salon_flutter/feature/auth/authblock/data/models/register_request_model.dart';
+import 'package:salon_flutter/uikit/constatns/storage_keys.dart';
 import '../../domain/entities/auth_user.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_remote_data_source.dart';
@@ -9,13 +10,6 @@ import '../models/auth_response_model.dart';
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
   final FlutterSecureStorage secureStorage;
-
-  // 🔥 Единые ключи для хранения (исправлено: везде используем _tokenKey)
-  static const String _tokenKey = 'auth_token';
-  static const String _roleKey = 'user_role';
-  static const String _nameKey = 'user_name';
-  static const String _phoneKey = 'user_phone';
-  static const String _emailKey = 'user_email';
 
   AuthRepositoryImpl({
     required this.remoteDataSource,
@@ -51,10 +45,8 @@ class AuthRepositoryImpl implements AuthRepository {
       phoneNumber: phoneNumber,
       password: password,
     );
-
-    // 1. Делаем сетевой запрос
     final response = await remoteDataSource.login(requestModel);
-    await _saveUserData(response); // ✅ единый метод
+    await _saveUserData(response);
     return _toAuthUser(response);
   }
 
@@ -65,16 +57,14 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<AuthUser?> getAuthenticatedUser() async {
-    final token = await secureStorage.read(key: 'jwt_token');
-
-    // Если токена нет, значит пользователь не авторизован
+    // ✅ исправлено: используем _tokenKey
+    final token = await secureStorage.read(key: StorageKeys.token_key);
     if (token == null || token.isEmpty) return null;
 
-    // Читаем остальные кэшированные данные
-    final role = await secureStorage.read(key: 'user_role') ?? '';
-    final name = await secureStorage.read(key: 'user_name') ?? '';
-    final phone = await secureStorage.read(key: 'user_phone') ?? '';
-    final email = await secureStorage.read(key: 'user_email') ?? '';
+    final role = await secureStorage.read(key: StorageKeys.role_key) ?? '';
+    final name = await secureStorage.read(key: StorageKeys.name_key) ?? '';
+    final phone = await secureStorage.read(key: StorageKeys.phone_key) ?? '';
+    final email = await secureStorage.read(key: StorageKeys.email_key) ?? '';
 
     return AuthUser(
       token: token,
@@ -85,12 +75,22 @@ class AuthRepositoryImpl implements AuthRepository {
     );
   }
 
+  @override
+  Future<String?> getToken() async {
+    return await secureStorage.read(key: StorageKeys.token_key);
+  }
+
+  @override
+  Future<String?> getUserPhone() async {
+    return await secureStorage.read(key: StorageKeys.phone_key);
+  }
+
   Future<void> _saveUserData(AuthResponseModel response) async {
-    await secureStorage.write(key: _tokenKey, value: response.token);
-    await secureStorage.write(key: _roleKey, value: response.role);
-    await secureStorage.write(key: _nameKey, value: response.firstName);
-    await secureStorage.write(key: _phoneKey, value: response.phoneNumber);
-    await secureStorage.write(key: _emailKey, value: response.email);
+    await secureStorage.write(key: StorageKeys.token_key, value: response.token);
+    await secureStorage.write(key: StorageKeys.role_key, value: response.role);
+    await secureStorage.write(key: StorageKeys.name_key, value: response.firstName);
+    await secureStorage.write(key: StorageKeys.phone_key, value: response.phoneNumber);
+    await secureStorage.write(key: StorageKeys.email_key, value: response.email);
   }
 
   AuthUser _toAuthUser(AuthResponseModel response) {

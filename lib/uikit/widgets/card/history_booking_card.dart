@@ -49,10 +49,7 @@ class _HistoryBookingCardState extends State<HistoryBookingCard> {
   bool get _isCanceled => widget.booking.status.toUpperCase() == 'CANCELED';
 
   bool get _isPast {
-    final end = widget.booking.dateTime.add(
-      Duration(minutes: widget.booking.durationMinutes),
-    );
-    return end.isBefore(DateTime.now());
+    return widget.booking.endTime.isBefore(DateTime.now());
   }
 
   bool get _canCancel {
