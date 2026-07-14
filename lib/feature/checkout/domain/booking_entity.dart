@@ -56,6 +56,34 @@ class BookingEntity {
 
     // Парсим услуги
     var servicesList = <AddServiceData>[];
+
+    // Приоритет 1: поле serviceNames (массив строк, как в history)
+    if (json['serviceNames'] != null && json['serviceNames'] is List) {
+      final List<dynamic> raw = json['serviceNames'];
+      servicesList = raw.map((name) {
+        return AddServiceData(
+          id: UniqueKey().toString(),
+          name: name.toString(),
+          price: 0,
+          durationMinutes: 30, // не знаем длительность каждой услуги отдельно
+        );
+      }).toList();
+    }
+
+    // Приоритет 2: servicesNames (возможный вариант)
+    else if (json['servicesNames'] != null && json['servicesNames'] is List) {
+      final List<dynamic> raw = json['servicesNames'];
+      servicesList = raw.map((name) {
+        return AddServiceData(
+          id: UniqueKey().toString(),
+          name: name.toString(),
+          price: 0,
+          durationMinutes: 30,
+        );
+      }).toList();
+    }
+
+    // Приоритет 3: services (массив объектов, детальный)
     if (json['services'] != null && json['services'] is List) {
       final List<dynamic> rawServices = json['services'];
       servicesList = rawServices.map((s) {
@@ -76,18 +104,16 @@ class BookingEntity {
       }).toList();
     }
 
-    if (servicesList.isEmpty) {
-      final singleServiceName = json['serviceName'] ?? json['service_name'];
-      if (singleServiceName != null) {
-        servicesList = [
-          AddServiceData(
-            id: json['id']?.toString() ?? UniqueKey().toString(),
-            name: singleServiceName as String,
-            price: totalPrice,
-            durationMinutes: json['durationMinutes'] ?? 60,
-          )
-        ];
-      }
+    // Приоритет 4: одиночное serviceName (строка)
+    else if (json['serviceName'] != null) {
+      servicesList = [
+        AddServiceData(
+          id: json['id']?.toString() ?? UniqueKey().toString(),
+          name: json['serviceName'].toString(),
+          price: totalPrice,
+          durationMinutes: durationMinutes,
+        )
+      ];
     }
 
     return BookingEntity(

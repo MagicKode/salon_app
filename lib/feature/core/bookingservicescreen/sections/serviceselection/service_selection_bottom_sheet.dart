@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../../../../uikit/strings/app_strings.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../../../uikit/colors/app_colors.dart';
+import '../../../../../uikit/strings/app_strings.dart';
 import '../../../../../uikit/widgets/button/app_button.dart';
+import '../../../../catalog/data/models/service_dto.dart';
+import '../../../../catalog/domain/repositories/catalog_repository.dart';
 import '../../domain/add_service_data.dart';
 
 class ServiceSelectionBottomSheet extends StatefulWidget {
@@ -23,14 +27,6 @@ class _ServiceSelectionBottomSheetState
     extends State<ServiceSelectionBottomSheet> {
   late List<AddServiceData> _selected;
 
-  final List<AddServiceData> _allServices = [
-    AddServiceData(id: '1', name: 'Женская стрижка', price: 30),
-    AddServiceData(id: '2', name: 'Мужская стрижка', price: 25),
-    AddServiceData(id: '3', name: 'Окрашивание волос', price: 80),
-    AddServiceData(id: '4', name: 'Уход за волосами', price: 45),
-    AddServiceData(id: '5', name: 'Массаж головы', price: 35),
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -39,61 +35,87 @@ class _ServiceSelectionBottomSheetState
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.75,
-      decoration: const BoxDecoration(
-        color: AppColors.primaryBackgroundColor,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      child: Column(
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(16),
-            child: Text(
-              AppStrings.chooseYourService,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _allServices.length,
-              itemBuilder: (context, index) {
-                final service = _allServices[index];
-                final isSelected = _selected.any((s) => s.id == service.id);
+    final repository = context.read<CatalogRepository>();
 
-                return Material(
-                  color: Colors.transparent,
-                  child: CheckboxListTile(
-                    title: Text(service.name),
-                    subtitle: Text('${service.price} ${AppStrings.currency}'),
-                    value: isSelected,
-                    activeColor: AppColors.primaryBlue,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        if (value == true) {
-                          _selected.add(service);
-                        } else {
-                          _selected.removeWhere((s) => s.id == service.id);
-                        }
-                      });
-                    },
-                  ),
-                );
-              },
-            ),
+    return FutureBuilder<List<ServiceDto>>( // ✅ тип Future<List<ServiceDto>>
+      future: repository.getServices(),
+      builder: (context, snapshot) {
+        List<AddServiceData> allServices = [];
+        if (snapshot.hasData && snapshot.data != null) {
+          allServices = snapshot.data!.map((service) {
+            return AddServiceData(
+              id: service.id.toString(),
+              name: service.name,
+              price: service.price,
+              // Если в ServiceDto есть durationMinutes – берём его, иначе 30
+              durationMinutes: service.durationMinutes ?? 30,
+            );
+          }).toList();
+        }
+
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.75,
+          decoration: const BoxDecoration(
+            color: AppColors.primaryBackgroundColor,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
           ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: AppButton(
-              text: AppStrings.addToServices,
-              onPressed: () {
-                widget.onServicesConfirmed(_selected);
-                Navigator.pop(context);
-              },
-            ),
+          child: Column(
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(16),
+                child: Text(
+                  AppStrings.chooseYourService,
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Expanded(
+                child: snapshot.connectionState == ConnectionState.waiting
+                    ? const Center(child: CircularProgressIndicator())
+                    : snapshot.hasError
+                    ? const Center(child: Text('Ошибка загрузки услуг'))
+                    : allServices.isEmpty
+                    ? const Center(child: Text('Нет доступных услуг'))
+                    : ListView.builder(
+                  itemCount: allServices.length,
+                  itemBuilder: (context, index) {
+                    final service = allServices[index];
+                    final isSelected = _selected.any((s) => s.id == service.id);
+
+                    return Material(
+                      color: Colors.transparent,
+                      child: CheckboxListTile(
+                        title: Text(service.name),
+                        subtitle: Text('${service.price} ${AppStrings.currency}'),
+                        value: isSelected,
+                        activeColor: AppColors.primaryBlue,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            if (value == true) {
+                              _selected.add(service);
+                            } else {
+                              _selected.removeWhere((s) => s.id == service.id);
+                            }
+                          });
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: AppButton(
+                  text: AppStrings.addToServices,
+                  onPressed: () {
+                    widget.onServicesConfirmed(_selected);
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

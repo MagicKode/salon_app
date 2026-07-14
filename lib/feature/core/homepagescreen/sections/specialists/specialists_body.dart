@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../uikit/widgets/card/specialist/specialist_card.dart';
+import 'package:salon_flutter/uikit/widgets/card/specialist/specialistcard/specialist_card.dart';
 import '../../../../catalog/domain/repositories/catalog_repository.dart';
 import '../../../../catalog/data/models/catalog_image.dart';
 import 'domain/master.dart';

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../uikit/colors/app_colors.dart';
-import '../../../uikit/widgets/card/history_booking_card.dart';
+import '../../../uikit/widgets/card/historycard/historybookingcard/history_booking_card.dart';
 import '../../../uikit/widgets/emptyscreen/history_empty_screen.dart';
 import '../../checkout/domain/booking_entity.dart';
 import '../bookingservicescreen/bookingblock/booking_slots_bloc.dart';
@@ -47,10 +47,10 @@ class HistoryBody extends StatelessWidget {
           alignment: Alignment.centerRight,
           padding: const EdgeInsets.only(right: 20),
           decoration: BoxDecoration(
-            color: Colors.red,
+            color: AppColors.primaryRed,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: const Icon(Icons.delete, color: Colors.white, size: 30),
+          child: const Icon(Icons.delete, color: AppColors.primaryWhite, size: 30),
         ),
         child: Padding(
           padding: const EdgeInsets.only(bottom: 12),

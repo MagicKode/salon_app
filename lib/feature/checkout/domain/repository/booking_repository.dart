@@ -108,29 +108,6 @@ class BookingRepository {
     }
   }
 
-  Future<List<BookingEntity>> fetchBookingHistory() async {
-    final token = await _getToken();
-    final phone = await _getUserPhone();
-    if (token == null || phone.isEmpty) {
-      throw Exception('Нет токена или телефона');
-    }
-    final response = await _dio.get(
-      historyUrl,
-      options: Options(
-        headers: {
-          'Authorization': 'Bearer $token',
-          'X-User-Name': phone,
-        },
-      ),
-    );
-    if (response.statusCode == 200) {
-      final List<dynamic> data = response.data;
-      return data.map((json) => BookingEntity.fromJson(json as Map<String, dynamic>)).toList();
-    } else {
-      throw Exception("Ошибка загрузки истории: ${response.statusCode}");
-    }
-  }
-
   Future<bool> cancelBooking(String bookingId) async {
     final token = await _getToken();
     final phone = await _getUserPhone();
@@ -194,7 +171,10 @@ class BookingRepository {
         },
       ),
     );
-    return _parseBookings(response);
+    print('📦 Активные записи (сырые): ${response.data}');
+    final parsed = _parseBookings(response);
+    print('📦 Активные записи (распарсенные): ${parsed.length} шт.');
+    return parsed;
   }
 
   Future<List<BookingEntity>> fetchPastBookings() async {

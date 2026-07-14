@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 import '../../../uikit/colors/app_colors.dart';
-import '../../../uikit/widgets/card/master_appointment_card.dart';
+import '../../../uikit/widgets/card/masterappointmentcard/master_appointment_card.dart';
 import '../../auth/authblock/bloc/auth_block.dart';
 import '../../auth/authblock/bloc/auth_state.dart';
 import 'bloc/master_calendar_bloc.dart';

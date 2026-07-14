@@ -127,12 +127,10 @@ class _BookingServiceBodyState extends State<BookingServiceBody>
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      builder:
-          (context) => ServiceSelectionBottomSheet(
-            alreadySelected: _selectedServices,
-            onServicesConfirmed:
-                (services) => setState(() => _selectedServices = services),
-          ),
+      builder: (context) => ServiceSelectionBottomSheet(
+        alreadySelected: _selectedServices,
+        onServicesConfirmed: (services) => setState(() => _selectedServices = services),
+      ),
     );
   }
 
