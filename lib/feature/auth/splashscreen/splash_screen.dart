@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../uikit/colors/app_colors.dart';
-import '../../../uikit/strings/app_strings.dart';
-import '../loginscreen/login_screen.dart';
+import 'package:salon_flutter/uikit/colors/app_colors.dart';
+import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -12,7 +11,6 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _studioSlideAnimation;
   late Animation<Offset> _nameSlideAnimation;
@@ -20,15 +18,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   @override
   void initState() {
     super.initState();
-
-    // Future.delayed(const Duration(seconds: 3), () {
-    //   if (mounted) {
-    //     Navigator.pushReplacement(
-    //       context,
-    //       MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
-    //     );
-    //   }
-    // });
 
     _controller = AnimationController(
       vsync: this,
@@ -39,7 +28,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       CurvedAnimation(parent: _controller, curve: const Interval(0.0, 0.5, curve: Curves.easeIn)),
     );
 
-    // 2. "Студия" – легкое движение сверху вниз (Offset по Y)
     _studioSlideAnimation = Tween<Offset>(
       begin: const Offset(0, -0.5),
       end: Offset.zero,
@@ -48,7 +36,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       curve: const Interval(0.2, 0.8, curve: Curves.easeOutCubic),
     ));
 
-    // 3. "Имя Фамилия" – легкое движение снизу вверх
     _nameSlideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.5),
       end: Offset.zero,
@@ -57,17 +44,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       curve: const Interval(0.2, 0.8, curve: Curves.easeOutCubic),
     ));
 
-    _controller.forward().then((_) => _navigateToLogin());
-  }
-
-  void _navigateToLogin() async {
-    await Future.delayed(const Duration(milliseconds: 800));
-    if (mounted) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
-      );
-    }
+    _controller.forward();
   }
 
   @override
@@ -96,7 +73,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Студия
                     SlideTransition(
                       position: _studioSlideAnimation,
                       child: Text(
@@ -109,10 +85,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                         ),
                       ),
                     ),
-
                     const SizedBox(height: 10),
-
-                    // Имя Фамилия
                     SlideTransition(
                       position: _nameSlideAnimation,
                       child: Text(

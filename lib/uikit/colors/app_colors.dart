@@ -1,33 +1,48 @@
 import 'dart:ui';
 
 class AppColors {
-  static const Color primaryBlue = Color(0xFF093882);
-  static const Color lightBlue = Color(0xFF3498DB);
-  static const Color primaryButtonColor = Color(0x9D093882);
-  static const Color primaryBackgroundColor = Color(0x10093882);
-  static const Color boxDecorationColor = Color(0x0d093882);
+  // ============================================================
+  // 1. Брендовые (основные) цвета
+  // ============================================================
+  static const Color primaryBlue = Color(0xFF093882); // тёмно-синий (логотип)
+  static const Color primaryBlueLight = Color(0xFF2A5F9A);
+  static const Color primaryBlueDark = Color(0xFF052A5E);
 
-  static const Color primaryBlack = Color(0xFF000000);
-  static const Color primaryBlackHint = Color(0x0d000000);
-  static const Color primaryBlackShadow = Color(0x05000000);
-  static const Color primaryGrey = Color(0xFF9E9E9E);
-  static const Color dateGrey = Color(0xFF444444);
-  static const Color primaryWhite = Color(0xFFFFFFFF);
-  static const Color primaryRed = Color(0xFFF44336);
-  static const Color primaryGreen = Color(0xFF36C742);
+  // ============================================================
+  // 2. Фоны и поверхности
+  // ============================================================
+  static const Color backgroundPrimary = Color(0xFFFFFFFF);    // основной фон экранов
+  static const Color backgroundSecondary = Color(0x10093882); // прозрачный синий (для секций)
+  static const Color surfaceCard = Color(0x0D093882);         // фон карточек
+  static const Color surfaceInput = Color(0xFFFFFFFF);        // поля ввода
+
+  // ============================================================
+  // 3. Текст
+  // ============================================================
+  static const Color textPrimary = Color(0xFF000000);
+  static const Color textSecondary = Color(0xFF444444);
+  static const Color textHint = Color(0xFF9E9E9E);
+  static const Color textOnPrimary = Color(0xFFFFFFFF);       // текст на синем фоне
+  static const Color textDisabled = Color(0xFFBDBDBD);
+
+  // ============================================================
+  // 4. Статусы (сигнальные цвета)
+  // ============================================================
+  static const Color statusSuccess = Color(0xFF36C742);
+  static const Color statusError = Color(0xFFD32F2F);
+  static const Color statusWarning = Color(0xFFF98600);
+  static const Color statusInfo = Color(0xFF2196F3);
+
+  // ============================================================
+  // 5. Границы и разделители
+  // ============================================================
+  static const Color divider = Color(0xFFE0E0E0);
+  static const Color borderLight = Color(0xFFE0E0E0);
+  static const Color shadow = Color(0x05000000);
 
 
-  static const Color textWhite = Color(0xFFFFFFFF);
-  static const Color textOrange = Color(0xCCF98600);
-
-  static const Color starsYellow = Color(0xFFFFC107);
-
-  // В AppColors.dart добавь:
-  static const Color cardBackground = Color(0xFFF8F9FA);     // светлый фон
-  static const Color lightBorder = Color(0xFFE0E0E0);        // светлая граница
-
-
-
-
-
+  // ============================================================
+  // 6. Рейтинг и акценты
+  // ============================================================
+  static const Color ratingStar = Color(0xFFFFC107);
 }

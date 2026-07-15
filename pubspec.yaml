@@ -38,9 +38,6 @@ dependencies:
   expandable_text: ^2.3.0
 
   intl: ^0.19.0 # Актуальная версия на момент 2026 года
-
-  flutter_map: ^6.1.0 # Для самой карты
-  latlong2: ^0.9.1    # Для работы с координатами
   permission_handler: ^11.3.1   # для работы с разрешениями
 
   table_calendar: ^3.1.2
@@ -65,6 +62,8 @@ dependencies:
   http: ^1.2.0
 
   shared_preferences: ^2.2.2
+
+  jwt_decoder: ^2.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

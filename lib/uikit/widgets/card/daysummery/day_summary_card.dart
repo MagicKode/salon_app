@@ -53,16 +53,18 @@ class DaySummaryCard extends StatelessWidget {
   }
 
   Widget _buildCompactCard(BuildContext context, AppointmentModel appointment) {
-    // ... (код карточки без изменений)
     final now = DateTime.now();
     final isPast = appointment.endTime.isBefore(now);
     final isCurrent =
         appointment.startTime.isBefore(now) && appointment.endTime.isAfter(now);
     final isFuture = appointment.startTime.isAfter(now);
+    final isCanceled = appointment.status?.toUpperCase() == 'CANCELED';
 
     Color statusColor;
-    if (isPast) {
-      statusColor = Colors.grey.shade400;
+    if (isCanceled) {
+      statusColor = Colors.red.shade500;
+    } else if (isPast) {
+    statusColor = Colors.grey.shade400;
     } else if (isCurrent) {
       statusColor = Colors.green.shade500;
     } else if (isFuture) {
@@ -89,6 +91,7 @@ class DaySummaryCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           child: Row(
             children: [
+              // Цветная полоска
               Container(
                 width: 4,
                 height: 32,
@@ -98,6 +101,7 @@ class DaySummaryCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 10),
+              // Время
               SizedBox(
                 width: 38,
                 child: Text(
@@ -110,6 +114,7 @@ class DaySummaryCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 6),
+              // Информация о клиенте и услугах
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,14 +130,25 @@ class DaySummaryCard extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 4),
-                        if (appointment.clientPhone.isNotEmpty) // ✅ показываем только если есть
+                        if (appointment.clientPhone.isNotEmpty)
                           Text(
                             '(${appointment.clientPhone})',
                             style: TextStyle(
                               fontSize: 11,
-                              color: Colors.grey.shade600,    // ✅ серое
+                              color: Colors.grey.shade600,
                             ),
                           ),
+                        if (isCanceled) ...[
+                          const SizedBox(width: 20),
+                          Text(
+                            'Отменена',
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: AppColors.primaryRed,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                     const SizedBox(height: 1),
@@ -149,6 +165,7 @@ class DaySummaryCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 6),
+              // Цена
               Text(
                 appointment.priceDisplay,
                 style: const TextStyle(

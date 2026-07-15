@@ -33,7 +33,7 @@ class DescriptionSection extends StatelessWidget {
               expandText: AppStrings.moreDetails,
               collapseText: AppStrings.hideDetails,
               maxLines: 3,
-              linkColor: AppColors.lightBlue,
+              linkColor: AppColors.primaryBlue,
               linkStyle: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 15,

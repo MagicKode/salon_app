@@ -47,7 +47,7 @@ class MasterCalendarScreen extends StatelessWidget {
                   );
                 }
               },
-              backgroundColor: AppColors.lightBlue,
+              backgroundColor: AppColors.primaryBlue,
               child: const Icon(Icons.refresh, color: AppColors.primaryWhite),
             ),
           );

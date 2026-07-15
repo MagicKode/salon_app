@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../../../feature/core/nearbymapscreen/domain/location_model.dart';
+
 import '../../../colors/app_colors.dart';
 
 class InfoCardTextContent extends StatelessWidget {
-  final LocationModel shopLocation;
+  final String address;
 
-  const InfoCardTextContent({super.key, required this.shopLocation});
+  const InfoCardTextContent({super.key, required this.address});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class InfoCardTextContent extends StatelessWidget {
       children: [
         // Адрес крупно
         Text(
-          shopLocation.address,
+          address,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(
@@ -28,13 +28,11 @@ class InfoCardTextContent extends StatelessWidget {
         const SizedBox(height: 4),
         // Подсказка или расстояние
         Text(
-          shopLocation.distanceInKm != null
-              ? '${shopLocation.formattedDistance} от вас'
-              : 'Мы находимся здесь',
+          'Мы находимся здесь',
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
-            color: AppColors.primaryWhite.withValues(alpha: 0.9),
+            color: AppColors.primaryWhite,
             fontSize: 14,
             fontWeight: FontWeight.w400,
           ),

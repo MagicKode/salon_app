@@ -1,4 +1,5 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:salon_flutter/feature/auth/authblock/data/models/register_request_model.dart';
 import 'package:salon_flutter/uikit/constatns/storage_keys.dart';
 import '../../domain/entities/auth_user.dart';
@@ -29,8 +30,6 @@ class AuthRepositoryImpl implements AuthRepository {
       firstName: firstName,
       email: email,
     );
-
-    // 1. Делаем сетевой запрос через DataSource
     final response = await remoteDataSource.register(requestModel);
     await _saveUserData(response);
     return _toAuthUser(response);
@@ -57,7 +56,6 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<AuthUser?> getAuthenticatedUser() async {
-    // ✅ исправлено: используем _tokenKey
     final token = await secureStorage.read(key: StorageKeys.token_key);
     if (token == null || token.isEmpty) return null;
 
@@ -85,6 +83,15 @@ class AuthRepositoryImpl implements AuthRepository {
     return await secureStorage.read(key: StorageKeys.phone_key);
   }
 
+  @override
+  Future<bool> isTokenValid(String token) async {
+    try {
+      return !JwtDecoder.isExpired(token);
+    } catch (_) {
+      return false;
+    }
+  }
+
   Future<void> _saveUserData(AuthResponseModel response) async {
     await secureStorage.write(key: StorageKeys.token_key, value: response.token);
     await secureStorage.write(key: StorageKeys.role_key, value: response.role);
@@ -104,7 +111,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<void> forgotPassword(String email) async{
+  Future<void> forgotPassword(String email) async {
     await remoteDataSource.forgotPassword(email);
   }
 

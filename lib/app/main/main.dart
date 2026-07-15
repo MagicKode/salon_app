@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -75,6 +76,11 @@ FlutterLocalNotificationsPlugin();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
+
   await SharedPreferences.getInstance();
   await initializeDateFormatting('ru', null);
 
@@ -93,7 +99,6 @@ void main() async {
   const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
   const initSettings = InitializationSettings(android: androidInit);
   await flutterLocalNotificationsPlugin.initialize(initSettings);
-
 
   // Запрос разрешений FCM
   String? fcmToken;
@@ -185,7 +190,6 @@ void main() async {
       print('🔐 FCM token saved for ${state.user.phoneNumber}');
     }
   });
-
 
   runApp(
     MultiRepositoryProvider(

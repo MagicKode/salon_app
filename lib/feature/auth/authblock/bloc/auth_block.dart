@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
-
 import '../domain/repositories/auth_repository.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
@@ -16,15 +15,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthLogoutRequested>(_onLogoutRequested);
   }
 
-  // Проверка сессии при старте приложения
+  // ✅ Проверка сессии при старте приложения
   Future<void> _onCheckStatusRequested(
-      AuthCheckStatusRequested event,
-      Emitter<AuthState> emit,
-      ) async {
+    AuthCheckStatusRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthLoading());
+
+    await Future.delayed(const Duration(milliseconds: 4000));
+
+    // ✅ показываем SplashScreen
     final user = await authRepository.getAuthenticatedUser();
-    if (user != null) {
+    if (user != null && await authRepository.isTokenValid(user.token)) {
       emit(AuthSuccess(user: user));
     } else {
+      if (user != null) await authRepository.logout();
       emit(AuthInitial());
     }
   }
@@ -43,7 +48,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       );
       emit(AuthSuccess(user: user));
     } on DioException catch (e) {
-      // Ловим кастомные ошибки от нашего глобального хэндлера бэкенда
       final backendMessage =
           e.response?.data['message'] ?? AppStrings.errorRegistration;
       emit(AuthFailure(errorMessage: backendMessage));
@@ -64,11 +68,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       );
       emit(AuthSuccess(user: user));
     } on DioException catch (e) {
-      // Если бэк вернул 401 Unauthorized с текстом, вытаскиваем его
-      final message = e.response?.data['message']
-          ?? e.response?.data['error']
-          ?? e.response?.data['detail']
-          ?? AppStrings.incorrectNumberOrPassword;
+      final message =
+          e.response?.data['message'] ??
+          e.response?.data['error'] ??
+          e.response?.data['detail'] ??
+          AppStrings.incorrectNumberOrPassword;
       emit(AuthFailure(errorMessage: message));
     } catch (e) {
       emit(AuthFailure(errorMessage: 'Не удалось войти: $e'));

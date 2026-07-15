@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../feature/auth/authblock/bloc/auth_state.dart';
 
-// Импорты твоих экранов
 import '../../feature/auth/loginscreen/login_screen.dart';
 import '../auth/authblock/bloc/auth_block.dart';
+import '../auth/splashscreen/splash_screen.dart';
 import 'main_navigation_screen.dart';
 
 class AppRootRouter extends StatelessWidget {
@@ -15,19 +15,12 @@ class AppRootRouter extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
-        // 1. Состояние загрузки (крутилка на старте или при запросе)
         if (state is AuthLoading) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
+          return const SplashScreen();
         }
-
-        // 2. Если авторизация успешна — отправляем на единый экран навигации
         if (state is AuthSuccess) {
           return const MainNavigationScreen();
         }
-
-        // 3. Если не авторизован — на экран логина
         return const LoginScreen();
       },
     );

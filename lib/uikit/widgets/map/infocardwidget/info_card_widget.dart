@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../../../../feature/core/nearbymapscreen/domain/location_model.dart';
 import '../../../colors/app_colors.dart';
 import 'info_card_text_content.dart';
 import 'info_card_transport_icon.dart';
 
 class InfoCardWidget extends StatelessWidget {
-  final LocationModel shopLocation;
+  final String address;
 
-  const InfoCardWidget({super.key, required this.shopLocation});
+  const InfoCardWidget({super.key, required this.address});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +31,7 @@ class InfoCardWidget extends StatelessWidget {
         children: [
           const InfoCardTransportIcon(),
           const SizedBox(width: 16),
-          Expanded(child: InfoCardTextContent(shopLocation: shopLocation)),
+          Expanded(child: InfoCardTextContent(address: address)),
         ],
       ),
     );

@@ -1,28 +1,18 @@
-import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/http.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:salon_flutter/uikit/widgets/map/positioned_info_card.dart';
+
 import '../../catalog/data/models/catalog_image.dart';
 import '../../catalog/domain/repositories/catalog_repository.dart';
-import 'domain/location_model.dart';
 
 class NearbyMapBody extends StatelessWidget {
   const NearbyMapBody({super.key});
 
-  static const _shopLat = 53.894034;
-  static const _shopLng = 27.541170;
-  static const _shopAddress = 'пр.Независимости 14, Минск';
+  static const String _address = 'пр.Независимости 14, Минск';
 
   @override
   Widget build(BuildContext context) {
-    final shopLocation = LocationModel(
-      coordinates: LatLng(_shopLat, _shopLng),
-      address: _shopAddress,
-      distanceInKm: null,
-    );
-
     final repository = context.read<CatalogRepository>();
 
     return FutureBuilder<List<CatalogImage>>(
@@ -37,7 +27,8 @@ class NearbyMapBody extends StatelessWidget {
             imageUrl: imageUrl,
             fit: BoxFit.cover,
             placeholder: (_, __) => _buildPlaceholder('Загрузка...'),
-            errorWidget: (_, __, ___) => _buildPlaceholder('Не удалось загрузить карту'),
+            errorWidget:
+                (_, __, ___) => _buildPlaceholder('Не удалось загрузить карту'),
           );
         } else {
           mapWidget = _buildPlaceholder('Мы находимся здесь');
@@ -45,10 +36,8 @@ class NearbyMapBody extends StatelessWidget {
 
         return Stack(
           children: [
-            Positioned.fill(
-                child: mapWidget
-            ),
-            PositionedInfoCard(shopLocation: shopLocation),
+            Positioned.fill(child: mapWidget),
+            PositionedInfoCard(address: _address),
           ],
         );
       },
@@ -62,7 +51,7 @@ class NearbyMapBody extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.map, size: 80, color: Colors.grey),
+            const Icon(Icons.map_outlined, size: 80, color: Colors.grey),
             const SizedBox(height: 8),
             Text(
               text,
