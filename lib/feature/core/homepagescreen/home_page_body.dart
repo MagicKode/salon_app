@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:connectivity_plus/connectivity_plus.dart'; // ✅ добавлен импорт
 import 'package:salon_flutter/feature/core/bookingservicescreen/booking_service_screen.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/appbar/app_bar_section.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/bookingbutton/home_booking_button_section.dart';
@@ -13,10 +14,12 @@ import 'package:salon_flutter/feature/core/homepagescreen/sections/salonheaderse
 import 'package:salon_flutter/feature/core/homepagescreen/sections/searchbar/home_search-bar.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/servicesgrid/service_grid_section.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/specialists/sections/specialists_section.dart';
-import 'package:salon_flutter/uikit/colors/app_colors.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 import '../../../config/theme/custom_colors.dart';
+import '../../../uikit/colors/app_colors.dart';
+import '../../../uikit/widgets/errors/loading_widget.dart';
+import '../../../uikit/widgets/errors/network_error_widget.dart';
 import '../../catalog/bloc/catalog_bloc.dart';
 import '../../catalog/bloc/catalog_event.dart';
 import '../../catalog/bloc/catalog_state.dart';
@@ -43,7 +46,6 @@ class _HomePageBodyState extends State<HomePageBody> {
   int _servicesRefreshCounter = 0;
 
   void _refreshServices() {
-    print('🔄 Обновление услуг, счётчик: $_servicesRefreshCounter');
     setState(() {
       _servicesRefreshCounter++;
     });
@@ -75,13 +77,11 @@ class _HomePageBodyState extends State<HomePageBody> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<CustomColors>()!;
 
-    // ✅ Загружаем только если ещё нет данных
     final catalogState = context.read<CatalogBloc>().state;
     if (catalogState is! CatalogSuccess) {
       context.read<CatalogBloc>().add(CatalogFetchRequested());
     }
 
-    // ✅ Отзывы тоже загружаем один раз
     final reviewState = context.read<ReviewBloc>().state;
     if (reviewState is! ReviewSuccess) {
       context.read<ReviewBloc>().add(ReviewFetchRequested(1));
@@ -93,53 +93,62 @@ class _HomePageBodyState extends State<HomePageBody> {
       body: SafeArea(
         child: BlocBuilder<CatalogBloc, CatalogState>(
           builder: (context, state) {
-            // 1. СОСТОЯНИЕ ЗАГРУЗКИ: Показываем красивый индикатор, пока идет запрос
+            // ✅ Загрузка
             if (state is CatalogLoading) {
-              return Center(
-                child: CircularProgressIndicator(color: colors.primaryBlue),
-              );
+              return const LoadingWidget(message: 'Загрузка услуг...');
             }
 
-            // 2. ОШИБКА: Если бэк упал или токен просрочен, выводим ошибку с кнопкой повтора
+            // ✅ Ошибка с проверкой интернета
             if (state is CatalogFailure) {
-              return Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        state.errorMessage,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: colors.statusError,
-                          fontSize: 16,
-                        ),
+              return FutureBuilder<ConnectivityResult>(
+                future: Connectivity().checkConnectivity(),
+                builder: (context, snapshot) {
+                  final hasInternet = snapshot.data != ConnectivityResult.none;
+                  if (!hasInternet) {
+                    return NetworkErrorWidget(
+                      message: 'Проверьте подключение к интернету',
+                      onRetry: () {
+                        context.read<CatalogBloc>().add(CatalogFetchRequested());
+                      },
+                    );
+                  }
+                  // Если интернет есть, но ошибка — показываем стандартную ошибку
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            state.errorMessage,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: colors.statusError,
+                              fontSize: 16,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          ElevatedButton(
+                            onPressed: () {
+                              context.read<CatalogBloc>().add(CatalogFetchRequested());
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: colors.primaryBlue,
+                              foregroundColor: colors.textOnPrimary,
+                            ),
+                            child: const Text(AppStrings.tryAgain),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          context.read<CatalogBloc>().add(
-                            CatalogFetchRequested(),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: colors.primaryBlue,
-                          foregroundColor: colors.textOnPrimary,
-                        ),
-                        child: const Text(AppStrings.tryAgain),
-                      ),
-                    ],
-                  ),
-                ),
+                    ),
+                  );
+                },
               );
             }
 
-            // 3. УСПЕХ: Данные получены, рендерим весь интерфейс
+            // ✅ Успех
             if (state is CatalogSuccess) {
               final salon = state.salon;
-
-              // Идея с кастомным или дефолтным названием студии:
               final displaySalonName = "Студия Павла Ярошенко";
 
               return Stack(
@@ -162,46 +171,29 @@ class _HomePageBodyState extends State<HomePageBody> {
                               );
                             },
                           ),
-
-                        // НОВЫЙ БЛОК: Визитка салона (теперь она НАВЕРХУ!)
                         SalonHeaderSection(
                           name: displaySalonName,
                           address: salon.address,
                           workingHours: salon.workingHours,
                           onLocationTap: () => _navigateToNearbyMap(context),
                         ),
-
                         const SizedBox(height: 16),
-
                         ServiceGridSection(
                           key: ValueKey(_servicesRefreshCounter),
                           isMaster: widget.isMaster,
-                          onQuickBookRequested:
-                              widget.isMaster
-                                  ? null
-                                  : widget.onQuickBookRequested,
+                          onQuickBookRequested: widget.isMaster ? null : widget.onQuickBookRequested,
                           onServiceUpdated: _refreshServices,
                         ),
-
                         const SizedBox(height: 16),
-
-                        // Передаем реальные данные с бэкенда в секцию описания!
                         DescriptionSection(description: salon.description),
-
                         const SizedBox(height: 16),
-
                         GallerySection(isMaster: widget.isMaster),
-
                         const SizedBox(height: 16),
-
                         const SpecialistsSection(),
-
                         const SizedBox(height: 20),
-
                         BlocBuilder<ReviewBloc, ReviewState>(
                           builder: (context, reviewState) {
-                            if (reviewState is ReviewLoading ||
-                                reviewState is ReviewInitial) {
+                            if (reviewState is ReviewLoading || reviewState is ReviewInitial) {
                               return const Center(
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(vertical: 20.0),
@@ -220,10 +212,7 @@ class _HomePageBodyState extends State<HomePageBody> {
                             }
                             if (reviewState is ReviewFailure) {
                               return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16.0,
-                                  vertical: 10.0,
-                                ),
+                                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
                                 child: Text(
                                   "Не удалось загрузить отзывы: ${reviewState.errorMessage}",
                                   style: TextStyle(
@@ -240,7 +229,6 @@ class _HomePageBodyState extends State<HomePageBody> {
                       ],
                     ),
                   ),
-                  // ✅ Анимированная кнопка
                   if (!widget.isMaster)
                     Positioned(
                       bottom: 16,
@@ -255,7 +243,7 @@ class _HomePageBodyState extends State<HomePageBody> {
                 ],
               );
             }
-            // Дефолтный пустой контейнер на случай непредвиденного стейта
+
             return const SizedBox.shrink();
           },
         ),

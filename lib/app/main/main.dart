@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -35,8 +36,8 @@ import '../../feature/core/notificationscreen/repository/notification_repository
 import '../../feature/navigation/app_root_router.dart';
 
 /// Переключай одной кнопкой: true — для эмулятора, false — для смартфона
-// const bool isEmulator = false;
-const bool isEmulator = true;
+const bool isEmulator = false;
+// const bool isEmulator = true;
 
 // Определяем базовый IP и порты для сервисов
 const String _host = isEmulator ? '10.0.2.2' : '192.168.1.223';
@@ -193,6 +194,9 @@ void main() async {
       print('🔐 FCM token saved for ${state.user.phoneNumber}');
     }
   });
+
+  final connectivityResult = await Connectivity().checkConnectivity();
+  final bool hasInternet = connectivityResult != ConnectivityResult.none;
 
   runApp(
     MultiRepositoryProvider(

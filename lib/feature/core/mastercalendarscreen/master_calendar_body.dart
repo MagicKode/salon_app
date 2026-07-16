@@ -1,8 +1,11 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
+import 'package:salon_flutter/uikit/widgets/errors/loading_widget.dart';
+import 'package:salon_flutter/uikit/widgets/errors/network_error_widget.dart';
 
-import '../../../config/theme/custom_colors.dart'; // ✅ импорт динамических цветов
+import '../../../config/theme/custom_colors.dart';
 import '../../../uikit/widgets/card/masterappointmentcard/master_appointment_card.dart';
 import '../../auth/authblock/bloc/auth_block.dart';
 import '../../auth/authblock/bloc/auth_state.dart';
@@ -37,21 +40,31 @@ class _MasterCalendarBodyState extends State<MasterCalendarBody> {
 
   @override
   Widget build(BuildContext context) {
-    // ✅ Получаем динамические цвета
     final colors = Theme.of(context).extension<CustomColors>()!;
 
     return BlocBuilder<MasterCalendarBloc, MasterCalendarState>(
       builder: (context, state) {
+        // ✅ Загрузка – красивый лоадер
         if (state is MasterCalendarLoading) {
-          return Center(
-            child: CircularProgressIndicator(
-              color: colors.primaryBlue, // ✅ динамический синий
-            ),
-          );
+          return const LoadingWidget(message: 'Загрузка расписания...');
         }
 
+        // ✅ Ошибка с проверкой интернета
         if (state is MasterCalendarFailure) {
-          return _buildError(context, colors, state.errorMessage);
+          return FutureBuilder<ConnectivityResult>(
+            future: Connectivity().checkConnectivity(),
+            builder: (context, snapshot) {
+              final hasInternet = snapshot.data != ConnectivityResult.none;
+              if (!hasInternet) {
+                return NetworkErrorWidget(
+                  message: 'Проверьте подключение к интернету',
+                  onRetry: _refreshData,
+                );
+              }
+              // Интернет есть, но ошибка
+              return _buildError(context, colors, state.errorMessage);
+            },
+          );
         }
 
         if (state is MasterCalendarSuccess) {
@@ -92,11 +105,7 @@ class _MasterCalendarBodyState extends State<MasterCalendarBody> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.error_outline,
-              size: 48,
-              color: colors.statusError, // ✅ динамический красный
-            ),
+            Icon(Icons.error_outline, size: 48, color: colors.statusError),
             const SizedBox(height: 16),
             Text(
               message,
@@ -105,14 +114,7 @@ class _MasterCalendarBodyState extends State<MasterCalendarBody> {
             ),
             const SizedBox(height: 24),
             ElevatedButton.icon(
-              onPressed: () {
-                final auth = context.read<AuthBloc>().state;
-                if (auth is AuthSuccess) {
-                  context.read<MasterCalendarBloc>().add(
-                    FetchTodayAppointments(auth.user.masterName),
-                  );
-                }
-              },
+              onPressed: _refreshData,
               style: ElevatedButton.styleFrom(
                 backgroundColor: colors.primaryBlue,
                 foregroundColor: colors.textOnPrimary,
@@ -134,17 +136,12 @@ class _MasterCalendarBodyState extends State<MasterCalendarBody> {
           Icon(
             Icons.coffee,
             size: 120,
-            color: colors.textSecondary.withOpacity(
-              0.5,
-            ), // ✅ полупрозрачный серый
+            color: colors.textSecondary.withOpacity(0.5),
           ),
           const SizedBox(height: 16),
           Text(
             AppStrings.noClientsForToday,
-            style: TextStyle(
-              fontSize: 16,
-              color: colors.textSecondary, // ✅ динамический серый
-            ),
+            style: TextStyle(fontSize: 16, color: colors.textSecondary),
           ),
         ],
       ),
@@ -167,7 +164,7 @@ class _MasterCalendarBodyState extends State<MasterCalendarBody> {
             "Запись отменена",
             style: TextStyle(color: colors.textOnPrimary),
           ),
-          backgroundColor: colors.statusError, // ✅ динамический красный
+          backgroundColor: colors.statusError,
         ),
       );
     }

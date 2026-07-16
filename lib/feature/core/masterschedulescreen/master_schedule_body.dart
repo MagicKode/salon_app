@@ -1,6 +1,10 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
+import 'package:salon_flutter/uikit/widgets/errors/loading_widget.dart';
+import 'package:salon_flutter/uikit/widgets/errors/network_error_widget.dart';
+
 import '../../../config/theme/custom_colors.dart';
 import '../../../uikit/widgets/card/calendar_view_card.dart';
 import '../../../uikit/widgets/card/daysummery/day_summary_card.dart';
@@ -20,49 +24,79 @@ class MasterScheduleBody extends StatelessWidget {
 
     return BlocBuilder<MasterScheduleBloc, MasterScheduleState>(
       builder: (context, state) {
+        // ✅ Загрузка – красивый лоадер
         if (state is MasterScheduleLoading) {
-          return Center(
-            child: CircularProgressIndicator(color: colors.primaryBlue),
-          );
+          return const LoadingWidget(message: 'Загрузка расписания...');
         }
 
+        // ✅ Ошибка с проверкой интернета
         if (state is MasterScheduleFailure) {
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.error_outline, size: 48, color: colors.statusError),
-                  const SizedBox(height: 16),
-                  Text(
-                    state.errorMessage,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: colors.statusError, fontSize: 16),
+          return FutureBuilder<ConnectivityResult>(
+            future: Connectivity().checkConnectivity(),
+            builder: (context, snapshot) {
+              final hasInternet = snapshot.data != ConnectivityResult.none;
+              if (!hasInternet) {
+                return NetworkErrorWidget(
+                  message: 'Проверьте подключение к интернету',
+                  onRetry: () {
+                    final auth = context.read<AuthBloc>().state;
+                    if (auth is AuthSuccess) {
+                      context.read<MasterScheduleBloc>().add(
+                        LoadScheduleMonth(
+                          masterName: auth.user.masterName,
+                          month: DateTime.now(),
+                        ),
+                      );
+                    }
+                  },
+                );
+              }
+              // Интернет есть, но ошибка
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.error_outline,
+                        size: 48,
+                        color: colors.statusError,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        state.errorMessage,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: colors.statusError,
+                          fontSize: 16,
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          final auth = context.read<AuthBloc>().state;
+                          if (auth is AuthSuccess) {
+                            context.read<MasterScheduleBloc>().add(
+                              LoadScheduleMonth(
+                                masterName: auth.user.masterName,
+                                month: DateTime.now(),
+                              ),
+                            );
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: colors.primaryBlue,
+                          foregroundColor: colors.textOnPrimary,
+                        ),
+                        icon: const Icon(Icons.refresh),
+                        label: const Text("Повторить"),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 24),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      final auth = context.read<AuthBloc>().state;
-                      if (auth is AuthSuccess) {
-                        context.read<MasterScheduleBloc>().add(
-                          LoadScheduleMonth(
-                            masterName: auth.user.masterName,
-                            month: DateTime.now(),
-                          ),
-                        );
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: colors.primaryBlue,
-                      foregroundColor: colors.textOnPrimary,
-                    ),
-                    icon: const Icon(Icons.refresh),
-                    label: const Text("Повторить"),
-                  ),
-                ],
-              ),
-            ),
+                ),
+              );
+            },
           );
         }
 
@@ -70,13 +104,13 @@ class MasterScheduleBody extends StatelessWidget {
           final availabilityMap = <DateTime, DayStatus>{
             for (var item in state.availability)
               DateTime.utc(
-                DateTime.parse(item.date).year,
-                DateTime.parse(item.date).month,
-                DateTime.parse(item.date).day,
-              ): item.status,
+                    DateTime.parse(item.date).year,
+                    DateTime.parse(item.date).month,
+                    DateTime.parse(item.date).day,
+                  ):
+                  item.status,
           };
 
-          // ✅ Календарь и легенда – статическая верхняя часть
           final calendarWidget = Column(
             children: [
               CalendarViewCard(
@@ -93,13 +127,15 @@ class MasterScheduleBody extends StatelessWidget {
               ),
               _buildLegend(colors),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 8,
+                ),
                 child: Divider(color: colors.borderLight),
               ),
             ],
           );
 
-          // ✅ Заявки – скроллится только этот блок
           final appointmentsWidget = DaySummaryCard(
             appointments: state.selectedDayAppointments,
             selectedDate: state.selectedDay,
@@ -117,10 +153,10 @@ class MasterScheduleBody extends StatelessWidget {
             },
           );
 
-          // 📏 Вычисляем высоту экрана для корректного скролла
           final screenHeight = MediaQuery.of(context).size.height;
-          final appBarHeight = kToolbarHeight + MediaQuery.of(context).padding.top;
-          final calendarHeight = 350.0; // высота календаря + легенда
+          final appBarHeight =
+              kToolbarHeight + MediaQuery.of(context).padding.top;
+          final calendarHeight = 350.0;
 
           return RefreshIndicator(
             color: colors.primaryBlue,
@@ -136,14 +172,9 @@ class MasterScheduleBody extends StatelessWidget {
               }
             },
             child: Container(
-              height: screenHeight - appBarHeight - 10, // ✅ фиксированная высота для Column
+              height: screenHeight - appBarHeight - 10,
               child: Column(
-                children: [
-                  calendarWidget,
-                  Expanded(
-                    child: appointmentsWidget, // ✅ занимает всё оставшееся место
-                  ),
-                ],
+                children: [calendarWidget, Expanded(child: appointmentsWidget)],
               ),
             ),
           );
@@ -179,13 +210,7 @@ class MasterScheduleBody extends StatelessWidget {
           decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         const SizedBox(width: 6),
-        Text(
-          text,
-          style: TextStyle(
-            fontSize: 10,
-            color: colors.textSecondary,
-          ),
-        ),
+        Text(text, style: TextStyle(fontSize: 10, color: colors.textSecondary)),
       ],
     );
   }
