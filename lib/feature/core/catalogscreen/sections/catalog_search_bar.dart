@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
-
 import '../../../../config/theme/custom_colors.dart';
 
 class CatalogSearchBar extends StatefulWidget {
@@ -17,7 +16,6 @@ class _CatalogSearchBarState extends State<CatalogSearchBar> {
   @override
   void initState() {
     super.initState();
-    // Слушаем изменения в контроллере, чтобы вовремя показать/скрыть крестик
     widget.controller.addListener(_onTextChanged);
   }
 
@@ -28,7 +26,6 @@ class _CatalogSearchBarState extends State<CatalogSearchBar> {
   }
 
   void _onTextChanged() {
-    // Перерисовываем виджет при изменении текста, чтобы обновить видимость крестика
     if (mounted) setState(() {});
   }
 
@@ -36,12 +33,18 @@ class _CatalogSearchBarState extends State<CatalogSearchBar> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<CustomColors>()!;
 
+    // ✅ Определяем цвет фона для поля
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+    final Color searchBackgroundColor = isDark
+        ? colors.surfaceInput
+        : Colors.grey.shade200;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Container(
         height: 48,
         decoration: BoxDecoration(
-          color: colors.surfaceInput,
+          color: searchBackgroundColor,
           borderRadius: BorderRadius.circular(12),
         ),
         child: TextField(
@@ -56,7 +59,7 @@ class _CatalogSearchBarState extends State<CatalogSearchBar> {
             hintText: AppStrings.hintServiceMasterSearch,
             hintStyle: TextStyle(
               fontSize: 14,
-              color:  colors.textHint,
+              color: colors.textHint,
             ),
             prefixIcon: Icon(
               Icons.search,
@@ -76,6 +79,8 @@ class _CatalogSearchBarState extends State<CatalogSearchBar> {
             )
                 : null,
             border: InputBorder.none,
+            filled: true,
+            fillColor: Colors.transparent, // ✅ делаем фон прозрачным
             contentPadding: const EdgeInsets.symmetric(vertical: 14),
           ),
         ),

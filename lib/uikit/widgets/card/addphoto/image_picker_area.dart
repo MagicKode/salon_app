@@ -100,7 +100,7 @@ class ImagePickerArea extends StatelessWidget {
                     ),
                     child: Icon(
                       Icons.close,
-                      color: colors.textOnPrimary,
+                      color: colors.primaryBlue,
                       size: 16,
                     ),
                   ),
