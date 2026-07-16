@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../uikit/colors/app_colors.dart';
+import '../../../../../config/theme/custom_colors.dart';
 import '../../../../../uikit/strings/app_strings.dart';
 
 class SalonHeaderSection extends StatelessWidget {
@@ -19,6 +19,8 @@ class SalonHeaderSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 0), // Отступы для верха
       child: Row(
@@ -28,13 +30,13 @@ class SalonHeaderSection extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   AppStrings.ourAddress,
                   style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.bold,
                     fontStyle: FontStyle.italic,
-                    color: AppColors.primaryBlack,
+                    color: colors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -42,18 +44,18 @@ class SalonHeaderSection extends StatelessWidget {
                 // Строка с адресом
                 Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.location_on_outlined,
                       size: 16,
-                      color: AppColors.primaryBlue,
+                      color: colors.primaryBlue,
                     ),
                     const SizedBox(width: 6),
                     Expanded(
                       child: Text(
                         address,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
-                          color: Colors.grey,
+                          color: colors.textSecondary,
                         ),
                       ),
                     ),
@@ -64,15 +66,18 @@ class SalonHeaderSection extends StatelessWidget {
                 // Строка с временем работы
                 Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.access_time,
                       size: 16,
-                      color: AppColors.primaryBlue,
+                      color: colors.primaryBlue,
                     ),
                     const SizedBox(width: 6),
                     Text(
                       '${AppStrings.workSchedule} $workingHours',
-                      style: const TextStyle(fontSize: 14, color: Colors.grey),
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: colors.textSecondary,
+                      ),
                     ),
                   ],
                 ),
@@ -88,12 +93,12 @@ class SalonHeaderSection extends StatelessWidget {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: AppColors.primaryWhite,
+                color: colors.surfaceCard,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.location_on_outlined,
-                color: AppColors.primaryBlue,
+                color: colors.primaryBlue,
                 size: 24,
               ),
             ),

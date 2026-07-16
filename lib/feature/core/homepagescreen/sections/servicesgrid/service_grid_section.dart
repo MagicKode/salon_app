@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:salon_flutter/feature/core/bookingservicescreen/booking_service_screen.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/servicesgrid/service_item.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
-import '../../../../catalog/data/models/catalog_image.dart';
 import '../../../../catalog/data/models/service_dto.dart';
 import '../../../../catalog/domain/repositories/catalog_repository.dart';
 import '../../../catalogscreen/domain/catalog_service.dart';
 import '../../../servicedetailscreen/domain/service_detail_data.dart';
 import '../../../servicedetailscreen/service_detail_body.dart';
-import '../../domain/service_item_data.dart';
 
 class ServiceGridSection extends StatelessWidget {
   final bool isMaster;
@@ -25,7 +24,6 @@ class ServiceGridSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('🟢 ServiceGridSection.build вызван, key: $key');
     final repo = context.read<CatalogRepository>();
     return FutureBuilder<List<ServiceDto>>(
       future: repo.getServices(),
@@ -62,11 +60,9 @@ class ServiceGridSection extends StatelessWidget {
                 ),
                 itemCount: services.length,
                 itemBuilder: (context, index) {
-                  final category = services[index];
                   final s = services[index];
                   return GestureDetector(
                     onTap: () {
-                      // Открытие деталей услуги (пока с прежней логикой)
                       _showServiceDetails(context, s);
                     },
                     child: ServiceItem(
@@ -94,16 +90,39 @@ class ServiceGridSection extends StatelessWidget {
       description: s.description,
     );
 
+    final selectedService = CatalogService(
+      id: s.id.toString(),
+      name: s.name,
+      price: s.price,
+      duration: '${s.durationMinutes} мин',
+    );
+
     showModalBottomSheet<CatalogService>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => ServiceDetailBody(
-        service: detail,
-        isMaster: isMaster,
-        onServiceSelected: onQuickBookRequested,
-        onServiceUpdated: onServiceUpdated,
-      ),
+      builder:
+          (_) => ServiceDetailBody(
+            service: detail,
+            isMaster: isMaster,
+            onServiceSelected: onQuickBookRequested,
+            onServiceUpdated: onServiceUpdated,
+            // ✅ Обработчик кнопки "Записаться"
+            onBookPressed: () {
+              // 1. Закрываем модалку (анимация вниз)
+              Navigator.pop(context);
+              // 2. Открываем экран бронирования с выбранной услугой
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (_) => BookingServiceScreen(
+                        selectedServices: [selectedService],
+                      ),
+                ),
+              );
+            },
+          ),
     ).then((result) {
       if (result != null && context.mounted) {
         onQuickBookRequested?.call(result);

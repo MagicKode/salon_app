@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/feature/core/servicedetailscreen/domain/service_detail_data.dart';
-import 'package:salon_flutter/uikit/colors/app_colors.dart';
+
+import '../../../../../config/theme/custom_colors.dart'; // ✅ импорт динамических цветов
 
 class ServiceInfoSection extends StatelessWidget {
   final ServiceDetail service;
 
-  const ServiceInfoSection({
-    super.key,
-    required this.service,
-  });
+  const ServiceInfoSection({super.key, required this.service});
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Получаем динамические цвета
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -21,14 +22,14 @@ class ServiceInfoSection extends StatelessWidget {
             Icon(
               Icons.access_time_rounded,
               size: 18,
-              color: AppColors.primaryGrey,
+              color: colors.textSecondary, // ✅ динамический серый
             ),
             const SizedBox(width: 6),
             Text(
               service.duration,
               style: TextStyle(
                 fontSize: 14,
-                color: AppColors.primaryGrey,
+                color: colors.textSecondary, // ✅ динамический серый
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -38,15 +39,16 @@ class ServiceInfoSection extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            color: Colors.blue.withValues(alpha: 0.1),
+            color: colors.primaryBlue.withOpacity(0.1),
+            // ✅ динамический синий с прозрачностью
             borderRadius: BorderRadius.circular(8),
           ),
           child: Text(
             service.price,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: AppColors.primaryBlue,
+              color: colors.primaryBlue, // ✅ динамический синий
             ),
           ),
         ),

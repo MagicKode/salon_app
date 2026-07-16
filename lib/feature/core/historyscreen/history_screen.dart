@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salon_flutter/feature/core/historyscreen/history_body.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
+
+import '../../../config/theme/custom_colors.dart';
 import '../../checkout/domain/booking_entity.dart';
 import '../../checkout/domain/repository/booking_repository.dart';
 import 'domain/hidden_history_service.dart';
@@ -14,7 +16,8 @@ class HistoryScreen extends StatefulWidget {
   State<HistoryScreen> createState() => _HistoryScreenState();
 }
 
-class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProviderStateMixin {
+class _HistoryScreenState extends State<HistoryScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   late Future<List<BookingEntity>> _activeFuture;
   late Future<List<BookingEntity>> _pastFuture;
@@ -60,21 +63,26 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Scaffold(
-      backgroundColor: AppColors.primaryWhite,
+      backgroundColor: colors.backgroundPrimary,
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           AppStrings.serviceHistory,
-          style: TextStyle(color: AppColors.primaryBlack, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: colors.textPrimary,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        backgroundColor: AppColors.primaryWhite,
+        backgroundColor: colors.backgroundPrimary,
         elevation: 0,
         centerTitle: true,
         bottom: TabBar(
           controller: _tabController,
-          indicatorColor: AppColors.primaryBlue,
-          labelColor: AppColors.primaryBlue,
-          unselectedLabelColor: Colors.grey,
+          indicatorColor: colors.primaryBlue,
+          labelColor: colors.primaryBlue,
+          unselectedLabelColor: colors.textSecondary,
           tabs: const [
             Tab(text: AppStrings.activeBookings),
             Tab(text: AppStrings.pastBooking),
@@ -93,12 +101,19 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
     );
   }
 
-  Widget _buildTabContent(Future<List<BookingEntity>> future, {required bool enableDelete}) {
+  Widget _buildTabContent(
+    Future<List<BookingEntity>> future, {
+    required bool enableDelete,
+  }) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return FutureBuilder<List<BookingEntity>>(
       future: future,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator(color: AppColors.primaryBlue));
+          return const Center(
+            child: CircularProgressIndicator(color: AppColors.primaryBlue),
+          );
         } else if (snapshot.hasError) {
           return Center(
             child: Padding(
@@ -106,7 +121,7 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
               child: Text(
                 "Ошибка: ${snapshot.error}",
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.red, fontSize: 16),
+                style: TextStyle(color: colors.statusError, fontSize: 16),
               ),
             ),
           );

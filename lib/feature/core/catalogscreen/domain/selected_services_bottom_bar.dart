@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
-import '../../../../uikit/colors/app_colors.dart';
+import '../../../../config/theme/custom_colors.dart';
 import 'bottom_bar_item_data.dart';
 
 class SelectedServicesBottomBar extends StatelessWidget {
@@ -22,9 +22,11 @@ class SelectedServicesBottomBar extends StatelessWidget {
 
   // Метод, который показывает выезжающую шторку со списком услуг
   void _showSelectedServicesSheet(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppColors.primaryWhite,
+      backgroundColor: colors.backgroundPrimary,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20),
@@ -45,7 +47,7 @@ class SelectedServicesBottomBar extends StatelessWidget {
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: Colors.grey.withValues(alpha: 0.3),
+                      color: colors.divider,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -53,10 +55,10 @@ class SelectedServicesBottomBar extends StatelessWidget {
                 const SizedBox(height: 16),
                 Text(
                   titleText,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.primaryBlack,
+                    color: colors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -66,18 +68,20 @@ class SelectedServicesBottomBar extends StatelessWidget {
                   child: ListView.separated(
                     shrinkWrap: true,
                     itemCount: items.length,
-                    separatorBuilder:
-                        (context, index) =>
-                            const Divider(height: 1, thickness: 0.5),
+                    separatorBuilder: (context, index) => Divider(
+                      height: 1,
+                      thickness: 0.5,
+                      color: colors.divider,
+                    ),
                     itemBuilder: (context, index) {
                       final item = items[index];
                       return ListTile(
                         contentPadding: EdgeInsets.zero,
                         title: Text(
                           item.name,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
-                            color: AppColors.primaryBlack,
+                            color: colors.textPrimary,
                           ),
                         ),
                         trailing: Row(
@@ -85,17 +89,18 @@ class SelectedServicesBottomBar extends StatelessWidget {
                           children: [
                             Text(
                               '${item.price.toStringAsFixed(0)} BYN',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
+                                color: colors.primaryBlue,
                               ),
                             ),
                             if (onRemoveItem != null) ...[
                               const SizedBox(width: 8),
                               IconButton(
-                                icon: const Icon(
+                                icon: Icon(
                                   Icons.close_rounded,
-                                  color: AppColors.primaryGrey,
+                                  color: colors.textSecondary,
                                   size: 20,
                                 ),
                                 onPressed: () {
@@ -123,6 +128,7 @@ class SelectedServicesBottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
     // Если ничего не выбрано, возвращаем пустой виджет (скрываем панель)
     if (items.isEmpty) {
       return const SizedBox.shrink();
@@ -134,10 +140,10 @@ class SelectedServicesBottomBar extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.only(left: 16, right: 16, top: 12, bottom: 24),
       decoration: BoxDecoration(
-        color: AppColors.primaryWhite,
+        color: colors.backgroundPrimary,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
+            color: colors.shadow,
             blurRadius: 10,
             offset: const Offset(0, -4),
           ),
@@ -162,27 +168,27 @@ class SelectedServicesBottomBar extends StatelessWidget {
                   children: [
                     Text(
                       titleText,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.primaryGrey,
+                        color: colors.textSecondary,
                       ),
                     ),
 
                     const SizedBox(height: 6),
-                    const Icon(
+                    Icon(
                       Icons.keyboard_double_arrow_up_rounded,
                       size: 20,
-                      color: AppColors.primaryBlue,
+                      color: colors.primaryBlue,
                     ),
                   ],
                 ),
                 Text(
                   '${totalPrice.toStringAsFixed(0)} BYN',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.primaryBlue,
+                    color: colors.primaryBlue,
                   ),
                 ),
               ],
@@ -193,8 +199,8 @@ class SelectedServicesBottomBar extends StatelessWidget {
           ElevatedButton(
             onPressed: onProceed,
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryBlue,
-              foregroundColor: AppColors.primaryWhite,
+              backgroundColor: colors.primaryBlue,
+              foregroundColor: colors.textOnPrimary,
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -205,13 +211,18 @@ class SelectedServicesBottomBar extends StatelessWidget {
               children: [
                 Text(
                   buttonText,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
+                    color: colors.textOnPrimary,
                   ),
                 ),
                 SizedBox(width: 8),
-                Icon(Icons.arrow_forward_ios_rounded, size: 14),
+                Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 14,
+                  color: colors.textOnPrimary,
+                ),
               ],
             ),
           ),

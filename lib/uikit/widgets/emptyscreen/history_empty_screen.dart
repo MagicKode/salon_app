@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../colors/app_colors.dart';
+import '../../../config/theme/custom_colors.dart';
 import '../../strings/app_strings.dart';
 
 class HistoryEmptyState extends StatelessWidget {
@@ -8,6 +8,9 @@ class HistoryEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Получаем динамические цвета
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -15,17 +18,26 @@ class HistoryEmptyState extends StatelessWidget {
           Icon(
             Icons.edit_calendar_outlined,
             size: 150,
-            color: AppColors.primaryGrey.withValues(alpha: 0.5),
+            color: colors.textSecondary.withOpacity(
+              0.5,
+            ), // ✅ динамический серый с прозрачностью
           ),
           const SizedBox(height: 16),
-          const Text(
+          Text(
             AppStrings.historyIsEmpty,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: AppColors.primaryGrey),
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+              color: colors.textPrimary, // ✅ динамический чёрный/белый
+            ),
           ),
           const SizedBox(height: 8),
-          const Text(
+          Text(
             AppStrings.hereWillBeYourBookingStory,
-            style: TextStyle(fontSize: 14, color: AppColors.primaryGrey),
+            style: TextStyle(
+              fontSize: 14,
+              color: colors.textSecondary, // ✅ динамический серый
+            ),
           ),
         ],
       ),

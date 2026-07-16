@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../colors/app_colors.dart';
+
+import '../../../config/theme/custom_colors.dart'; // ✅ импорт динамических цветов
 
 class AppTextField extends StatefulWidget {
   final TextEditingController controller;
@@ -14,7 +15,7 @@ class AppTextField extends StatefulWidget {
   final String? Function(String?)? validator;
   final String? errorText;
   final ValueChanged<String>? onChanged;
-
+  final FocusNode? focusNode;
 
   const AppTextField({
     super.key,
@@ -29,7 +30,8 @@ class AppTextField extends StatefulWidget {
     this.minLines,
     this.validator,
     this.errorText,
-    this.onChanged
+    this.onChanged,
+    this.focusNode,
   });
 
   @override
@@ -53,10 +55,15 @@ class _AppTextFieldState extends State<AppTextField> {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Получаем динамические цвета
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     final bool hasFocus = _focusNode.hasFocus;
-    final primary = AppColors.primaryBlue;
-    final inactive = Colors.grey[400]!;
-    final hasError = widget.errorText != null && widget.errorText!.isNotEmpty;
+    final Color primary = colors.primaryBlue;
+    final Color inactive = colors.textSecondary;
+    final Color error = colors.statusError;
+    final bool hasError =
+        widget.errorText != null && widget.errorText!.isNotEmpty;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -67,7 +74,7 @@ class _AppTextFieldState extends State<AppTextField> {
           builder: (context, isVisible, _) {
             return TextFormField(
               controller: widget.controller,
-              focusNode: _focusNode,
+              focusNode: widget.focusNode,
               enabled: widget.enabled,
               maxLines: widget.maxLines ?? (widget.minLines != null ? null : 1),
               minLines: widget.minLines,
@@ -75,19 +82,37 @@ class _AppTextFieldState extends State<AppTextField> {
               keyboardType: widget.keyboardType,
               validator: widget.validator,
               onChanged: widget.onChanged,
+              style: TextStyle(
+                color: colors.textSecondary,
+                // ✅ тусклый цвет текста (как в поиске)
+                fontSize: 15,
+              ),
               decoration: InputDecoration(
-                prefixIcon: Icon(widget.prefixIcon, color: hasFocus ? primary : (hasError ? AppColors.primaryRed : inactive)),
-                suffixIcon: widget.isPassword ? _buildPasswordToggle(isVisible, hasFocus) : null,
+                prefixIcon: Icon(
+                  widget.prefixIcon,
+                  color: hasFocus ? primary : (hasError ? error : inactive),
+                ),
+                suffixIcon:
+                    widget.isPassword
+                        ? _buildPasswordToggle(isVisible, hasFocus, colors)
+                        : null,
                 hintText: widget.hintText,
-                hintStyle: TextStyle(color: hasFocus ? primary : Colors.grey[500]),
+                hintStyle: TextStyle(
+                  color: hasFocus ? primary : colors.textHint,
+                ),
                 errorText: widget.errorText,
                 errorMaxLines: 1,
-                errorStyle: const TextStyle(fontSize: 12, color: AppColors.primaryRed, height: 0.8),
-                enabledBorder: _buildBorder(hasError ? AppColors.primaryRed : inactive),
+                errorStyle: TextStyle(fontSize: 12, color: error, height: 0.8),
+                enabledBorder: _buildBorder(hasError ? error : inactive),
                 focusedBorder: _buildBorder(primary),
-                errorBorder: _buildBorder(AppColors.primaryRed),
-                focusedErrorBorder: _buildBorder(AppColors.primaryRed),
-                contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                errorBorder: _buildBorder(error),
+                focusedErrorBorder: _buildBorder(error),
+                filled: true,
+                fillColor: colors.surfaceInput,
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 16,
+                  horizontal: 20,
+                ),
               ),
             );
           },
@@ -101,15 +126,21 @@ class _AppTextFieldState extends State<AppTextField> {
     borderSide: BorderSide(color: color, width: 1.0),
   );
 
-  Widget _buildPasswordToggle(bool isVisible, bool hasFocus) => IconButton(
-    icon: Icon(
-      isVisible ? Icons.visibility : Icons.visibility_off,
-      color: hasFocus ? AppColors.primaryBlue : Colors.grey[400],
-    ),
-    onPressed: () {
-      if (widget.passwordVisibility != null) {
-        widget.passwordVisibility!.value = !widget.passwordVisibility!.value;
-      }
-    },
-  );
+  Widget _buildPasswordToggle(
+    bool isVisible,
+    bool hasFocus,
+    CustomColors colors,
+  ) {
+    return IconButton(
+      icon: Icon(
+        isVisible ? Icons.visibility : Icons.visibility_off,
+        color: hasFocus ? colors.primaryBlue : colors.textSecondary,
+      ),
+      onPressed: () {
+        if (widget.passwordVisibility != null) {
+          widget.passwordVisibility!.value = !widget.passwordVisibility!.value;
+        }
+      },
+    );
+  }
 }

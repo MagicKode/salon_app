@@ -3,6 +3,7 @@ import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
 import 'package:flutter/gestures.dart';
 
+import '../../../../config/theme/custom_colors.dart';
 import '../../../../uikit/strings/app_strings.dart';
 
 class TermsAndPrivacy extends StatelessWidget {
@@ -15,6 +16,8 @@ class TermsAndPrivacy extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: RichText(
@@ -30,8 +33,8 @@ class TermsAndPrivacy extends StatelessWidget {
             const TextSpan(text: AppStrings.termsPrefix),
             TextSpan(
               text: AppStrings.termsLink,
-              style: const TextStyle(
-                color: AppColors.primaryBlue,
+              style: TextStyle(
+                color: colors.primaryBlueLight,
                 fontWeight: FontWeight.bold,
               ),
               recognizer: TapGestureRecognizer()..onTap = onTermAndPrivacyPressed,

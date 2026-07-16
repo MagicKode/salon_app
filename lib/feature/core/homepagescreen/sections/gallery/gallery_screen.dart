@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/gallery/gallery_body.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
-import '../../../../../uikit/colors/app_colors.dart';
+import '../../../../../config/theme/custom_colors.dart';
 
 class GalleryScreen extends StatelessWidget {
   final bool isMaster;
@@ -16,22 +16,24 @@ class GalleryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Scaffold(
-      backgroundColor: AppColors.primaryWhite,
+      backgroundColor: colors.backgroundPrimary,
       appBar: AppBar(
-        backgroundColor: AppColors.primaryWhite,
-        title: const Text(
+        backgroundColor: colors.backgroundPrimary,
+        title: Text(
           AppStrings.portfolioGallery,
           style: TextStyle(
-            color: AppColors.primaryBlack,
+            color: colors.textPrimary,
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
         ),
         leading: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back_ios_new,
-            color: AppColors.primaryBlack,
+            color: colors.textPrimary,
             size: 20,
           ),
           onPressed: () => Navigator.pop(context),
@@ -39,10 +41,7 @@ class GalleryScreen extends StatelessWidget {
         centerTitle: true,
         elevation: 0,
       ),
-      body: GalleryBody(
-        isMaster: isMaster,
-        onRefresh: onRefresh,
-      ),
+      body: GalleryBody(isMaster: isMaster, onRefresh: onRefresh),
     );
   }
 }

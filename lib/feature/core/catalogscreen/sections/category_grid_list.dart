@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../uikit/colors/app_colors.dart';
+import '../../../../config/theme/custom_colors.dart';
 import '../../../../uikit/widgets/card/images/networkimagewithplaceholder.dart';
 import '../../../catalog/data/models/category_dto.dart';
 
@@ -16,6 +16,8 @@ class CategoryGridList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return ListView.builder(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       itemCount: categories.length,
@@ -49,13 +51,19 @@ class CategoryGridList extends StatelessWidget {
                         url: category.image!.url,
                         fit: BoxFit.cover,
                         errorWidget: Container(
-                          color: AppColors.primaryBlue.withValues(alpha: 0.2),
-                          child: const Icon(Icons.image_not_supported_rounded, color: AppColors.primaryGrey),
+                          color: colors.surfaceCard,
+                          child: Icon(
+                            Icons.image_not_supported_rounded,
+                            color: colors.textSecondary,
+                          ),
                         ),
                       )
                           : Container(
-                        color: AppColors.primaryBlue.withValues(alpha: 0.2),
-                        child: const Icon(Icons.image_not_supported_rounded, color: AppColors.primaryGrey),
+                        color: colors.surfaceCard,
+                        child: Icon(
+                          Icons.image_not_supported_rounded,
+                          color: colors.textSecondary,
+                        ),
                       ),
                     ),
                     // Градиент
@@ -85,10 +93,10 @@ class CategoryGridList extends StatelessWidget {
                           children: [
                             Text(
                               category.name,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 22,
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.primaryWhite,
+                                color: colors.textOnPrimary,
                                 letterSpacing: 0.5,
                               ),
                             ),
@@ -97,7 +105,7 @@ class CategoryGridList extends StatelessWidget {
                               'Услуги',
                               style: TextStyle(
                                 fontSize: 13,
-                                color: AppColors.primaryWhite.withValues(alpha: 0.8),
+                                color: colors.textOnPrimary.withValues(alpha: 0.8),
                               ),
                             ),
                           ],
@@ -111,7 +119,7 @@ class CategoryGridList extends StatelessWidget {
                       bottom: 0,
                       child: Icon(
                         Icons.arrow_forward_ios_rounded,
-                        color: AppColors.primaryWhite.withValues(alpha: 0.7),
+                        color: colors.textOnPrimary.withValues(alpha: 0.7),
                         size: 18,
                       ),
                     ),

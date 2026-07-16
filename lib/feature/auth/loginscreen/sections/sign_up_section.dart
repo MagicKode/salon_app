@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
+import '../../../../config/theme/custom_colors.dart';
 import '../../../../uikit/colors/app_colors.dart';
 
 class SignUpSection extends StatelessWidget {
@@ -12,6 +13,8 @@ class SignUpSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 32.0),
       child: Row(
@@ -31,10 +34,10 @@ class SignUpSection extends StatelessWidget {
               minimumSize: const Size(0, 0),
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
-            child: const Text(
+            child: Text(
               AppStrings.register,
               style: TextStyle(
-                color: AppColors.primaryBlue,
+                color: colors.primaryBlueLight,
                 fontSize: 14.0,
                 fontWeight: FontWeight.w700,
               ),

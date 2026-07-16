@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
-import '../../../../../uikit/colors/app_colors.dart';
+
+import '../../../../../config/theme/custom_colors.dart'; // ✅ импорт динамических цветов
 
 class ThemeSystemSection extends StatelessWidget {
   final bool isActive;
@@ -14,6 +15,9 @@ class ThemeSystemSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Получаем динамические цвета
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -25,12 +29,12 @@ class ThemeSystemSection extends StatelessWidget {
           ),
           value: isActive,
           onChanged: onChanged,
-          activeThumbColor: AppColors.primaryBlue,
+          activeThumbColor: colors.primaryBlue, // ✅ динамический синий
         ),
-        const Text(
+        Text(
           AppStrings.systemThemeDescription,
           style: TextStyle(
-            color: AppColors.primaryGrey,
+            color: colors.textHint, // ✅ динамический серый для описания
             fontSize: 12,
           ),
         ),

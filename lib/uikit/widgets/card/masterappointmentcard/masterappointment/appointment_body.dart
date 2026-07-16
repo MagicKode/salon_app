@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:salon_flutter/uikit/colors/app_colors.dart';
-import '../../../../../feature/core/mastercalendarscreen/domain/appointment_model.dart';
+import 'package:salon_flutter/feature/core/mastercalendarscreen/domain/appointment_model.dart';
+
+import '../../../../../config/theme/custom_colors.dart';
 import '../../../../utils/formatphone/format_phone.dart';
 
 class MasterAppointmentBody extends StatelessWidget {
   final AppointmentModel appointment;
   final bool isExpanded;
-  final VoidCallback onEditComment; // если нужно редактировать комментарий
+  final VoidCallback onEditComment;
 
   const MasterAppointmentBody({
     super.key,
@@ -18,11 +19,17 @@ class MasterAppointmentBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     final a = appointment;
     final dateStr = DateFormat('d MMMM yyyy', 'ru').format(a.startTime);
-    final servicesText = a.servicesNames.length > 1
-        ? '${a.mainService} + ещё ${a.servicesNames.length - 1} услуги'
-        : a.mainService;
+
+    // ✅ Убираем дубли и создаём уникальный список
+    final uniqueServices = a.servicesNames.toSet().toList();
+    final servicesText =
+        uniqueServices.length > 1
+            ? '${uniqueServices.first} + ещё ${uniqueServices.length - 1} услуги'
+            : (uniqueServices.isNotEmpty ? uniqueServices.first : 'Услуга');
 
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -32,18 +39,15 @@ class MasterAppointmentBody extends StatelessWidget {
           // Услуги
           Row(
             children: [
-              const Icon(
-                Icons.content_cut,
-                color: AppColors.primaryBlue,
-                size: 18,
-              ),
+              Icon(Icons.content_cut, color: colors.primaryBlue, size: 18),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   servicesText,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 15,
+                    color: colors.textPrimary,
                   ),
                 ),
               ),
@@ -54,11 +58,7 @@ class MasterAppointmentBody extends StatelessWidget {
           // Клиент
           Row(
             children: [
-              const Icon(
-                Icons.person_outline,
-                color: AppColors.primaryBlue,
-                size: 16,
-              ),
+              Icon(Icons.person_outline, color: colors.primaryBlue, size: 16),
               const SizedBox(width: 8),
               RichText(
                 text: TextSpan(
@@ -66,13 +66,13 @@ class MasterAppointmentBody extends StatelessWidget {
                   children: [
                     TextSpan(
                       text: a.displayClientName,
-                      style: const TextStyle(color: AppColors.primaryBlack),
+                      style: TextStyle(color: colors.textPrimary),
                     ),
                     const WidgetSpan(child: SizedBox(width: 8)),
                     TextSpan(
                       text: ' (${formatPhone(a.clientPhone)})',
                       style: TextStyle(
-                        color: AppColors.primaryGrey,
+                        color: colors.textSecondary,
                         fontSize: 13,
                       ),
                     ),
@@ -90,10 +90,10 @@ class MasterAppointmentBody extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.chat_bubble_outline,
                     size: 14,
-                    color: AppColors.primaryGrey,
+                    color: colors.textSecondary,
                   ),
                   const SizedBox(width: 6),
                   Expanded(
@@ -101,10 +101,10 @@ class MasterAppointmentBody extends StatelessWidget {
                       a.notes!,
                       maxLines: isExpanded ? null : 1,
                       overflow: isExpanded ? null : TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
                         fontStyle: FontStyle.italic,
-                        color: AppColors.primaryBlack,
+                        color: colors.textPrimary,
                       ),
                     ),
                   ),
@@ -115,18 +115,11 @@ class MasterAppointmentBody extends StatelessWidget {
           // Дата
           Row(
             children: [
-              const Icon(
-                Icons.calendar_today,
-                color: AppColors.primaryBlue,
-                size: 14,
-              ),
+              Icon(Icons.calendar_today, color: colors.primaryBlue, size: 14),
               const SizedBox(width: 8),
               Text(
                 dateStr,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: AppColors.primaryBlack,
-                ),
+                style: TextStyle(fontSize: 14, color: colors.textPrimary),
               ),
             ],
           ),
@@ -135,27 +128,24 @@ class MasterAppointmentBody extends StatelessWidget {
           // Время + Цена
           Row(
             children: [
-              const Icon(
-                Icons.access_time,
-                color: AppColors.primaryBlue,
-                size: 14,
-              ),
+              Icon(Icons.access_time, color: colors.primaryBlue, size: 14),
               const SizedBox(width: 8),
               Text(
                 a.timeRange,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
+                  color: colors.textPrimary,
                 ),
               ),
               const Spacer(),
               if (a.totalPrice > 0)
                 Text(
                   a.priceDisplay,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.primaryBlue,
+                    color: colors.primaryBlue,
                   ),
                 ),
             ],

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salon_flutter/feature/checkout/domain/booking_entity.dart';
 import 'package:salon_flutter/feature/checkout/domain/repository/booking_repository.dart';
-import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
+import '../../../../../config/theme/custom_colors.dart'; // ✅ импорт динамических цветов
 import '../../../dialog/cancel_booking_dialog.dart';
 import '../../../dialog/edit_comment_dialog.dart';
 import '../history_card_body.dart';
@@ -69,13 +69,12 @@ class _HistoryBookingCardState extends State<HistoryBookingCard> {
     final repo = context.read<BookingRepository>();
     final updated = await showDialog<String>(
       context: context,
-      builder:
-          (_) => EditCommentDialog(
-            bookingId: '${widget.booking.id}',
-            initialComment: _currentNotes ?? '',
-            bookingRepository: repo,
-            onUpdateSuccess: widget.onUpdateSuccess,
-          ),
+      builder: (_) => EditCommentDialog(
+        bookingId: '${widget.booking.id}',
+        initialComment: _currentNotes ?? '',
+        bookingRepository: repo,
+        onUpdateSuccess: widget.onUpdateSuccess,
+      ),
     );
     if (updated != null && mounted) setState(() => _currentNotes = updated);
   }
@@ -83,14 +82,13 @@ class _HistoryBookingCardState extends State<HistoryBookingCard> {
   void _onCancel() {
     showDialog(
       context: context,
-      builder:
-          (_) => CancelBookingDialog(
-            bookingId: '${widget.booking.id}',
-            onCancelSuccess: () {
-              widget.onCancelSuccess?.call();
-              setState(() => _isCollapsing = true);
-            },
-          ),
+      builder: (_) => CancelBookingDialog(
+        bookingId: '${widget.booking.id}',
+        onCancelSuccess: () {
+          widget.onCancelSuccess?.call();
+          setState(() => _isCollapsing = true);
+        },
+      ),
     );
   }
 
@@ -98,6 +96,9 @@ class _HistoryBookingCardState extends State<HistoryBookingCard> {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Получаем динамические цвета
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return AnimatedOpacity(
       duration: const Duration(milliseconds: 200),
       opacity: _isCollapsing ? 0.0 : 1.0,
@@ -105,52 +106,50 @@ class _HistoryBookingCardState extends State<HistoryBookingCard> {
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
         alignment: Alignment.topCenter,
-        child:
-            _isCollapsing
-                ? const SizedBox(height: 0, width: double.infinity)
-                : Opacity(
-                  opacity: _isPast ? 0.5 : 1.0,
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    decoration: BoxDecoration(
-                      color: AppColors.boxDecorationColor,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color:
-                            _isExpanded
-                                ? AppColors.primaryBlue
-                                : AppColors.primaryBlue.withAlpha(50),
-                        width: _isExpanded ? 1.5 : 1,
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        HistoryCardHeader(
-                          status: widget.booking.status,
-                          isPast: _isPast,
-                          isCanceled: _isCanceled,
-                          canCancel: _canCancel,
-                          onCancel: _onCancel,
-                        ),
-                        HistoryCardBody(
-                          booking: widget.booking,
-                          servicesList: _servicesList,
-                          currentNotes: _currentNotes,
-                          canEditComment: _canEditComment,
-                          isExpanded: _isExpanded,
-                          onEditComment: _editComment,
-                        ),
-                        if (_isExpanded && _hasDetails)
-                          HistoryCardExpanded(servicesList: _servicesList),
-                        if (_hasDetails)
-                          HistoryCardFooter(
-                            isExpanded: _isExpanded,
-                            onToggle: _toggleExpand,
-                          ),
-                      ],
-                    ),
-                  ),
+        child: _isCollapsing
+            ? const SizedBox(height: 0, width: double.infinity)
+            : Opacity(
+          opacity: _isPast ? 0.5 : 1.0,
+          child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            decoration: BoxDecoration(
+              color: colors.surfaceCard, // ✅ динамический фон
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: _isExpanded
+                    ? colors.primaryBlue
+                    : colors.primaryBlue.withOpacity(0.5), // ✅ динамическая граница
+                width: _isExpanded ? 1.5 : 1,
+              ),
+            ),
+            child: Column(
+              children: [
+                HistoryCardHeader(
+                  status: widget.booking.status,
+                  isPast: _isPast,
+                  isCanceled: _isCanceled,
+                  canCancel: _canCancel,
+                  onCancel: _onCancel,
                 ),
+                HistoryCardBody(
+                  booking: widget.booking,
+                  servicesList: _servicesList,
+                  currentNotes: _currentNotes,
+                  canEditComment: _canEditComment,
+                  isExpanded: _isExpanded,
+                  onEditComment: _editComment,
+                ),
+                if (_isExpanded && _hasDetails)
+                  HistoryCardExpanded(servicesList: _servicesList),
+                if (_hasDetails)
+                  HistoryCardFooter(
+                    isExpanded: _isExpanded,
+                    onToggle: _toggleExpand,
+                  ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

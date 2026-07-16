@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/uikit/colors/app_colors.dart';
-
+import '../../../../config/theme/custom_colors.dart';
 import '../../../../uikit/strings/app_strings.dart';
 
 class SignInSection extends StatelessWidget {
@@ -10,23 +9,38 @@ class SignInSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 32.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text(
+          Text(
             AppStrings.alreadyHaveAccount,
-            style: TextStyle(color: Color(0xFF757575), fontSize: 14.0),
+            style: TextStyle(
+              fontSize: 14,
+              color: colors.textSecondary,
+            ),
           ),
-          GestureDetector(
-            onTap: onSignInPressed,
-            child: const Text(
-              AppStrings.loginLink,
-              style: TextStyle(
-                color: AppColors.primaryBlue,
-                fontSize: 14.0,
-                fontWeight: FontWeight.w600,
+          const SizedBox(width: 4),
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onSignInPressed,
+              borderRadius: BorderRadius.circular(4),
+              splashColor: colors.primaryBlue.withOpacity(0.15),
+              highlightColor: colors.primaryBlue.withOpacity(0.05),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                child: Text(
+                  AppStrings.loginLink,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: colors.primaryBlueLight,
+                  ),
+                ),
               ),
             ),
           ),

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:salon_flutter/feature/core/mastercalendarscreen/domain/appointment_model.dart';
 import 'package:salon_flutter/feature/core/masterschedulescreen/domain/day_availability_model.dart';
-import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
+import '../../../../config/theme/custom_colors.dart'; // ✅ импорт динамических цветов
 import '../../../../feature/core/mastercalendarscreen/master_calendar_screen.dart';
 import 'day_off_widget.dart';
 import 'empty_day_widget.dart';
@@ -38,9 +38,9 @@ class DaySummaryCard extends StatelessWidget {
     final sorted = List<AppointmentModel>.from(appointments)
       ..sort((a, b) => a.startTime.compareTo(b.startTime));
 
-    // ✅ Теперь это обычный ListView без shrinkWrap
     return ListView.builder(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      physics: const BouncingScrollPhysics(),
       itemCount: sorted.length,
       itemBuilder: (context, index) {
         final appointment = sorted[index];
@@ -53,6 +53,9 @@ class DaySummaryCard extends StatelessWidget {
   }
 
   Widget _buildCompactCard(BuildContext context, AppointmentModel appointment) {
+    // ✅ Получаем динамические цвета
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     final now = DateTime.now();
     final isPast = appointment.endTime.isBefore(now);
     final isCurrent =
@@ -62,15 +65,15 @@ class DaySummaryCard extends StatelessWidget {
 
     Color statusColor;
     if (isCanceled) {
-      statusColor = Colors.red.shade500;
+      statusColor = colors.statusError; // ✅ красный
     } else if (isPast) {
-    statusColor = Colors.grey.shade400;
+      statusColor = colors.textSecondary; // ✅ серый
     } else if (isCurrent) {
-      statusColor = Colors.green.shade500;
+      statusColor = colors.statusSuccess; // ✅ зелёный
     } else if (isFuture) {
-      statusColor = Colors.blue.shade500;
+      statusColor = colors.primaryBlue; // ✅ синий
     } else {
-      statusColor = Colors.grey.shade300;
+      statusColor = colors.textHint; // ✅ светлый серый
     }
 
     final timeStr = DateFormat('HH:mm', 'ru').format(appointment.startTime);
@@ -79,6 +82,7 @@ class DaySummaryCard extends StatelessWidget {
       margin: EdgeInsets.zero,
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      color: colors.surfaceInput,
       child: InkWell(
         onTap: () {
           Navigator.push(
@@ -106,10 +110,10 @@ class DaySummaryCard extends StatelessWidget {
                 width: 38,
                 child: Text(
                   timeStr,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.primaryBlack,
+                    color: colors.textPrimary, // ✅ динамический чёрный/белый
                   ),
                 ),
               ),
@@ -123,10 +127,12 @@ class DaySummaryCard extends StatelessWidget {
                       children: [
                         Text(
                           appointment.displayClientName,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
-                            color: AppColors.primaryBlack,
+                            color:
+                                colors
+                                    .textPrimary, // ✅ динамический чёрный/белый
                           ),
                         ),
                         const SizedBox(width: 4),
@@ -135,7 +141,8 @@ class DaySummaryCard extends StatelessWidget {
                             '(${appointment.clientPhone})',
                             style: TextStyle(
                               fontSize: 11,
-                              color: Colors.grey.shade600,
+                              color:
+                                  colors.textSecondary, // ✅ динамический серый
                             ),
                           ),
                         if (isCanceled) ...[
@@ -144,7 +151,8 @@ class DaySummaryCard extends StatelessWidget {
                             'Отменена',
                             style: TextStyle(
                               fontSize: 15,
-                              color: AppColors.primaryRed,
+                              color: colors.statusError,
+                              // ✅ динамический красный
                               fontWeight: FontWeight.w700,
                             ),
                           ),
@@ -158,7 +166,7 @@ class DaySummaryCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 11,
-                        color: Colors.grey.shade700,
+                        color: colors.textSecondary, // ✅ динамический серый
                       ),
                     ),
                   ],
@@ -168,10 +176,10 @@ class DaySummaryCard extends StatelessWidget {
               // Цена
               Text(
                 appointment.priceDisplay,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.primaryBlue,
+                  color: colors.primaryBlue, // ✅ динамический синий
                 ),
               ),
             ],

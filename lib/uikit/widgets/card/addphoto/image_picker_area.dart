@@ -1,7 +1,8 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 
-import '../../../colors/app_colors.dart';
+import '../../../../config/theme/custom_colors.dart';
 
 class ImagePickerArea extends StatelessWidget {
   final List<File> images;
@@ -19,6 +20,8 @@ class ImagePickerArea extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: GestureDetector(
@@ -28,40 +31,45 @@ class ImagePickerArea extends StatelessWidget {
           width: double.infinity,
           decoration: BoxDecoration(
             border: Border.all(
-              color: images.isEmpty ? Colors.grey.shade300 : Colors.transparent,
+              color: images.isEmpty ? colors.borderLight : Colors.transparent,
               width: 2,
             ),
             borderRadius: BorderRadius.circular(16),
-            color: images.isEmpty ? Colors.grey.shade50 : Colors.transparent,
+            color: images.isEmpty ? colors.surfaceInput : Colors.transparent,
           ),
-          child: images.isEmpty
-              ? _buildEmptyState()
-              : _buildImageList(),
+          child:
+              images.isEmpty
+                  ? _buildEmptyState(colors)
+                  : _buildImageList(colors),
         ),
       ),
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(CustomColors colors) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(Icons.add_photo_alternate_outlined, size: 48, color: Colors.grey.shade400),
+        Icon(
+          Icons.add_photo_alternate_outlined,
+          size: 48,
+          color: colors.textHint,
+        ),
         const SizedBox(height: 8),
         Text(
           'Нажмите, чтобы выбрать фото',
-          style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+          style: TextStyle(fontSize: 14, color: colors.textSecondary),
         ),
         const SizedBox(height: 4),
         Text(
           'можно выбрать несколько',
-          style: TextStyle(fontSize: 12, color: Colors.grey.shade400),
+          style: TextStyle(fontSize: 12, color: colors.textHint),
         ),
       ],
     );
   }
 
-  Widget _buildImageList() {
+  Widget _buildImageList(CustomColors colors) {
     return ListView.builder(
       scrollDirection: Axis.horizontal,
       itemCount: images.length,
@@ -86,11 +94,15 @@ class ImagePickerArea extends StatelessWidget {
                   onTap: () => onRemove(index),
                   child: Container(
                     padding: const EdgeInsets.all(4),
-                    decoration: const BoxDecoration(
-                      color: AppColors.primaryBlack,
+                    decoration: BoxDecoration(
+                      color: colors.textPrimary,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.close, color: AppColors.primaryWhite, size: 16),
+                    child: Icon(
+                      Icons.close,
+                      color: colors.textOnPrimary,
+                      size: 16,
+                    ),
                   ),
                 ),
               ),

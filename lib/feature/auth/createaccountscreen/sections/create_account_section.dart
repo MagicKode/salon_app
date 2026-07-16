@@ -8,6 +8,14 @@ class CreateAccountSection extends StatelessWidget {
   final TextEditingController mobileController;
   final TextEditingController passwordController;
   final ValueNotifier<bool> isPasswordVisible;
+  final String? nameError;
+  final String? emailError;
+  final String? phoneError;
+  final String? passwordError;
+  final FocusNode? nameFocusNode;
+  final FocusNode? emailFocusNode;
+  final FocusNode? phoneFocusNode;
+  final FocusNode? passwordFocusNode;
 
   const CreateAccountSection({
     super.key,
@@ -16,6 +24,14 @@ class CreateAccountSection extends StatelessWidget {
     required this.mobileController,
     required this.passwordController,
     required this.isPasswordVisible,
+    this.nameError,
+    this.emailError,
+    this.phoneError,
+    this.passwordError,
+    this.nameFocusNode,
+    this.emailFocusNode,
+    this.phoneFocusNode,
+    this.passwordFocusNode,
   });
 
   @override
@@ -25,19 +41,28 @@ class CreateAccountSection extends StatelessWidget {
         AppTextField(
           controller: nameController,
           hintText: AppStrings.firstNameHint,
-          prefixIcon: Icons.person, // Исправлено с email на person
+          prefixIcon: Icons.person,
+          errorText: nameError,
+          focusNode: nameFocusNode,
+          onChanged: (_) {},
         ),
         const SizedBox(height: 16.0),
         AppTextField(
           controller: emailController,
           hintText: AppStrings.emailHint,
           prefixIcon: Icons.email,
+          errorText: emailError,
+          focusNode: emailFocusNode,
+          onChanged: (_) {},
         ),
         const SizedBox(height: 16.0),
         AppTextField(
           controller: mobileController,
           hintText: AppStrings.phoneHint,
           prefixIcon: Icons.phone,
+          errorText: phoneError,
+          focusNode: phoneFocusNode,
+          onChanged: (_) {},
         ),
         const SizedBox(height: 16.0),
         AppTextField(
@@ -46,6 +71,9 @@ class CreateAccountSection extends StatelessWidget {
           prefixIcon: Icons.lock,
           isPassword: true,
           passwordVisibility: isPasswordVisible,
+          errorText: passwordError,
+          focusNode: passwordFocusNode,
+          onChanged: (_) {},
         ),
       ],
     );

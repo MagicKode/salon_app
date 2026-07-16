@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
+import '../../../config/theme/custom_colors.dart'; // ✅ импорт динамических цветов
 import '../../../feature/checkout/domain/repository/booking_repository.dart';
-import '../../colors/app_colors.dart';
 
 class CancelBookingDialog extends StatelessWidget {
   final String bookingId;
@@ -17,49 +17,74 @@ class CancelBookingDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Получаем динамические цвета
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return AlertDialog(
-      title: const Text(AppStrings.cancellingBooking),
-      content: const Text(AppStrings.confirmationOfCancellingBooking),
+      backgroundColor: colors.backgroundPrimary, // ✅ динамический фон
+      title: Text(
+        AppStrings.cancellingBooking,
+        style: TextStyle(
+          color: colors.textPrimary,
+        ), // ✅ динамический цвет заголовка
+      ),
+      content: Text(
+        AppStrings.confirmationOfCancellingBooking,
+        style: TextStyle(
+          color: colors.textSecondary,
+        ), // ✅ динамический цвет текста
+      ),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text(
+          child: Text(
             AppStrings.back,
-            style: TextStyle(color: AppColors.primaryGrey),
+            style: TextStyle(
+              color: colors.textSecondary,
+            ), // ✅ динамический серый
           ),
         ),
         TextButton(
           onPressed: () async {
-            Navigator.pop(context); // Сразу закрываем диалог
+            Navigator.pop(context);
 
-            // Вызываем отправку запроса на бэк
             final success = await context
                 .read<BookingRepository>()
                 .cancelBooking(bookingId);
 
             if (success) {
               if (onCancelSuccess != null) {
-                onCancelSuccess!(); // Перерисовываем список
+                onCancelSuccess!();
               }
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text(AppStrings.successfulDeleted)),
+                  SnackBar(
+                    content: Text(
+                      AppStrings.successfulDeleted,
+                      style: TextStyle(color: colors.textOnPrimary),
+                    ),
+                    backgroundColor: colors.statusSuccess,
+                  ),
                 );
               }
             } else {
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text(AppStrings.errorInDeleteService),
+                  SnackBar(
+                    content: Text(
+                      AppStrings.errorInDeleteService,
+                      style: TextStyle(color: colors.textOnPrimary),
+                    ),
+                    backgroundColor: colors.statusError,
                   ),
                 );
               }
             }
           },
-          child: const Text(
+          child: Text(
             AppStrings.cancelDelete,
             style: TextStyle(
-              color: AppColors.primaryRed,
+              color: colors.statusError,
               fontWeight: FontWeight.bold,
             ),
           ),

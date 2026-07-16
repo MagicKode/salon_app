@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/feature/core/homepagescreen/sections/gallery/gallery_screen.dart';
-import 'package:salon_flutter/feature/core/homepagescreen/sections/gallery/sections/gallery_grid_preview.dart';
-import 'package:salon_flutter/feature/core/homepagescreen/sections/gallery/sections/add_photo_sheet.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salon_flutter/feature/catalog/data/repositories/catalog_repository_impl.dart';
 import 'package:salon_flutter/feature/catalog/domain/repositories/catalog_repository.dart';
+import 'package:salon_flutter/feature/core/homepagescreen/sections/gallery/gallery_screen.dart';
+import 'package:salon_flutter/feature/core/homepagescreen/sections/gallery/sections/add_photo_sheet.dart';
+import 'package:salon_flutter/feature/core/homepagescreen/sections/gallery/sections/gallery_grid_preview.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../app/main/main.dart';
+import '../../../../../../config/theme/custom_colors.dart';
 
 class GallerySection extends StatefulWidget {
   final bool isMaster;
@@ -42,14 +43,25 @@ class _GallerySectionState extends State<GallerySection> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
+        Padding(
+          padding: const EdgeInsets.only(
+            left: 16,
+            right: 16,
+            top: 16,
+            bottom: 8,
+          ),
           child: Text(
             AppStrings.portfolio,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: colors.textPrimary, // ✅ динамический цвет текста
+            ),
           ),
         ),
 
@@ -63,12 +75,15 @@ class _GallerySectionState extends State<GallerySection> {
                 TextButton(
                   onPressed: () => _showUploadDialog(context),
                   style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                    backgroundColor: Colors.grey.shade200,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
+                    backgroundColor: colors.surfaceCard,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    foregroundColor: AppColors.primaryBlue,
+                    foregroundColor: colors.primaryBlue,
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -77,7 +92,10 @@ class _GallerySectionState extends State<GallerySection> {
                       const SizedBox(width: 4),
                       const Text(
                         'Добавить фото',
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ],
                   ),
@@ -89,23 +107,32 @@ class _GallerySectionState extends State<GallerySection> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => GalleryScreen(
-                        isMaster: widget.isMaster,
-                        onRefresh: _refreshGallery,
-                      ),
+                      builder:
+                          (context) => GalleryScreen(
+                            isMaster: widget.isMaster,
+                            onRefresh: _refreshGallery,
+                          ),
                     ),
                   );
                 },
                 style: OutlinedButton.styleFrom(
-                  backgroundColor: AppColors.primaryBlue.withOpacity(0.15),
-                  side: BorderSide(color: AppColors.primaryBlue.withOpacity(0.2)),
+                  // ✅ Фон с лёгким оттенком синего, более заметный в тёмной теме
+                  backgroundColor: colors.primaryBlue.withOpacity(0.20),
+                  // ✅ Граница становится ярче и толще для лучшей видимости
+                  side: BorderSide(color: colors.primaryBlue, width: 1.5),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  foregroundColor: AppColors.primaryBlue,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  foregroundColor: colors.primaryBlue,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
                 ),
-                child: const Text(AppStrings.seeAllGallery),
+                child: Text(
+                  AppStrings.seeAllGallery,
+                  style: TextStyle(color: colors.primaryBlue),
+                ),
               ),
             ],
           ),

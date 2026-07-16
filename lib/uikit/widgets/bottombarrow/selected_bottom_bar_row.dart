@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
+import '../../../config/theme/custom_colors.dart';
 import '../../../feature/core/catalogscreen/domain/bottom_bar_item_data.dart';
-import '../../colors/app_colors.dart';
 
 class SelectedBottomBarRow extends StatelessWidget {
   final BottomBarItemData item;
@@ -10,6 +10,8 @@ class SelectedBottomBarRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3.0),
       child: Row(
@@ -20,20 +22,20 @@ class SelectedBottomBarRow extends StatelessWidget {
               item.name,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w400,
-                color: AppColors.primaryBlack,
+                color: colors.textPrimary,
               ),
             ),
           ),
           const SizedBox(width: 12),
           Text(
             '${item.price.toStringAsFixed(0)} BYN',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: AppColors.primaryBlack,
+              color: colors.textPrimary,
             ),
           ),
         ],

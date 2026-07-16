@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/uikit/colors/app_colors.dart';
+
+import '../../../../config/theme/custom_colors.dart';
 
 class HeaderWidget extends StatelessWidget {
   final int count;
@@ -13,6 +14,9 @@ class HeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Получаем динамические цвета
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
@@ -21,12 +25,12 @@ class HeaderWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Добавить фото',
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.primaryBlack,
+                    color: colors.textPrimary, // ✅ динамический цвет текста
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -34,7 +38,7 @@ class HeaderWidget extends StatelessWidget {
                   'Выберите изображения для портфолио',
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.grey.shade600,
+                    color: colors.textSecondary, // ✅ динамический серый
                   ),
                 ),
               ],
@@ -44,15 +48,16 @@ class HeaderWidget extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               decoration: BoxDecoration(
-                color: AppColors.primaryBlue.withOpacity(0.1),
+                color: colors.primaryBlue.withOpacity(0.1),
+                // ✅ динамический синий с прозрачностью
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
                 '$count',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.primaryBlue,
+                  color: colors.primaryBlue, // ✅ динамический синий
                 ),
               ),
             ),

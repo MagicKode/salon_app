@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/uikit/colors/app_colors.dart';
+
+import '../../../../config/theme/custom_colors.dart';
 
 class ActionButtons extends StatelessWidget {
   final bool isUploading;
@@ -17,6 +18,8 @@ class ActionButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
       child: Row(
@@ -25,11 +28,12 @@ class ActionButtons extends StatelessWidget {
             child: OutlinedButton(
               onPressed: isUploading ? null : onCancel,
               style: OutlinedButton.styleFrom(
-                side: BorderSide(color: Colors.grey.shade300),
+                side: BorderSide(color: colors.borderLight),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
                 padding: const EdgeInsets.symmetric(vertical: 14),
+                foregroundColor: colors.textSecondary,
               ),
               child: const Text('Отмена', style: TextStyle(fontSize: 16)),
             ),
@@ -40,27 +44,31 @@ class ActionButtons extends StatelessWidget {
             child: ElevatedButton(
               onPressed: isUploading || !hasImages ? null : onUpload,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryBlue,
-                foregroundColor: AppColors.primaryWhite,
+                backgroundColor: colors.primaryBlue,
+                foregroundColor: colors.textOnPrimary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 elevation: 0,
               ),
-              child: isUploading
-                  ? const SizedBox(
-                width: 24,
-                height: 24,
-                child: CircularProgressIndicator(
-                  color: AppColors.primaryWhite,
-                  strokeWidth: 2,
-                ),
-              )
-                  : const Text(
-                'Загрузить',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
+              child:
+                  isUploading
+                      ? SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(
+                          color: colors.textOnPrimary,
+                          strokeWidth: 2,
+                        ),
+                      )
+                      : const Text(
+                        'Загрузить',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
             ),
           ),
         ],

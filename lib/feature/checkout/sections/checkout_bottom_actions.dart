@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 import '../../../../uikit/colors/app_colors.dart';
+import '../../../config/theme/custom_colors.dart';
 
 class CheckoutBottomActions extends StatelessWidget {
   final VoidCallback onConfirm;
@@ -14,6 +15,8 @@ class CheckoutBottomActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -23,7 +26,8 @@ class CheckoutBottomActions extends StatelessWidget {
             child: ElevatedButton(
               onPressed: onConfirm,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryBlue,
+                backgroundColor: colors.primaryBlue,
+                foregroundColor: colors.textOnPrimary,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
@@ -39,7 +43,7 @@ class CheckoutBottomActions extends StatelessWidget {
             child: Text(
               AppStrings.cancelAndLeave,
               style: TextStyle(
-                color: AppColors.primaryRed,
+                color: colors.statusError,
                 fontWeight: FontWeight.w500,
                 fontSize: 15,
               ),

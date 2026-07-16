@@ -5,7 +5,7 @@ import 'package:salon_flutter/feature/core/catalogscreen/sections/catalog_search
 import 'package:salon_flutter/feature/core/catalogscreen/sections/category_grid_list.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
-import '../../../uikit/colors/app_colors.dart';
+import '../../../config/theme/custom_colors.dart';
 import '../../../uikit/widgets/bottombarrow/service_list_bottom_sheet.dart';
 import '../../catalog/data/models/category_dto.dart';
 import '../../catalog/data/models/service_dto.dart';
@@ -53,9 +53,10 @@ class _CatalogBodyState extends State<CatalogBody> {
     context.read<CatalogRepository>().getServices().then((allServices) {
       if (mounted) {
         setState(() {
-          _filteredServices = allServices
-              .where((s) => s.name.toLowerCase().contains(query))
-              .toList();
+          _filteredServices =
+              allServices
+                  .where((s) => s.name.toLowerCase().contains(query))
+                  .toList();
         });
       }
     });
@@ -75,20 +76,30 @@ class _CatalogBodyState extends State<CatalogBody> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => BookingServiceScreen(selectedServices: _selectedServices),
+        builder:
+            (_) => BookingServiceScreen(selectedServices: _selectedServices),
       ),
     );
   }
 
   Widget _buildSearchResultsList() {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     if (_filteredServices.isEmpty) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.search_off_rounded, size: 48, color: AppColors.primaryGrey),
+            Icon(
+              Icons.search_off_rounded,
+              size: 48,
+              color: colors.textSecondary,
+            ),
             SizedBox(height: 12),
-            Text('Ничего не найдено'),
+            Text(
+              'Ничего не найдено',
+              style: TextStyle(color: colors.textSecondary),
+            ),
           ],
         ),
       );
@@ -108,23 +119,40 @@ class _CatalogBodyState extends State<CatalogBody> {
         final isSelected = _selectedServices.contains(catalogService);
 
         return ListTile(
-          title: Text(s.name),
-          subtitle: Text('${s.durationMinutes} мин'),
+          title: Text(s.name, style: TextStyle(color: colors.textPrimary)),
+          subtitle: Text(
+            '${s.durationMinutes} мин',
+            style: TextStyle(color: colors.textSecondary),
+          ),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('${s.price} Br', style: const TextStyle(fontWeight: FontWeight.bold)),
+              Text(
+                '${s.price} Br',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: colors.primaryBlue,
+                ),
+              ),
               const SizedBox(width: 8),
               ElevatedButton(
                 onPressed: () => _handleServiceSelection(catalogService),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: isSelected ? Colors.grey.shade200 : AppColors.primaryBlue,
-                  foregroundColor: isSelected ? AppColors.primaryBlack : AppColors.primaryWhite,
+                  backgroundColor: isSelected ? colors.surfaceInput : colors.primaryBlue,
+                  foregroundColor: isSelected ? colors.textPrimary : colors.textOnPrimary,
                   elevation: 0,
                   padding: const EdgeInsets.symmetric(horizontal: 12),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
-                child: Text(isSelected ? 'Убрать' : 'Выбрать', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                child: Text(
+                  isSelected ? 'Убрать' : 'Выбрать',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ],
           ),
@@ -135,18 +163,27 @@ class _CatalogBodyState extends State<CatalogBody> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Scaffold(
-      backgroundColor: AppColors.primaryWhite,
+      backgroundColor: colors.backgroundPrimary,
       appBar: AppBar(
-        backgroundColor: AppColors.primaryWhite,
+        backgroundColor: colors.backgroundPrimary,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.primaryBlack),
+          icon: Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: colors.textPrimary,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           AppStrings.servicesCatalogTitle,
-          style: TextStyle(color: AppColors.primaryBlack, fontWeight: FontWeight.bold, fontSize: 22),
+          style: TextStyle(
+            color: colors.textPrimary,
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+          ),
         ),
         centerTitle: true,
       ),
@@ -156,49 +193,70 @@ class _CatalogBodyState extends State<CatalogBody> {
             CatalogSearchBar(controller: _searchController),
             const SizedBox(height: 8),
             Expanded(
-              child: _isSearching
-                  ? _buildSearchResultsList()
-                  : FutureBuilder<List<CategoryDto>>(
-                future: context.read<CatalogRepository>().getCategories(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  if (snapshot.hasError || !snapshot.hasData) {
-                    return const Center(child: Text('Ошибка загрузки категорий'));
-                  }
-                  final categories = snapshot.data!;
-                  return CategoryGridList(
-                    categories: categories,
-                    onCategorySelected: (category) {
-                      showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        backgroundColor: AppColors.primaryWhite,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(24),
-                            topRight: Radius.circular(24),
-                          ),
-                        ),
-                        builder: (_) => ServiceListBottomSheet(
-                          category: category,
-                          selectedServices: _selectedServices,
-                          onServiceSelected: _handleServiceSelection,
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
+              child:
+                  _isSearching
+                      ? _buildSearchResultsList()
+                      : FutureBuilder<List<CategoryDto>>(
+                        future:
+                            context.read<CatalogRepository>().getCategories(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(
+                              child: CircularProgressIndicator(
+                                color: colors.primaryBlue,
+                              ),
+                            );
+                          }
+                          if (snapshot.hasError || !snapshot.hasData) {
+                            return Center(
+                              child: Text(
+                                'Ошибка загрузки категорий',
+                                style: TextStyle(color: colors.textSecondary),
+                              ),
+                            );
+                          }
+                          final categories = snapshot.data!;
+                          return CategoryGridList(
+                            categories: categories,
+                            onCategorySelected: (category) {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                backgroundColor: colors.backgroundPrimary,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(24),
+                                    topRight: Radius.circular(24),
+                                  ),
+                                ),
+                                builder:
+                                    (_) => ServiceListBottomSheet(
+                                      category: category,
+                                      selectedServices: _selectedServices,
+                                      onServiceSelected:
+                                          _handleServiceSelection,
+                                    ),
+                              );
+                            },
+                          );
+                        },
+                      ),
             ),
           ],
         ),
       ),
       bottomNavigationBar: SelectedServicesBottomBar(
-        items: _selectedServices
-            .map((s) => BottomBarItemData(id: s.name, name: s.name, price: s.price))
-            .toList(),
+        items:
+            _selectedServices
+                .map(
+                  (s) => BottomBarItemData(
+                    id: s.name,
+                    name: s.name,
+                    price: s.price,
+                  ),
+                )
+                .toList(),
         onProceed: _navigateToBooking,
         onRemoveItem: (id) {
           setState(() {

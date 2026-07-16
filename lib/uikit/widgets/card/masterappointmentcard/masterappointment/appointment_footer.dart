@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
+import '../../../../../config/theme/custom_colors.dart';
+
 class MasterAppointmentFooter extends StatelessWidget {
   final bool isExpanded;
   final VoidCallback onToggle;
@@ -13,6 +15,8 @@ class MasterAppointmentFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return GestureDetector(
       onTap: onToggle,
       child: Container(
@@ -30,9 +34,10 @@ class MasterAppointmentFooter extends StatelessWidget {
           children: [
             Text(
               isExpanded ? 'Скрыть ▲' : 'Подробнее ▼',
-              style: const TextStyle(
-                color: AppColors.primaryBlue,
+              style: TextStyle(
+                color: colors.primaryBlueLight,
                 fontSize: 12,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ],

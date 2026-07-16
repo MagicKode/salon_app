@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salon_flutter/feature/core/notificationscreen/notifications_screen.dart';
 
-import '../../../../../uikit/colors/app_colors.dart';
+import '../../../../../config/theme/custom_colors.dart';
 import '../../../../../uikit/strings/app_strings.dart';
 import '../../../../../uikit/widgets/button/notifications_button.dart';
 import '../../../../auth/authblock/bloc/auth_block.dart';
@@ -42,6 +42,8 @@ class _AppBarSectionState extends State<AppBarSection> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
       final String userName = state is AuthSuccess
@@ -49,7 +51,7 @@ class _AppBarSectionState extends State<AppBarSection> {
                 : (AppStrings.homeGuest ?? "Гость");
 
         return AppBar(
-          backgroundColor: AppColors.primaryWhite,
+          backgroundColor: colors.backgroundPrimary,
           elevation: 0,
           automaticallyImplyLeading: false,
           flexibleSpace: SafeArea(
@@ -66,12 +68,13 @@ class _AppBarSectionState extends State<AppBarSection> {
                         style: TextStyle(
                           fontSize: 23,
                           fontWeight: FontWeight.bold,
+                          color: colors.textPrimary,
                         ),
                       ),
                       Text(
                         AppStrings.homeSubtitle,
                         style: TextStyle(
-                          color: AppColors.primaryGrey,
+                          color: colors.textSecondary,
                           fontSize: 16,
                         ),
                       ),

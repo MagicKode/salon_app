@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/uikit/colors/app_colors.dart';
+
+import '../../../../config/theme/custom_colors.dart'; // ✅ импорт динамических цветов
 
 class HistoryCardCommentRow extends StatelessWidget {
   final String comment;
@@ -17,20 +18,27 @@ class HistoryCardCommentRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Получаем динамические цвета
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Icon(Icons.chat_bubble_outline, size: 14, color: AppColors.primaryGrey),
+        Icon(
+          Icons.chat_bubble_outline,
+          size: 14,
+          color: colors.textSecondary, // ✅ динамический серый
+        ),
         const SizedBox(width: 6),
         Expanded(
           child: Text(
             comment,
             maxLines: isExpanded ? null : 1,
             overflow: isExpanded ? null : TextOverflow.ellipsis,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 13,
               fontStyle: FontStyle.italic,
-              color: AppColors.primaryBlack,
+              color: colors.textPrimary, // ✅ динамический чёрный/белый
             ),
           ),
         ),
@@ -38,7 +46,11 @@ class HistoryCardCommentRow extends StatelessWidget {
           const SizedBox(width: 8),
           GestureDetector(
             onTap: onEdit,
-            child: const Icon(Icons.edit, color: AppColors.primaryBlue, size: 18),
+            child: Icon(
+              Icons.edit,
+              color: colors.primaryBlue, // ✅ динамический синий
+              size: 18,
+            ),
           ),
         ],
       ],
@@ -53,15 +65,25 @@ class HistoryCardAddCommentButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Получаем динамические цвета
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return GestureDetector(
       onTap: onTap,
-      child: const Row(
+      child: Row(
         children: [
-          Icon(Icons.add_comment_outlined, size: 14, color: AppColors.primaryBlue),
-          SizedBox(width: 6),
+          Icon(
+            Icons.add_comment_outlined,
+            size: 14,
+            color: colors.primaryBlue, // ✅ динамический синий
+          ),
+          const SizedBox(width: 6),
           Text(
             'Добавить комментарий',
-            style: TextStyle(color: AppColors.primaryBlue, fontSize: 13),
+            style: TextStyle(
+              color: colors.primaryBlue, // ✅ динамический синий
+              fontSize: 13,
+            ),
           ),
         ],
       ),

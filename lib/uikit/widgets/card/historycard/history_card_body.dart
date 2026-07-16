@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:salon_flutter/uikit/colors/app_colors.dart';
 import 'package:salon_flutter/feature/checkout/domain/booking_entity.dart';
+
+import '../../../../config/theme/custom_colors.dart'; // ✅ импорт динамических цветов
 import 'history_card_comment.dart';
 
 class HistoryCardBody extends StatelessWidget {
@@ -24,12 +25,17 @@ class HistoryCardBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dateStr = DateFormat('d MMMM yyyy (EEEE)', 'ru')
-        .format(booking.dateTime);
+    // ✅ Получаем динамические цвета
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
+    final dateStr = DateFormat(
+      'd MMMM yyyy (EEEE)',
+      'ru',
+    ).format(booking.dateTime);
     final mainService = servicesList.isNotEmpty ? servicesList.first : 'Услуга';
     final extraCount = servicesList.length - 1;
     final servicesText =
-    extraCount > 0 ? '$mainService + ещё $extraCount' : mainService;
+        extraCount > 0 ? '$mainService + ещё $extraCount' : mainService;
 
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -39,17 +45,28 @@ class HistoryCardBody extends StatelessWidget {
           // Клиент
           Row(
             children: [
-              const Icon(Icons.person_outline, color: AppColors.primaryBlue, size: 16),
+              Icon(
+                Icons.person_outline,
+                color: colors.primaryBlue, // ✅ динамический синий
+                size: 16,
+              ),
               const SizedBox(width: 8),
               Text(
                 booking.clientName.isNotEmpty ? booking.clientName : 'Клиент',
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: colors.textPrimary, // ✅ динамический чёрный/белый
+                ),
               ),
               const SizedBox(width: 4),
               if (booking.clientPhone.isNotEmpty)
                 Text(
                   '(${booking.clientPhone})',
-                  style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: colors.textSecondary, // ✅ динамический серый
+                  ),
                 ),
             ],
           ),
@@ -59,15 +76,23 @@ class HistoryCardBody extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
-                padding: EdgeInsets.only(top: 1),
-                child: Icon(Icons.content_cut, color: AppColors.primaryBlue, size: 18),
+              Padding(
+                padding: const EdgeInsets.only(top: 1),
+                child: Icon(
+                  Icons.content_cut,
+                  color: colors.primaryBlue, // ✅ динамический синий
+                  size: 18,
+                ),
               ),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   servicesText,
-                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15,
+                    color: colors.textPrimary, // ✅ динамический чёрный/белый
+                  ),
                 ),
               ),
             ],
@@ -77,9 +102,19 @@ class HistoryCardBody extends StatelessWidget {
           // Мастер
           Row(
             children: [
-              const Icon(Icons.assignment_ind, color: AppColors.primaryBlue, size: 16),
+              Icon(
+                Icons.assignment_ind,
+                color: colors.primaryBlue, // ✅ динамический синий
+                size: 16,
+              ),
               const SizedBox(width: 8),
-              Text('Мастер: ${booking.masterName}', style: const TextStyle(fontSize: 14)),
+              Text(
+                'Мастер: ${booking.masterName}',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: colors.textPrimary, // ✅ динамический чёрный/белый
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 8),
@@ -87,9 +122,19 @@ class HistoryCardBody extends StatelessWidget {
           // Дата
           Row(
             children: [
-              const Icon(Icons.calendar_today, color: AppColors.primaryBlue, size: 14),
+              Icon(
+                Icons.calendar_today,
+                color: colors.primaryBlue, // ✅ динамический синий
+                size: 14,
+              ),
               const SizedBox(width: 8),
-              Text(dateStr, style: const TextStyle(fontSize: 14, color: AppColors.primaryBlack)),
+              Text(
+                dateStr,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: colors.textPrimary, // ✅ динамический чёрный/белый
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 8),
@@ -97,14 +142,29 @@ class HistoryCardBody extends StatelessWidget {
           // Время + Цена
           Row(
             children: [
-              const Icon(Icons.access_time, color: AppColors.primaryBlue, size: 14),
+              Icon(
+                Icons.access_time,
+                color: colors.primaryBlue, // ✅ динамический синий
+                size: 14,
+              ),
               const SizedBox(width: 8),
-              Text(_timeRange, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+              Text(
+                _timeRange,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: colors.textPrimary, // ✅ динамический чёрный/белый
+                ),
+              ),
               const Spacer(),
               if (booking.price > 0)
                 Text(
                   '${booking.price} Br',
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.primaryBlue),
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: colors.primaryBlue, // ✅ динамический синий
+                  ),
                 ),
             ],
           ),

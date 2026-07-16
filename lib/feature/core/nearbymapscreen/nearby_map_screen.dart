@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/uikit/colors/app_colors.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
+
+import '../../../config/theme/custom_colors.dart';
 import 'nearby_map_body.dart';
 
 class NearbyMapScreen extends StatelessWidget {
@@ -8,16 +9,19 @@ class NearbyMapScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Получаем кастомные цвета темы
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           AppStrings.howToFind,
           style: TextStyle(
-            color: AppColors.primaryBlack,
+            color: colors.textPrimary, // ✅ динамический чёрный/белый
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: AppColors.primaryWhite,
+        backgroundColor: colors.backgroundPrimary, // ✅ динамический фон
         elevation: 0,
         centerTitle: true,
       ),

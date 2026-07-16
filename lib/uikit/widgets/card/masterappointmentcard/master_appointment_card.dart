@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
+import '../../../../config/theme/custom_colors.dart'; // ✅ импорт динамических цветов
 import '../../../../feature/core/mastercalendarscreen/domain/appointment_model.dart';
 import '../../dialog/delete_booking_dialog.dart';
 import 'masterappointment/appointment_body.dart';
@@ -27,6 +27,9 @@ class _MasterAppointmentCardState extends State<MasterAppointmentCard> {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Получаем динамические цвета
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     final a = widget.appointment;
     final canExpand = a.hasDetails;
     final isCanceled = a.status?.toUpperCase() == 'CANCELED';
@@ -39,13 +42,15 @@ class _MasterAppointmentCardState extends State<MasterAppointmentCard> {
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         decoration: BoxDecoration(
-          color: AppColors.boxDecorationColor,
+          color: colors.surfaceCard,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color:
                 _isExpanded
-                    ? AppColors.primaryBlue
-                    : AppColors.primaryBlue.withAlpha(50),
+                    ? colors.primaryBlue
+                    : colors.primaryBlue.withOpacity(
+                      0.5,
+                    ),
             width: _isExpanded ? 1.5 : 1,
           ),
         ),
@@ -61,7 +66,7 @@ class _MasterAppointmentCardState extends State<MasterAppointmentCard> {
             MasterAppointmentBody(
               appointment: a,
               isExpanded: _isExpanded,
-              onEditComment: () {}, // пока ничего
+              onEditComment: () {},
             ),
             if (_isExpanded && canExpand)
               MasterAppointmentExpanded(appointment: a),

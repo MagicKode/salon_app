@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
-import '../../../uikit/colors/app_colors.dart';
+
+import '../../../config/theme/custom_colors.dart'; // ✅ импорт динамических цветов
 import '../../../uikit/widgets/card/masterappointmentcard/master_appointment_card.dart';
 import '../../auth/authblock/bloc/auth_block.dart';
 import '../../auth/authblock/bloc/auth_state.dart';
@@ -9,7 +10,7 @@ import 'bloc/master_calendar_bloc.dart';
 import 'bloc/master_calendar_event.dart';
 import 'bloc/master_calendar_state.dart';
 
-class MasterCalendarBody extends StatefulWidget  {
+class MasterCalendarBody extends StatefulWidget {
   const MasterCalendarBody({super.key});
 
   @override
@@ -17,11 +18,9 @@ class MasterCalendarBody extends StatefulWidget  {
 }
 
 class _MasterCalendarBodyState extends State<MasterCalendarBody> {
-
   @override
   void initState() {
     super.initState();
-    // ✅ Автообновление при возврате на экран
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _refreshData();
     });
@@ -38,19 +37,26 @@ class _MasterCalendarBodyState extends State<MasterCalendarBody> {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Получаем динамические цвета
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return BlocBuilder<MasterCalendarBloc, MasterCalendarState>(
       builder: (context, state) {
         if (state is MasterCalendarLoading) {
-          return const Center(child: CircularProgressIndicator(color: AppColors.primaryBlue));
+          return Center(
+            child: CircularProgressIndicator(
+              color: colors.primaryBlue, // ✅ динамический синий
+            ),
+          );
         }
 
         if (state is MasterCalendarFailure) {
-          return _buildError(context, state.errorMessage);
+          return _buildError(context, colors, state.errorMessage);
         }
 
         if (state is MasterCalendarSuccess) {
           if (state.dailySchedule.bookings.isEmpty) {
-            return _buildEmpty();
+            return _buildEmpty(context, colors);
           }
 
           return ListView.builder(
@@ -59,7 +65,12 @@ class _MasterCalendarBodyState extends State<MasterCalendarBody> {
             itemBuilder: (context, index) {
               return MasterAppointmentCard(
                 appointment: state.dailySchedule.bookings[index],
-                onDelete: () => _deleteAppointment(context, state.dailySchedule.bookings[index].id),
+                onDelete:
+                    () => _deleteAppointment(
+                      context,
+                      colors,
+                      state.dailySchedule.bookings[index].id,
+                    ),
               );
             },
           );
@@ -70,24 +81,42 @@ class _MasterCalendarBodyState extends State<MasterCalendarBody> {
     );
   }
 
-  Widget _buildError(BuildContext context, String message) {
+  Widget _buildError(
+    BuildContext context,
+    CustomColors colors,
+    String message,
+  ) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.error_outline, size: 48, color: AppColors.primaryRed),
+            Icon(
+              Icons.error_outline,
+              size: 48,
+              color: colors.statusError, // ✅ динамический красный
+            ),
             const SizedBox(height: 16),
-            Text(message, textAlign: TextAlign.center, style: const TextStyle(color: AppColors.primaryRed, fontSize: 16)),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: colors.statusError, fontSize: 16),
+            ),
             const SizedBox(height: 24),
             ElevatedButton.icon(
               onPressed: () {
                 final auth = context.read<AuthBloc>().state;
                 if (auth is AuthSuccess) {
-                  context.read<MasterCalendarBloc>().add(FetchTodayAppointments(auth.user.masterName));
+                  context.read<MasterCalendarBloc>().add(
+                    FetchTodayAppointments(auth.user.masterName),
+                  );
                 }
               },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: colors.primaryBlue,
+                foregroundColor: colors.textOnPrimary,
+              ),
               icon: const Icon(Icons.refresh),
               label: const Text("Повторить"),
             ),
@@ -97,25 +126,49 @@ class _MasterCalendarBodyState extends State<MasterCalendarBody> {
     );
   }
 
-  Widget _buildEmpty() {
+  Widget _buildEmpty(BuildContext context, CustomColors colors) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.coffee, size: 120, color: AppColors.primaryGrey.withValues(alpha: 0.5)),
+          Icon(
+            Icons.coffee,
+            size: 120,
+            color: colors.textSecondary.withOpacity(
+              0.5,
+            ), // ✅ полупрозрачный серый
+          ),
           const SizedBox(height: 16),
-          const Text(AppStrings.noClientsForToday, style: TextStyle(fontSize: 16, color: AppColors.dateGrey)),
+          Text(
+            AppStrings.noClientsForToday,
+            style: TextStyle(
+              fontSize: 16,
+              color: colors.textSecondary, // ✅ динамический серый
+            ),
+          ),
         ],
       ),
     );
   }
 
-  void _deleteAppointment(BuildContext context, String id) {
+  void _deleteAppointment(
+    BuildContext context,
+    CustomColors colors,
+    String id,
+  ) {
     final auth = context.read<AuthBloc>().state;
     if (auth is AuthSuccess) {
-      context.read<MasterCalendarBloc>().add(CancelAppointmentRequested(auth.user.masterName, appointmentId: id));
+      context.read<MasterCalendarBloc>().add(
+        CancelAppointmentRequested(auth.user.masterName, appointmentId: id),
+      );
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Запись отменена"), backgroundColor: AppColors.primaryRed),
+        SnackBar(
+          content: Text(
+            "Запись отменена",
+            style: TextStyle(color: colors.textOnPrimary),
+          ),
+          backgroundColor: colors.statusError, // ✅ динамический красный
+        ),
       );
     }
   }

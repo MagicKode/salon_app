@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../colors/app_colors.dart';
+import '../../../config/theme/custom_colors.dart'; // ✅ импорт динамических цветов
 
 class DateCard extends StatelessWidget {
   final DateTime date;
@@ -18,39 +18,46 @@ class DateCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Получаем динамические цвета
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
+    // Определяем цвета в зависимости от состояния
+    final Color backgroundColor;
+    final Color textColor;
+    final Color borderColor;
+
+    if (isSelected) {
+      backgroundColor = colors.primaryBlue;
+      textColor = colors.textOnPrimary;
+      borderColor = colors.primaryBlue;
+    } else if (isWeekend) {
+      backgroundColor = colors.statusError.withOpacity(0.1);
+      textColor = colors.statusError;
+      borderColor = colors.statusError.withOpacity(0.3);
+    } else {
+      backgroundColor = colors.surfaceCard;
+      textColor = colors.textPrimary;
+      borderColor = colors.primaryBlue.withOpacity(0.3);
+    }
+
+    final dayName =
+        ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'][date.weekday - 1];
+
     return Container(
       width: 60,
       decoration: BoxDecoration(
-        color:
-            isSelected
-                ? AppColors.primaryBlue
-                : isWeekend
-                ? AppColors.primaryRed.withValues(alpha: 0.1)
-                : AppColors.boxDecorationColor,
+        color: backgroundColor,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color:
-              isSelected
-                  ? AppColors.primaryBlue
-                  : isWeekend
-                  ? AppColors.primaryRed.withValues(alpha: 0.3)
-                  : AppColors.primaryBlue.withValues(alpha: 0.3),
-        ),
+        border: Border.all(color: borderColor),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            // День недели
-            ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'][date.weekday - 1],
+            dayName,
             style: TextStyle(
               fontSize: 14,
-              color:
-                  isSelected
-                      ? Colors.white
-                      : isWeekend
-                      ? AppColors.primaryRed
-                      : AppColors.primaryGrey,
+              color: isSelected ? colors.textOnPrimary : textColor,
             ),
           ),
           const SizedBox(height: 4),
@@ -59,12 +66,7 @@ class DateCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color:
-                  isSelected
-                      ? Colors.white
-                      : isWeekend
-                      ? AppColors.primaryRed
-                      : AppColors.primaryBlack,
+              color: isSelected ? colors.textOnPrimary : textColor,
             ),
           ),
         ],

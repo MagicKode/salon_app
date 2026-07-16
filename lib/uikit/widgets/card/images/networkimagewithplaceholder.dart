@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import '../../../colors/app_colors.dart';
+
+import '../../../../config/theme/custom_colors.dart';
 
 class NetworkImageWithPlaceholder extends StatelessWidget {
   final String url;
@@ -20,8 +21,12 @@ class NetworkImageWithPlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Получаем динамические цвета внутри билдера
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     final effectiveWidth = (width != null && width!.isFinite) ? width : null;
-    final effectiveHeight = (height != null && height!.isFinite) ? height : null;
+    final effectiveHeight =
+        (height != null && height!.isFinite) ? height : null;
 
     return CachedNetworkImage(
       imageUrl: url,
@@ -30,22 +35,24 @@ class NetworkImageWithPlaceholder extends StatelessWidget {
       fit: fit ?? BoxFit.cover,
       memCacheWidth: effectiveWidth?.toInt() ?? 400,
       memCacheHeight: effectiveHeight?.toInt() ?? 300,
-      placeholder: (context, url) => const _LoadingPlaceholder(),
-      errorWidget: (context, url, error) => const _DefaultErrorWidget(),
+      placeholder: (context, url) => _LoadingPlaceholder(colors: colors),
+      errorWidget: (context, url, error) => _DefaultErrorWidget(colors: colors),
     );
   }
 }
 
 class _LoadingPlaceholder extends StatelessWidget {
-  const _LoadingPlaceholder();
+  final CustomColors colors;
+
+  const _LoadingPlaceholder({required this.colors});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.grey.shade200,
-      child: const Center(
+      color: colors.surfaceInput, // ✅ динамический фон
+      child: Center(
         child: CircularProgressIndicator(
-          color: AppColors.primaryBlue,
+          color: colors.primaryBlue, // ✅ динамический синий
           strokeWidth: 2,
         ),
       ),
@@ -54,14 +61,20 @@ class _LoadingPlaceholder extends StatelessWidget {
 }
 
 class _DefaultErrorWidget extends StatelessWidget {
-  const _DefaultErrorWidget();
+  final CustomColors colors;
+
+  const _DefaultErrorWidget({required this.colors});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.grey[200],
-      child: const Center(
-        child: Icon(Icons.broken_image, color: AppColors.primaryGrey, size: 48),
+      color: colors.surfaceInput, // ✅ динамический фон
+      child: Center(
+        child: Icon(
+          Icons.broken_image,
+          color: colors.textSecondary, // ✅ динамический серый
+          size: 48,
+        ),
       ),
     );
   }

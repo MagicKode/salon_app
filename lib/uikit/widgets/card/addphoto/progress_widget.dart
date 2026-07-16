@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/uikit/colors/app_colors.dart';
+
+import '../../../../config/theme/custom_colors.dart';
 
 class ProgressWidget extends StatelessWidget {
   final int uploadedCount;
@@ -15,14 +16,16 @@ class ProgressWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         children: [
           LinearProgressIndicator(
             value: progress,
-            backgroundColor: Colors.grey.shade200,
-            color: AppColors.primaryBlue,
+            backgroundColor: colors.surfaceInput,
+            color: colors.statusSuccess,
             minHeight: 6,
             borderRadius: BorderRadius.circular(3),
           ),
@@ -32,14 +35,14 @@ class ProgressWidget extends StatelessWidget {
             children: [
               Text(
                 'Загрузка $uploadedCount из $totalCount',
-                style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                style: TextStyle(fontSize: 13, color: colors.textSecondary),
               ),
               Text(
                 '${(progress * 100).toInt()}%',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.primaryBlue,
+                  color: colors.statusSuccess,
                 ),
               ),
             ],

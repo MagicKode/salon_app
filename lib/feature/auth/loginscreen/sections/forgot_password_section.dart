@@ -1,36 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/uikit/strings/app_strings.dart';
-import '../../../../uikit/colors/app_colors.dart';
+import '../../../../config/theme/custom_colors.dart';
 
 class ForgotPasswordSection extends StatelessWidget {
   final VoidCallback onPressed;
 
-  const ForgotPasswordSection({
-    super.key,
-    required this.onPressed,
-  });
+  const ForgotPasswordSection({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: TextButton(
-          onPressed: onPressed, // Используем переданную функцию
-          style: TextButton.styleFrom(
-            padding: EdgeInsets.zero,
-            minimumSize: const Size(0, 0),
-            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          ),
-          child: const Text(
-            AppStrings.forgotPassword,
-            style: TextStyle(
-              color: AppColors.primaryBlue,
-              fontWeight: FontWeight.w600,
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          GestureDetector(
+            onTap: onPressed,
+            child: Text(
+              'Забыли пароль?',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: colors.primaryBlueLight,
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

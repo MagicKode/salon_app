@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
-import '../../../../uikit/colors/app_colors.dart';
+import '../../../../config/theme/custom_colors.dart';
 import '../../../../uikit/utils/masterCalendarDateFormater/calendar_date_formater.dart';
 
 class CalendarHeaderSection extends StatelessWidget
@@ -13,18 +13,20 @@ class CalendarHeaderSection extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     // Инициализируем локализацию (обычно это делают один раз в main.dart,
     initializeDateFormatting('ru', null);
 
     return AppBar(
-      backgroundColor: AppColors.primaryWhite,
+      backgroundColor: colors.backgroundPrimary,
       elevation: 0,
       centerTitle: true,
-      title: const Text(
+      title: Text(
         AppStrings.titleMasterCalendar,
         style: TextStyle(
           fontWeight: FontWeight.bold,
-          color: AppColors.primaryBlack,
+          color: colors.textPrimary,
         ),
       ),
       bottom: PreferredSize(
@@ -36,30 +38,24 @@ class CalendarHeaderSection extends StatelessWidget
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.calendar_today,
                     size: 16,
-                    color: AppColors.primaryBlue,
+                    color: colors.primaryBlue, // ✅ динамический синий
                   ),
-
                   const SizedBox(width: 8),
-
                   Text(
                     CalendarDateFormater.formatFullDate(selectedDate),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
-                      color: AppColors.primaryBlue,
+                      color: colors.primaryBlue, // ✅ динамический синий
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
               ),
             ),
-            const Divider(
-              color: AppColors.lightBorder,
-              thickness: 1,
-              height: 1,
-            ),
+            Divider(color: colors.borderLight, thickness: 1, height: 1),
           ],
         ),
       ),

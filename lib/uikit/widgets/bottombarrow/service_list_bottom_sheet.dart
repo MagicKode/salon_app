@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../config/theme/custom_colors.dart'; // ✅ импорт динамических цветов
 import '../../../feature/catalog/data/models/category_dto.dart';
 import '../../../feature/catalog/data/models/service_dto.dart';
 import '../../../feature/catalog/domain/repositories/catalog_repository.dart';
 import '../../../feature/core/catalogscreen/domain/catalog_service.dart';
-import '../../colors/app_colors.dart';
 
 class ServiceListBottomSheet extends StatelessWidget {
   final CategoryDto category;
@@ -25,22 +26,26 @@ class ServiceListBottomSheet extends StatelessWidget {
     return FutureBuilder<List<ServiceDto>>(
       future: repo.getServicesByCategory(category.id),
       builder: (context, snapshot) {
-        // Пока данные грузятся – показываем компактный индикатор
+        // ✅ Получаем динамические цвета внутри билдера
+        final colors = Theme.of(context).extension<CustomColors>()!;
+
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Padding(
-            padding: EdgeInsets.symmetric(vertical: 32),
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 32),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                SizedBox(
+                const SizedBox(
                   width: 24,
                   height: 24,
                   child: CircularProgressIndicator(strokeWidth: 2),
                 ),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 Text(
                   'Загрузка услуг...',
-                  style: TextStyle(color: AppColors.primaryGrey),
+                  style: TextStyle(
+                    color: colors.textSecondary, // ✅ динамический серый
+                  ),
                 ),
               ],
             ),
@@ -48,9 +53,12 @@ class ServiceListBottomSheet extends StatelessWidget {
         }
 
         if (snapshot.hasError || !snapshot.hasData) {
-          return const Padding(
-            padding: EdgeInsets.all(32),
-            child: Text('Ошибка загрузки услуг'),
+          return Padding(
+            padding: const EdgeInsets.all(32),
+            child: Text(
+              'Ошибка загрузки услуг',
+              style: TextStyle(color: colors.statusError), // ✅ динамический красный
+            ),
           );
         }
 
@@ -68,7 +76,7 @@ class ServiceListBottomSheet extends StatelessWidget {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(0.3),
+                    color: colors.divider, // ✅ динамическая граница
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -76,20 +84,24 @@ class ServiceListBottomSheet extends StatelessWidget {
               // Заголовок категории
               Text(
                 category.name,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
+                  color: colors.textPrimary, // ✅ динамический цвет текста
                 ),
               ),
               const SizedBox(height: 16),
 
-              // Список услуг (динамическая высота)
+              // Список услуг
               Flexible(
                 child: ListView.separated(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: services.length,
-                  separatorBuilder: (_, __) => const Divider(height: 1),
+                  separatorBuilder: (_, __) => Divider(
+                    height: 1,
+                    color: colors.divider,
+                  ),
                   itemBuilder: (context, index) {
                     final s = services[index];
                     final catalogService = CatalogService(
@@ -113,17 +125,18 @@ class ServiceListBottomSheet extends StatelessWidget {
                               children: [
                                 Text(
                                   s.name,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.w500,
+                                    color: colors.textPrimary,
                                   ),
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
                                   '${s.durationMinutes} мин',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 12,
-                                    color: AppColors.primaryGrey,
+                                    color: colors.textSecondary,
                                   ),
                                 ),
                               ],
@@ -135,26 +148,24 @@ class ServiceListBottomSheet extends StatelessWidget {
                             children: [
                               Text(
                                 '${s.price} Br',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold,
+                                  color: colors.textPrimary,
                                 ),
                               ),
                               const SizedBox(height: 6),
                               SizedBox(
                                 height: 32,
                                 child: ElevatedButton(
-                                  onPressed:
-                                      () => onServiceSelected(catalogService),
+                                  onPressed: () => onServiceSelected(catalogService),
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        isSelected
-                                            ? Colors.grey.shade200
-                                            : AppColors.primaryBlue,
-                                    foregroundColor:
-                                        isSelected
-                                            ? AppColors.primaryBlack
-                                            : AppColors.primaryWhite,
+                                    backgroundColor: isSelected
+                                        ? colors.surfaceInput
+                                        : colors.primaryBlue,
+                                    foregroundColor: isSelected
+                                        ? colors.textPrimary
+                                        : colors.textOnPrimary,
                                     elevation: 0,
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 12,

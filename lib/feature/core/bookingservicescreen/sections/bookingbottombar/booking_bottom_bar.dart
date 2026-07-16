@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
+import '../../../../../config/theme/custom_colors.dart';
 import '../../../../../uikit/strings/app_strings.dart';
 import '../../../../../uikit/widgets/button/app_button.dart';
 
@@ -16,10 +17,12 @@ class BookingBottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Container(
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 10),
       decoration: BoxDecoration(
-        color: AppColors.primaryWhite,
+        color: colors.backgroundPrimary,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
@@ -36,12 +39,12 @@ class BookingBottomBar extends StatelessWidget {
             children: [
               Text(
                 AppStrings.totalPrice,
-                style: const TextStyle(color: AppColors.primaryGrey, fontSize: 14),
+                style: TextStyle(color: colors.textSecondary, fontSize: 14),
               ),
               Text(
                 '${totalPrice.toStringAsFixed(0)} ${AppStrings.currency}',
-                style: const TextStyle(
-                  color: AppColors.primaryBlue,
+                style: TextStyle(
+                  color: colors.primaryBlueLight,
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                 ),

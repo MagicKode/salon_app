@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../colors/app_colors.dart';
+
+import '../../../config/theme/custom_colors.dart'; // ✅ импорт динамических цветов
 
 class AppButton extends StatelessWidget {
   final String text;
@@ -19,6 +20,9 @@ class AppButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Получаем динамические цвета
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: SizedBox(
@@ -27,39 +31,38 @@ class AppButton extends StatelessWidget {
         child: ElevatedButton(
           onPressed: isLoading ? null : onPressed,
           style: ElevatedButton.styleFrom(
-            backgroundColor: backgroundColor ?? AppColors.primaryBlue,
-            foregroundColor: AppColors.primaryWhite,
+            backgroundColor: backgroundColor ?? colors.primaryBlue, // ✅ динамический фон
+            foregroundColor: colors.textOnPrimary, // ✅ динамический цвет текста и иконки
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(50.0),
             ),
             elevation: 0,
           ),
-          child:
-              isLoading
-                  ? const SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator(
-                      color: AppColors.primaryWhite,
-                      strokeWidth: 2,
-                    ),
-                  )
-                  : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        text,
-                        style: const TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ), // Закрыли Text
-                      if (icon != null) ...[
-                        const SizedBox(width: 8),
-                        Icon(icon, size: 18),
-                      ],
-                    ],
-                  ),
+          child: isLoading
+              ? SizedBox(
+            width: 24,
+            height: 24,
+            child: CircularProgressIndicator(
+              color: colors.textOnPrimary, // ✅ динамический цвет лоадера
+              strokeWidth: 2,
+            ),
+          )
+              : Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                text,
+                style: const TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              if (icon != null) ...[
+                const SizedBox(width: 8),
+                Icon(icon, size: 18),
+              ],
+            ],
+          ),
         ),
       ),
     );

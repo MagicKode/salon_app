@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:salon_flutter/feature/checkout/domain/booking_entity.dart';
 import 'package:salon_flutter/feature/core/bookingservicescreen/domain/add_service_data.dart';
 
+import '../../../../../config/theme/custom_colors.dart';
 import '../../../../../uikit/colors/app_colors.dart';
 import '../../../../../uikit/strings/app_strings.dart';
 import '../../../../../uikit/widgets/order/order_service_item.dart';
@@ -11,7 +12,6 @@ class OrderSummarySection extends StatelessWidget {
   final VoidCallback onAddMoreServices;
   final Function(AddServiceData) onRemoveService;
   final String notes;
-
 
   const OrderSummarySection({
     super.key,
@@ -23,6 +23,8 @@ class OrderSummarySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     final totalPriceValue = selectedServices.totalPrice;
     final totalDurationValue = selectedServices.totalDuration;
 
@@ -37,20 +39,19 @@ class OrderSummarySection extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: AppColors.primaryBackgroundColor,
+            color: colors.surfaceCard,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.lightBorder),
+            border: Border.all(color: colors.borderLight),
           ),
           child: Column(
             children: [
-
               // --- СПИСОК УСЛУГ ---
               if (selectedServices.isEmpty)
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 5),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
                   child: Text(
                     AppStrings.serviceListIsEmpty,
-                    style: TextStyle(color: AppColors.primaryGrey),
+                    style: TextStyle(color: colors.textHint),
                   ),
                 )
               else
@@ -75,23 +76,22 @@ class OrderSummarySection extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-
                       Text(
                         '${totalPriceValue.toStringAsFixed(0)} ${AppStrings.currency}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.primaryBlack,
+                          color: colors.textPrimary,
                         ),
                       ),
 
                       if (selectedServices.isNotEmpty)
                         Row(
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.access_time,
                               size: 14,
-                              color: AppColors.primaryBlack,
+                              color: colors.textSecondary,
                             ),
                             const SizedBox(width: 4),
                             Text(
@@ -117,20 +117,26 @@ class OrderSummarySection extends StatelessWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: AppColors.boxDecorationColor,
+                    color: colors.surfaceCard,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         AppStrings.notesHeader,
-                        style: TextStyle(fontSize: 12, color: AppColors.primaryGrey),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: colors.textSecondary,
+                        ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         notes,
-                        style: const TextStyle(fontSize: 14, color: AppColors.primaryBlack),
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: colors.textPrimary,
+                        ),
                       ),
                     ],
                   ),
@@ -142,15 +148,11 @@ class OrderSummarySection extends StatelessWidget {
 
               TextButton.icon(
                 onPressed: onAddMoreServices,
-                icon: const Icon(
-                  Icons.add,
-                  size: 18,
-                  color: AppColors.primaryBlue,
-                ),
-                label: const Text(
+                icon: Icon(Icons.add, size: 18, color: colors.primaryBlue),
+                label: Text(
                   AppStrings.addMoreServices,
                   style: TextStyle(
-                    color: AppColors.primaryBlue,
+                    color: colors.primaryBlue,
                     fontWeight: FontWeight.w600,
                   ),
                 ),

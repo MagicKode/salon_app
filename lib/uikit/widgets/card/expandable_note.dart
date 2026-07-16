@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../colors/app_colors.dart';
+import '../../../config/theme/custom_colors.dart';
 import '../../strings/app_strings.dart';
 
 class ExpandableNote extends StatefulWidget {
@@ -22,14 +22,16 @@ class _ExpandableNoteState extends State<ExpandableNote> {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Получаем динамические цвета
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return GestureDetector(
       onTap: () => setState(() => _isExpanded = !_isExpanded),
       child: Container(
-        // duration: const Duration(milliseconds: 300),
         padding: const EdgeInsets.all(12),
         width: double.infinity,
         decoration: BoxDecoration(
-          color: AppColors.primaryBackgroundColor,
+          color: colors.surfaceCard, // ✅ динамический фон
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
@@ -37,14 +39,18 @@ class _ExpandableNoteState extends State<ExpandableNote> {
           children: [
             Row(
               children: [
-                const Icon(Icons.edit_note, size: 18, color: AppColors.primaryGrey),
+                Icon(
+                  Icons.edit_note,
+                  size: 18,
+                  color: colors.textSecondary, // ✅ динамический серый
+                ),
                 const SizedBox(width: 8),
                 Text(
                   AppStrings.notesHeader,
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.primaryGrey,
+                    color: colors.textSecondary, // ✅ динамический серый
                   ),
                 ),
               ],
@@ -54,7 +60,10 @@ class _ExpandableNoteState extends State<ExpandableNote> {
               widget.note,
               maxLines: _isExpanded ? null : 1,
               overflow: _isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
-              style: const TextStyle(fontSize: 13, color: AppColors.primaryBlack),
+              style: TextStyle(
+                fontSize: 13,
+                color: colors.textPrimary, // ✅ динамический чёрный/белый
+              ),
             ),
           ],
         ),

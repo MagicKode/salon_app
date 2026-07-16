@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../../../../uikit/colors/app_colors.dart';
+import '../../../../../config/theme/custom_colors.dart'; // ✅ импорт динамических цветов
 import '../../domain/service_detail_data.dart';
 
 class ServiceImageHeaderSection extends StatelessWidget {
@@ -10,6 +9,9 @@ class ServiceImageHeaderSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Получаем динамические цвета
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return SizedBox(
       height: 280,
       width: double.infinity,
@@ -25,14 +27,18 @@ class ServiceImageHeaderSection extends StatelessWidget {
                 service.imageUrl,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) => Container(
-                  color: Colors.grey.shade200,
-                  child: const Icon(Icons.image_not_supported_rounded, color: AppColors.primaryGrey, size: 48),
+                  color: colors.surfaceInput, // ✅ динамический фон заглушки
+                  child: Icon(
+                    Icons.image_not_supported_rounded,
+                    color: colors.textSecondary, // ✅ динамический серый
+                    size: 48,
+                  ),
                 ),
               ),
             ),
           ),
 
-          // 2. Градиент поверх картинки
+          // 2. Градиент поверх картинки (остаётся тёмным, не зависит от темы)
           Positioned.fill(
             child: DecoratedBox(
               decoration: BoxDecoration(
@@ -43,9 +49,9 @@ class ServiceImageHeaderSection extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    AppColors.primaryBlack.withValues(alpha: 0.3),
+                    Colors.black.withOpacity(0.3),
                     Colors.transparent,
-                    AppColors.primaryBlack.withValues(alpha: 0.8),
+                    Colors.black.withOpacity(0.8),
                   ],
                   stops: const [0.0, 0.5, 1.0],
                 ),
@@ -53,7 +59,7 @@ class ServiceImageHeaderSection extends StatelessWidget {
             ),
           ),
 
-          // 3. Текст заголовка
+          // 3. Текст заголовка (всегда белый на тёмном фоне)
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
@@ -61,7 +67,7 @@ class ServiceImageHeaderSection extends StatelessWidget {
               child: Text(
                 service.title,
                 style: const TextStyle(
-                  color: AppColors.primaryWhite,
+                  color: Colors.white,
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                 ),
@@ -69,21 +75,21 @@ class ServiceImageHeaderSection extends StatelessWidget {
             ),
           ),
 
-          // Кнопка "закрыть"
+          // Кнопка "закрыть" (всегда белая)
           Positioned(
             top: 12,
             left: 12,
             child: IconButton(
               icon: const Icon(
                 Icons.expand_more,
-                color: AppColors.primaryWhite,
+                color: Colors.white,
                 size: 32,
               ),
               onPressed: () => Navigator.pop(context),
             ),
           ),
 
-          // 5. Тот самый серый индикатор (handle) по центру
+          // 5. Серый индикатор (handle) по центру (полупрозрачный белый)
           Align(
             alignment: Alignment.topCenter,
             child: Container(
@@ -91,7 +97,7 @@ class ServiceImageHeaderSection extends StatelessWidget {
               width: 36,
               height: 4,
               decoration: BoxDecoration(
-                color: AppColors.primaryWhite.withValues(alpha: 0.5),
+                color: Colors.white.withOpacity(0.5),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),

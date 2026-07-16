@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../colors/app_colors.dart';
+import '../../../../config/theme/custom_colors.dart'; // ✅ импорт динамических цветов
 
 class InfoCardTextContent extends StatelessWidget {
   final String address;
@@ -9,6 +9,9 @@ class InfoCardTextContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Получаем динамические цвета
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -18,21 +21,21 @@ class InfoCardTextContent extends StatelessWidget {
           address,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-            color: AppColors.primaryWhite,
+          style: TextStyle(
+            color: colors.textOnPrimary, // ✅ всегда контрастный белый/светлый
             fontSize: 18,
             fontWeight: FontWeight.w700,
             letterSpacing: -0.5,
           ),
         ),
         const SizedBox(height: 4),
-        // Подсказка или расстояние
+        // Подсказка
         Text(
           'Мы находимся здесь',
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
-            color: AppColors.primaryWhite,
+            color: colors.textOnPrimary, // ✅ всегда контрастный
             fontSize: 14,
             fontWeight: FontWeight.w400,
           ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
-import '../../../../../uikit/colors/app_colors.dart';
-// Путь к твоим ассетам
+
+import '../../../../../config/theme/custom_colors.dart'; // ✅ импорт динамических цветов
 import '../../domain/entities/user_entity.dart';
 
 class UserInfoSection extends StatelessWidget {
@@ -11,68 +11,68 @@ class UserInfoSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Получаем динамические цвета
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // ФОТО ПО ЦЕНТРУ
           CircleAvatar(
             radius: 70,
-            backgroundColor: AppColors.primaryGrey.withValues(alpha: 0.2),
-            // ЛОГИКА: Если есть avatarUrl (у мастера), берем его.
-            // Если нет (у клиента), показываем иконку.
+            backgroundColor: colors.textSecondary.withOpacity(0.2), // ✅ динамический серый с прозрачностью
             backgroundImage:
-                (user.avatarUrl != null && user.avatarUrl!.isNotEmpty)
-                    ? AssetImage(user.avatarUrl!) as ImageProvider
-                    : null,
+            (user.avatarUrl != null && user.avatarUrl!.isNotEmpty)
+                ? AssetImage(user.avatarUrl!) as ImageProvider
+                : null,
             child:
-                (user.avatarUrl == null || user.avatarUrl!.isEmpty)
-                    ? const Icon(
-                      Icons.person_outline,
-                      size: 70,
-                      color: AppColors.primaryGrey,
-                    )
-                    : null,
+            (user.avatarUrl == null || user.avatarUrl!.isEmpty)
+                ? Icon(
+              Icons.person_outline,
+              size: 70,
+              color: colors.textSecondary, // ✅ динамический серый
+            )
+                : null,
           ),
 
           const SizedBox(height: 16),
 
-          // ИМЯ (ФАМИЛИЯ)
           Text(
             user.fullName,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: AppColors.primaryBlack,
+              color: colors.textPrimary, // ✅ динамический чёрный/белый
             ),
           ),
           const SizedBox(height: 8),
 
-          // ТЕЛЕФОН
           Text(
             user.phone,
-            style: const TextStyle(fontSize: 14, color: AppColors.primaryGrey),
+            style: TextStyle(
+              fontSize: 14,
+              color: colors.textSecondary, // ✅ динамический серый
+            ),
           ),
           const SizedBox(height: 4),
 
-          // EMAIL
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
+              Text(
                 AppStrings.profileEmail,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: AppColors.primaryGrey,
+                  color: colors.textSecondary, // ✅ динамический серый
                 ),
               ),
               Text(
                 user.email,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
-                  color: AppColors.primaryGrey,
+                  color: colors.textSecondary, // ✅ динамический серый
                 ),
               ),
             ],

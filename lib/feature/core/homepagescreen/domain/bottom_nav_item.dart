@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../uikit/colors/app_colors.dart';
+import '../../../../config/theme/custom_colors.dart';
 
 class BottomNavItem extends StatelessWidget {
   final int index;
@@ -24,6 +24,7 @@ class BottomNavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
     final isSelected = currentIndex == index;
 
     return GestureDetector(
@@ -38,10 +39,7 @@ class BottomNavItem extends StatelessWidget {
               children: [
                 Icon(
                   isSelected ? activeIcon : icon,
-                  color:
-                      isSelected
-                          ? AppColors.primaryBlue
-                          : AppColors.primaryGrey,
+                  color: isSelected ? colors.primaryBlue : colors.textSecondary,
                   size: 24,
                 ),
                 // ✅ Бейдж с количеством непрочитанных
@@ -51,8 +49,8 @@ class BottomNavItem extends StatelessWidget {
                     top: -4,
                     child: Container(
                       padding: const EdgeInsets.all(4),
-                      decoration: const BoxDecoration(
-                        color: AppColors.primaryRed,
+                      decoration: BoxDecoration(
+                        color: colors.statusError,
                         shape: BoxShape.circle,
                       ),
                       constraints: const BoxConstraints(
@@ -61,8 +59,8 @@ class BottomNavItem extends StatelessWidget {
                       ),
                       child: Text(
                         '$unreadCount',
-                        style: const TextStyle(
-                          color: AppColors.primaryWhite,
+                        style: TextStyle(
+                          color: colors.textOnPrimary,
                           fontSize: 10,
                         ),
                         textAlign: TextAlign.center,
@@ -76,8 +74,7 @@ class BottomNavItem extends StatelessWidget {
               label,
               style: TextStyle(
                 fontSize: 10,
-                color:
-                    isSelected ? AppColors.primaryBlue : AppColors.primaryGrey,
+                color: isSelected ? colors.primaryBlue : colors.textSecondary,
               ),
             ),
           ],

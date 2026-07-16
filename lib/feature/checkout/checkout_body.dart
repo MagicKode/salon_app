@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
-
-import '../../uikit/colors/app_colors.dart';
+import '../../config/theme/custom_colors.dart'; // ✅ импорт динамических цветов
 import '../../uikit/widgets/button/app_button.dart';
 import '../auth/authblock/bloc/auth_block.dart';
 import '../auth/authblock/bloc/auth_state.dart';
@@ -19,6 +18,9 @@ class CheckoutBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Получаем кастомные цвета темы
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
       child: Column(
@@ -27,14 +29,21 @@ class CheckoutBody extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 AppStrings.yourService,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: colors.textPrimary,
+                ),
               ),
               TextButton.icon(
                 onPressed: () => Navigator.pop(context),
-                icon: const Icon(Icons.edit_outlined, size: 18),
-                label: const Text(AppStrings.change),
+                icon: Icon(Icons.edit_outlined, size: 18, color: colors.primaryBlue),
+                label: Text(
+                  AppStrings.change,
+                  style: TextStyle(color: colors.primaryBlue),
+                ),
               ),
             ],
           ),
@@ -59,7 +68,10 @@ class CheckoutBody extends StatelessWidget {
             onPressed: () => Navigator.pop(context),
             child: Text(
               AppStrings.cancelAndLeave,
-              style: TextStyle(color: AppColors.primaryRed, fontSize: 16),
+              style: TextStyle(
+                color: colors.statusError,
+                fontSize: 16,
+              ),
             ),
           ),
         ],
@@ -67,15 +79,14 @@ class CheckoutBody extends StatelessWidget {
     );
   }
 
-  /// Чистая и лаконичная обработка нажатия кнопки подтверждения
   Future<void> _onConfirm(BuildContext context) async {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     print("=== [DEBUG] Нажата кнопка подтверждения бронирования ===");
 
-    // 1. Показываем лоадер загрузки
-    _showLoadingDialog(context);
+    _showLoadingDialog(context, colors);
     final bookingRepository = RepositoryProvider.of<BookingRepository>(context);
 
-    // 2. Получаем JWT токен из стейта авторизации
     final authState = context.read<AuthBloc>().state;
     String? jwtToken;
 
@@ -87,50 +98,57 @@ class CheckoutBody extends StatelessWidget {
     }
 
     if (jwtToken == null) {
-      if (context.mounted) Navigator.pop(context); // FIX: Закрываем лоадер, чтобы экран не завис
+      if (context.mounted) Navigator.pop(context);
       _showErrorSnackBar(context, "Ошибка авторизации. Пожалуйста, войдите снова.");
       return;
     }
 
     try {
       print("=== [DEBUG] Отправляем запрос на сервер... ===");
-      // 3. Вызываем изолированный метод отправки из репозитория
       final bool isSuccess = await bookingRepository.sendBooking(booking);
       print("=== [DEBUG] Ответ от сервера успешный! Результат: $isSuccess ===");
 
-      if (context.mounted) Navigator.pop(context); // Скрываем лоадер
+      if (context.mounted) Navigator.pop(context);
 
       if (isSuccess && context.mounted) {
-        Navigator.pop(context); // Успех — убираем шторку чекаута и открываем экран успеха
+        Navigator.pop(context);
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => BookingSuccessScreen(
-            bookingId: '${booking.id}',
-          )),
+          MaterialPageRoute(
+            builder: (_) => BookingSuccessScreen(
+              bookingId: '${booking.id}',
+            ),
+          ),
         );
       }
     } catch (error) {
       print("=== [DEBUG] Поймали ошибку при отправке: $error ===");
-      if (context.mounted) Navigator.pop(context); // Скрываем лоадер при ошибке
+      if (context.mounted) Navigator.pop(context);
       _showErrorSnackBar(context, error.toString().replaceAll("Exception: ", ""));
     }
   }
 
-  void _showLoadingDialog(BuildContext context) {
+  void _showLoadingDialog(BuildContext context, CustomColors colors) {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const Center(
-        child: CircularProgressIndicator(color: AppColors.primaryBlue),
+      builder: (context) => Center(
+        child: CircularProgressIndicator(
+          color: colors.primaryBlue,
+        ),
       ),
     );
   }
 
   void _showErrorSnackBar(BuildContext context, String message) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message),
-        backgroundColor: AppColors.primaryRed,
+        content: Text(
+          message,
+          style: TextStyle(color: colors.textOnPrimary),
+        ),
+        backgroundColor: colors.statusError,
       ),
     );
   }

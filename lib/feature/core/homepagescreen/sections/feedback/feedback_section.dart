@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/feedback/reviewmodel/review_model.dart';
 import 'package:salon_flutter/feature/core/homepagescreen/sections/feedback/reviewmodel/review_stats_model.dart';
 
+import '../../../../../config/theme/custom_colors.dart';
 import '../../../../../uikit/colors/app_colors.dart';
 import '../../../../../uikit/strings/app_strings.dart';
 import '../../../../../uikit/widgets/card/feedback/feedback_card.dart';
@@ -26,6 +27,8 @@ class FeedbackSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -52,13 +55,12 @@ class FeedbackSection extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () => _showLeaveFeedbackSheet(context),
-                  child: const Text(
+                  child: Text(
                     AppStrings.leaveFeedback,
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.primaryBlue,
-                      decoration: TextDecoration.underline,
+                      color: colors.primaryBlueLight,
                     ),
                   ),
                 ),

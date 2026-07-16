@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../uikit/colors/app_colors.dart';
+import '../../../../../config/theme/custom_colors.dart';
 import '../../../../../uikit/widgets/card/images/networkimagewithplaceholder.dart';
 
 class ServiceItem extends StatelessWidget {
-  final String imageUrl;   // ✅ заменили category на прямую ссылку
+  final String imageUrl; // ✅ заменили category на прямую ссылку
   final String title;
   final String subtitle;
 
-  const ServiceItem({super.key, required this.imageUrl,
+  const ServiceItem({
+    super.key,
+    required this.imageUrl,
     required this.title,
-    required this.subtitle,});
+    required this.subtitle,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: Stack(
@@ -24,8 +29,8 @@ class ServiceItem extends StatelessWidget {
             url: imageUrl,
             fit: BoxFit.cover,
             errorWidget: Container(
-              color: Colors.grey[300],
-              child: const Icon(Icons.broken_image, color: AppColors.primaryGrey),
+              color: colors.surfaceInput,
+              child: Icon(Icons.broken_image, color: colors.textSecondary),
             ),
           ),
 
@@ -51,13 +56,12 @@ class ServiceItem extends StatelessWidget {
               alignment: Alignment.bottomLeft,
               child: Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
-                  color: AppColors.primaryWhite,
+                  color: Colors.white,
                   letterSpacing: 0.3,
-                  // Очень мягкая тень для отделения от фона
-                  shadows: [
+                  shadows: const [
                     Shadow(
                       color: Colors.black26,
                       offset: Offset(0, 1),

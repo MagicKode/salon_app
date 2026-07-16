@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
+import '../../../../config/theme/custom_colors.dart'; // ✅ импорт динамических цветов
 import '../../../../feature/core/homepagescreen/sections/feedback/reviewmodel/review_stats_model.dart';
 
 class RatingSummaryCard extends StatelessWidget {
@@ -10,16 +10,17 @@ class RatingSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Получаем динамические цвета
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 2.0),
-      // Меньше внешний отступ
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: AppColors.primaryBlue.withValues(alpha: 0.1),
+          color: colors.primaryBlue.withOpacity(0.1), // ✅ динамический синий с прозрачностью
           borderRadius: BorderRadius.circular(12),
         ),
-
         child: Row(
           children: [
             // Левая часть
@@ -29,10 +30,11 @@ class RatingSummaryCard extends StatelessWidget {
                 children: [
                   Text(
                     stats.averageRating.toStringAsFixed(1),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                       height: 1.0,
+                      color: colors.textPrimary, // ✅ динамический чёрный/белый
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -40,11 +42,11 @@ class RatingSummaryCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
                       5,
-                      (index) => Icon(
+                          (index) => Icon(
                         index < stats.averageRating.floor()
                             ? Icons.star
                             : Icons.star_border,
-                        color: AppColors.starsYellow,
+                        color: colors.ratingStar, // ✅ динамический жёлтый
                         size: 12,
                       ),
                     ),
@@ -52,7 +54,7 @@ class RatingSummaryCard extends StatelessWidget {
                   Text(
                     "${stats.totalReviews} отзывов",
                     style: TextStyle(
-                      color: AppColors.primaryGrey,
+                      color: colors.textSecondary, // ✅ динамический серый
                       fontSize: 10,
                     ),
                   ),
@@ -62,11 +64,11 @@ class RatingSummaryCard extends StatelessWidget {
 
             const SizedBox(width: 6),
 
-            // Разделитель (опционально, добавит аккуратности)
+            // Разделитель
             Container(
               width: 1,
               height: 40,
-              color: Colors.black.withValues(alpha: 0.05),
+              color: colors.divider, // ✅ динамическая граница
             ),
 
             const SizedBox(width: 12),
@@ -77,7 +79,6 @@ class RatingSummaryCard extends StatelessWidget {
                 children: List.generate(5, (index) {
                   final rating = 5 - index;
 
-                  // Считаем количество отзывов для текущей оценки
                   int currentStarCount = 0;
                   switch (rating) {
                     case 5:
@@ -97,30 +98,29 @@ class RatingSummaryCard extends StatelessWidget {
                       break;
                   }
 
-                  // Вычисляем процент заполнения полоски (защита от деления на 0)
                   final double percentage =
-                      stats.totalReviews > 0
-                          ? currentStarCount / stats.totalReviews
-                          : 0.0;
+                  stats.totalReviews > 0
+                      ? currentStarCount / stats.totalReviews
+                      : 0.0;
 
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 1),
-                    // Плотная верстка
                     child: Row(
                       children: [
                         Text("$rating", style: const TextStyle(fontSize: 10)),
                         const SizedBox(width: 2),
-                        Icon(Icons.star, color: AppColors.starsYellow, size: 8),
+                        Icon(
+                          Icons.star,
+                          color: colors.ratingStar, // ✅ динамический жёлтый
+                          size: 8,
+                        ),
                         const SizedBox(width: 6),
                         Expanded(
                           child: LinearProgressIndicator(
                             value: percentage,
-                            backgroundColor: AppColors.primaryGrey.withValues(
-                              alpha: 0.3,
-                            ),
-                            color: AppColors.primaryGreen,
+                            backgroundColor: colors.divider, // ✅ динамическая граница
+                            color: colors.statusSuccess, // ✅ динамический зелёный
                             minHeight: 2.5,
-                            // Тонкие полоски
                             borderRadius: BorderRadius.circular(2),
                           ),
                         ),

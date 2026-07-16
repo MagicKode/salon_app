@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../../uikit/colors/app_colors.dart';
+import '../../../../../../config/theme/custom_colors.dart';
 import '../../../../../../uikit/widgets/card/images/networkimagewithplaceholder.dart';
 import '../../../../../catalog/data/models/catalog_image.dart';
 import '../../../../../catalog/domain/repositories/catalog_repository.dart';
@@ -11,6 +11,9 @@ class GalleryGridPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors =
+        Theme.of(context).extension<CustomColors>()!; // ✅ динамические цвета
+
     final repo = context.read<CatalogRepository>();
     const spacing = 6.0;
     const horizontalPadding = 16.0;
@@ -20,7 +23,6 @@ class GalleryGridPreview extends StatelessWidget {
     // Размеры плиток
     final bigWidth = (availableWidth - spacing) / 2;
     final smallWidth = (availableWidth - spacing * 2) / 3;
-    // Задаём единое соотношение сторон для всех плиток (например, 3:4)
     final aspectRatio = 1.15;
     final bigHeight = bigWidth * aspectRatio;
     final smallHeight = smallWidth * aspectRatio;
@@ -29,7 +31,11 @@ class GalleryGridPreview extends StatelessWidget {
       future: repo.getImages('gallery', 0, limit: 999),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return Center(
+            child: CircularProgressIndicator(
+              color: colors.primaryBlue, // ✅ динамический синий
+            ),
+          );
         }
         if (snapshot.hasError || !snapshot.hasData) {
           return const SizedBox.shrink();
@@ -54,6 +60,7 @@ class GalleryGridPreview extends StatelessWidget {
                   children: [
                     Expanded(
                       child: _buildTile(
+                        context,
                         displayImages[0].url,
                         bigWidth,
                         bigHeight,
@@ -62,6 +69,7 @@ class GalleryGridPreview extends StatelessWidget {
                     const SizedBox(width: spacing),
                     Expanded(
                       child: _buildTile(
+                        context,
                         displayImages[1].url,
                         bigWidth,
                         bigHeight,
@@ -77,6 +85,7 @@ class GalleryGridPreview extends StatelessWidget {
                   children: [
                     Expanded(
                       child: _buildTile(
+                        context,
                         displayImages[2].url,
                         smallWidth,
                         smallHeight,
@@ -85,6 +94,7 @@ class GalleryGridPreview extends StatelessWidget {
                     const SizedBox(width: spacing),
                     Expanded(
                       child: _buildTile(
+                        context,
                         displayImages[3].url,
                         smallWidth,
                         smallHeight,
@@ -93,6 +103,7 @@ class GalleryGridPreview extends StatelessWidget {
                     const SizedBox(width: spacing),
                     Expanded(
                       child: _buildTile(
+                        context,
                         displayImages[4].url,
                         smallWidth,
                         smallHeight,
@@ -108,7 +119,15 @@ class GalleryGridPreview extends StatelessWidget {
     );
   }
 
-  Widget _buildTile(String url, double width, double height) {
+  Widget _buildTile(
+    BuildContext context,
+    String url,
+    double width,
+    double height,
+  ) {
+    final colors =
+        Theme.of(context).extension<CustomColors>()!; // ✅ получаем цвета внутри
+
     return SizedBox(
       width: width,
       height: height,
@@ -118,12 +137,10 @@ class GalleryGridPreview extends StatelessWidget {
           url: url,
           fit: BoxFit.cover,
           width: width,
-          // передаём явно
           height: height,
-          // передаём явно
           errorWidget: Container(
-            color: Colors.grey[200],
-            child: const Icon(Icons.broken_image, color: AppColors.primaryGrey),
+            color: colors.surfaceInput,
+            child: Icon(Icons.broken_image, color: colors.textSecondary),
           ),
         ),
       ),

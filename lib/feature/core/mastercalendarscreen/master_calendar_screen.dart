@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salon_flutter/feature/core/mastercalendarscreen/master_calendar_body.dart';
 import 'package:salon_flutter/feature/core/mastercalendarscreen/sections/calendar_header_section.dart';
 
-import '../../../uikit/colors/app_colors.dart';
+import '../../../config/theme/custom_colors.dart'; // ✅ динамические цвета
 import '../../auth/authblock/bloc/auth_block.dart';
 import '../../auth/authblock/bloc/auth_state.dart';
 import 'bloc/master_calendar_bloc.dart';
@@ -15,6 +15,9 @@ class MasterCalendarScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Получаем динамические цвета
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return BlocProvider(
       create:
           (_) => MasterCalendarBloc(context.read<MasterCalendarRepository>()),
@@ -33,11 +36,9 @@ class MasterCalendarScreen extends StatelessWidget {
           );
 
           return Scaffold(
-            backgroundColor: AppColors.primaryWhite,
+            backgroundColor: colors.backgroundPrimary, // ✅ динамический фон
             appBar: CalendarHeaderSection(selectedDate: DateTime.now()),
             body: const MasterCalendarBody(),
-
-            // ✅ Кнопка обновления
             floatingActionButton: FloatingActionButton.small(
               onPressed: () {
                 final auth = context.read<AuthBloc>().state;
@@ -47,8 +48,11 @@ class MasterCalendarScreen extends StatelessWidget {
                   );
                 }
               },
-              backgroundColor: AppColors.primaryBlue,
-              child: const Icon(Icons.refresh, color: AppColors.primaryWhite),
+              backgroundColor: colors.primaryBlue, // ✅ динамический синий
+              child: Icon(
+                Icons.refresh,
+                color: colors.textOnPrimary, // ✅ динамический белый
+              ),
             ),
           );
         },

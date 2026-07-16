@@ -30,7 +30,7 @@ class BookingEntity {
   });
 
   factory BookingEntity.fromJson(Map<String, dynamic> json) {
-    // 1. Парсим startTime/bookingDate/bookingTime
+    // 1. Парсим дату и время
     DateTime parsedDateTime;
     try {
       if (json['startTime'] != null) {
@@ -46,47 +46,48 @@ class BookingEntity {
       parsedDateTime = DateTime.now();
     }
 
-    // 2. Парсим durationMinutes – если нет, берём 60
+    // 2. Парсим durationMinutes
     final int durationMinutes = (json['durationMinutes'] as int?) ?? 60;
 
-    // 3. ✅ Вычисляем endTime: всегда на основе startTime + duration
+    // 3. Вычисляем endTime
     final DateTime parsedEndTime = parsedDateTime.add(Duration(minutes: durationMinutes));
 
     final double totalPrice = (json['totalPrice'] ?? json['total_price'] ?? 0).toDouble();
 
-    // Парсим услуги
+    // ========== 4. Парсим услуги с удалением дублей ==========
     var servicesList = <AddServiceData>[];
 
-    // Приоритет 1: поле serviceNames (массив строк, как в history)
+    // Приоритет 1: serviceNames (массив строк)
     if (json['serviceNames'] != null && json['serviceNames'] is List) {
       final List<dynamic> raw = json['serviceNames'];
-      servicesList = raw.map((name) {
+      final uniqueNames = raw.map((e) => e.toString()).toSet().toList();
+      servicesList = uniqueNames.map((name) {
         return AddServiceData(
           id: UniqueKey().toString(),
-          name: name.toString(),
-          price: 0,
-          durationMinutes: 30, // не знаем длительность каждой услуги отдельно
-        );
-      }).toList();
-    }
-
-    // Приоритет 2: servicesNames (возможный вариант)
-    else if (json['servicesNames'] != null && json['servicesNames'] is List) {
-      final List<dynamic> raw = json['servicesNames'];
-      servicesList = raw.map((name) {
-        return AddServiceData(
-          id: UniqueKey().toString(),
-          name: name.toString(),
+          name: name,
           price: 0,
           durationMinutes: 30,
         );
       }).toList();
     }
-
-    // Приоритет 3: services (массив объектов, детальный)
-    if (json['services'] != null && json['services'] is List) {
+    // Приоритет 2: servicesNames
+    else if (json['servicesNames'] != null && json['servicesNames'] is List) {
+      final List<dynamic> raw = json['servicesNames'];
+      final uniqueNames = raw.map((e) => e.toString()).toSet().toList();
+      servicesList = uniqueNames.map((name) {
+        return AddServiceData(
+          id: UniqueKey().toString(),
+          name: name,
+          price: 0,
+          durationMinutes: 30,
+        );
+      }).toList();
+    }
+    // Приоритет 3: services (массив объектов)
+    else if (json['services'] != null && json['services'] is List) {
       final List<dynamic> rawServices = json['services'];
-      servicesList = rawServices.map((s) {
+      final Map<String, AddServiceData> uniqueMap = {};
+      for (var s in rawServices) {
         String currentName = 'Услуга';
         String currentId = UniqueKey().toString();
         if (s is Map) {
@@ -95,16 +96,18 @@ class BookingEntity {
         } else if (s is String) {
           currentName = s;
         }
-        return AddServiceData(
-          id: currentId,
-          name: currentName,
-          price: 0,
-          durationMinutes: 30,
-        );
-      }).toList();
+        if (!uniqueMap.containsKey(currentName)) {
+          uniqueMap[currentName] = AddServiceData(
+            id: currentId,
+            name: currentName,
+            price: 0,
+            durationMinutes: 30,
+          );
+        }
+      }
+      servicesList = uniqueMap.values.toList();
     }
-
-    // Приоритет 4: одиночное serviceName (строка)
+    // Приоритет 4: одиночное serviceName
     else if (json['serviceName'] != null) {
       servicesList = [
         AddServiceData(
@@ -116,6 +119,7 @@ class BookingEntity {
       ];
     }
 
+    // ========== 5. Собираем BookingEntity ==========
     return BookingEntity(
       id: json['id'] as int? ?? 0,
       clientName: json['clientName'] as String? ?? 'Клиент',

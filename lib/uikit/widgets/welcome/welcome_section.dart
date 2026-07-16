@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../colors/app_colors.dart';
+import '../../../config/theme/custom_colors.dart';
 
 class WelcomeSection extends StatelessWidget {
   final String title;
@@ -14,6 +14,9 @@ class WelcomeSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Получаем динамические цвета
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
@@ -21,10 +24,10 @@ class WelcomeSection extends StatelessWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 32.0,
-              color: AppColors.primaryBlack,
+              color: colors.textPrimary, // ✅ динамический чёрный/белый
             ),
           ),
           const SizedBox(height: 12.0),
@@ -32,7 +35,7 @@ class WelcomeSection extends StatelessWidget {
             subtitle,
             style: TextStyle(
               fontSize: 16.0,
-              color: AppColors.primaryGrey,
+              color: colors.textSecondary, // ✅ динамический серый
               height: 1.4,
             ),
           ),

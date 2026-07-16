@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salon_flutter/feature/core/profilescreen/sections/appversion/version_section.dart';
 import 'package:salon_flutter/feature/core/profilescreen/sections/auth/logout_section.dart';
 import 'package:salon_flutter/feature/core/profilescreen/sections/legal/privacy_policy_section.dart';
+import 'package:salon_flutter/feature/core/profilescreen/sections/profilethemeswitch/profile_theme_tile.dart';
 import 'package:salon_flutter/feature/core/profilescreen/sections/share/share_section.dart';
 import 'package:salon_flutter/feature/core/profilescreen/sections/support/support_section.dart';
 import 'package:salon_flutter/feature/core/profilescreen/sections/userinfo/user_info_section.dart';
@@ -90,7 +91,8 @@ class _ProfileBodyState extends State<ProfileBody> {
                   title: AppStrings.shareApp ?? "Поделиться приложением",
                   onTap: () {
                     const String appLink = AppStrings.shareAppLink;
-                    const String message = '${AppStrings.shareAppMessage} $appLink';
+                    const String message =
+                        '${AppStrings.shareAppMessage} $appLink';
                     Share.share(message);
                   },
                 ),
@@ -104,13 +106,20 @@ class _ProfileBodyState extends State<ProfileBody> {
                   icon: Icons.headset_mic_outlined,
                   title: AppStrings.supportTeam,
                   onTap: () async {
-                    final uri = Uri.parse('https://t.me/${AppStrings.supportTelegram}');
+                    final uri = Uri.parse(
+                      'https://t.me/${AppStrings.supportTelegram}',
+                    );
                     try {
-                      await launchUrl(uri, mode: LaunchMode.externalApplication);
+                      await launchUrl(
+                        uri,
+                        mode: LaunchMode.externalApplication,
+                      );
                     } catch (_) {
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Не удалось открыть Telegram')),
+                          const SnackBar(
+                            content: Text('Не удалось открыть Telegram'),
+                          ),
                         );
                       }
                     }
@@ -120,20 +129,30 @@ class _ProfileBodyState extends State<ProfileBody> {
 
               const SizedBox(height: 4),
 
+              const ProfileThemeTile(),
+
+              const SizedBox(height: 4),
+
               // 5. СЕКЦИЯ ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ
               PrivacyPolicySection(
                 action: ProfileActionEntity(
                   icon: Icons.description_outlined,
                   title: AppStrings.privacyPolicy,
                   onTap: () async {
-                    const privacyUrl = 'https://your-salon.com/privacy';  // замените на свой URL
+                    const privacyUrl =
+                        'https://your-salon.com/privacy'; // замените на свой URL
                     final uri = Uri.parse(privacyUrl);
                     try {
-                      await launchUrl(uri, mode: LaunchMode.externalApplication);
+                      await launchUrl(
+                        uri,
+                        mode: LaunchMode.externalApplication,
+                      );
                     } catch (_) {
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Не удалось открыть страницу')),
+                          const SnackBar(
+                            content: Text('Не удалось открыть страницу'),
+                          ),
                         );
                       }
                     }

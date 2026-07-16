@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salon_flutter/feature/navigation/main_navigation_screen.dart';
-import 'package:salon_flutter/uikit/colors/app_colors.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 import 'package:salon_flutter/uikit/widgets/button/app_button.dart';
+import '../../../config/theme/custom_colors.dart'; // ✅ импорт динамических цветов
 
 import 'domain/repository/booking_repository.dart';
 
@@ -14,8 +14,11 @@ class BookingSuccessScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Получаем кастомные цвета темы
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Scaffold(
-      backgroundColor: AppColors.primaryWhite,
+      backgroundColor: colors.backgroundPrimary,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -26,36 +29,36 @@ class BookingSuccessScreen extends StatelessWidget {
               Container(
                 width: 100,
                 height: 100,
-                decoration: const BoxDecoration(
-                  color: AppColors.primaryWhite,
+                decoration: BoxDecoration(
+                  color: colors.surfaceCard,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.check_circle_rounded,
-                  color: AppColors.primaryGreen,
+                  color: colors.statusSuccess,
                   size: 80,
                 ),
               ),
               const SizedBox(height: 32),
 
-              // Текст статуса
               const Text(
                 AppStrings.bookedSuccessful,
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.primaryBlack,
                 ),
               ),
               const SizedBox(height: 12),
-              const Text(
+              Text(
                 AppStrings.serviceWelcomeMessage,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, color: AppColors.primaryGrey),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: colors.textSecondary,
+                ),
               ),
               const Spacer(),
 
-              // 2. Кнопка «На главную»
               AppButton(
                 text: AppStrings.toHomePage,
                 onPressed: () {
@@ -64,13 +67,12 @@ class BookingSuccessScreen extends StatelessWidget {
                     MaterialPageRoute(
                       builder: (context) => const MainNavigationScreen(),
                     ),
-                    (route) => false,
+                        (route) => false,
                   );
                 },
               ),
               const SizedBox(height: 16),
 
-              // 3. Кнопка «Отменить бронирование»
               AppButton(
                 text: AppStrings.cancelBooking,
                 onPressed: () => _showCancelConfirmation(context),
@@ -83,66 +85,79 @@ class BookingSuccessScreen extends StatelessWidget {
     );
   }
 
-  // Метод для подтверждения отмены
   void _showCancelConfirmation(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     showDialog(
       context: context,
-      builder:
-          (dialogContext) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
+      builder: (dialogContext) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        title: Text(
+          AppStrings.cancellingBooking,
+          style: TextStyle(color: colors.textPrimary),
+        ),
+        content: Text(
+          AppStrings.confirmationOfCancellingBooking,
+          style: TextStyle(color: colors.textSecondary),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(
+              AppStrings.back,
+              style: TextStyle(color: colors.textSecondary),
             ),
-            title: const Text(AppStrings.cancellingBooking),
-            content: const Text(AppStrings.confirmationOfCancellingBooking),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(dialogContext),
-                child: const Text(
-                  AppStrings.back,
-                  style: TextStyle(color: AppColors.primaryGrey),
-                ),
-              ),
-              TextButton(
-                onPressed: () async {
-                  Navigator.pop(dialogContext);
-
-                  // 3. Отправляем реальный PATCH-запрос на бэкенд через репозиторий
-                  final success = await context
-                      .read<BookingRepository>()
-                      .cancelBooking(bookingId);
-
-                  if (success) {
-                    if (context.mounted) {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MainNavigationScreen(),
-                        ),
-                        (route) => false,
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(AppStrings.bookingIsCanceled),
-                        ),
-                      );
-                    }
-                  } else {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(AppStrings.errorInDeleteService),
-                        ),
-                      );
-                    }
-                  }
-                },
-                child: const Text(
-                  AppStrings.confirmCancelling,
-                  style: TextStyle(color: AppColors.primaryRed),
-                ),
-              ),
-            ],
           ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(dialogContext);
+
+              final success = await context
+                  .read<BookingRepository>()
+                  .cancelBooking(bookingId);
+
+              if (success) {
+                if (context.mounted) {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MainNavigationScreen(),
+                    ),
+                        (route) => false,
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        AppStrings.bookingIsCanceled,
+                        style: TextStyle(color: colors.textOnPrimary),
+                      ),
+                      backgroundColor: colors.statusSuccess,
+                    ),
+                  );
+                }
+              } else {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        AppStrings.errorInDeleteService,
+                        style: TextStyle(color: colors.textOnPrimary),
+                      ),
+                      backgroundColor: colors.statusError,
+                    ),
+                  );
+                }
+              }
+            },
+            child: Text(
+              AppStrings.confirmCancelling,
+              style: TextStyle(color: colors.statusError),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

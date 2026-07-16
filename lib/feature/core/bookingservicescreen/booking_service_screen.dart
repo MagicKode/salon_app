@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/feature/core/bookingservicescreen/booking_service_body.dart';
-import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
+import '../../../config/theme/custom_colors.dart';
 import '../../../uikit/strings/app_strings.dart';
 import '../../checkout/checkout_screen.dart';
 import '../../checkout/domain/booking_entity.dart';
@@ -29,18 +29,20 @@ class _BookingServiceScreenState extends State<BookingServiceScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Scaffold(
-      backgroundColor: AppColors.primaryWhite,
+      backgroundColor: colors.backgroundPrimary,
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           AppStrings.bookingTitle,
           style: TextStyle(
-            color: AppColors.primaryBlack,
+            color: colors.textPrimary,
             fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,
-        backgroundColor: AppColors.primaryWhite,
+        backgroundColor: colors.backgroundPrimary,
         elevation: 0,
       ),
       body: BookingServiceBody(

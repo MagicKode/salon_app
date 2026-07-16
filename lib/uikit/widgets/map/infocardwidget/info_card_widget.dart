@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../colors/app_colors.dart';
+import '../../../../config/theme/custom_colors.dart'; // ✅ импорт динамических цветов
 import 'info_card_text_content.dart';
 import 'info_card_transport_icon.dart';
 
@@ -11,17 +11,23 @@ class InfoCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Получаем динамические цвета
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
       decoration: BoxDecoration(
-        color: AppColors.primaryBlue.withValues(alpha: 0.5),
+        color: colors.primaryBlue.withOpacity(0.5),
+        // ✅ динамический синий с прозрачностью
         borderRadius: BorderRadius.circular(28),
         border: Border.all(
-          color: AppColors.primaryWhite.withValues(alpha: 0.15),
+          color: colors.textOnPrimary.withOpacity(
+            0.15,
+          ), // ✅ контрастный белый с прозрачностью
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primaryBlack.withValues(alpha: 0.25),
+            color: colors.shadow, // ✅ динамическая тень
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),

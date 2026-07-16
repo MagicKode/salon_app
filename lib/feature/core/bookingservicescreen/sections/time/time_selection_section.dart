@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salon_flutter/feature/core/bookingservicescreen/domain/time_slot_model.dart';
-import 'package:salon_flutter/uikit/colors/app_colors.dart';
 
+import '../../../../../config/theme/custom_colors.dart';
 import '../../../../../uikit/strings/app_strings.dart';
 import '../../../../../uikit/widgets/time/time_slots_grid.dart';
 import '../../bookingblock/booking_slots_bloc.dart';
@@ -64,19 +64,29 @@ class _TimeSelectionSectionState extends State<TimeSelectionSection> {
   }
 
   void _showErrorSnackBar(String message) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: AppColors.primaryRed),
+      SnackBar(
+        content: Text(message, style: TextStyle(color: colors.textOnPrimary)),
+        backgroundColor: colors.statusError,
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           AppStrings.timeSection,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: colors.textPrimary,
+          ),
         ),
         const SizedBox(height: 16),
         TimeSlotsGrid(

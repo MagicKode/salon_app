@@ -3,6 +3,7 @@ import 'package:salon_flutter/feature/checkout/sections/price_calculation_sectio
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 import '../../../../uikit/colors/app_colors.dart';
+import '../../../config/theme/custom_colors.dart';
 import '../../../uikit/widgets/card/expandable_note.dart';
 import '../domain/booking_entity.dart';
 import 'booking_info_grid.dart';
@@ -14,6 +15,8 @@ class BookingSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Container(
       padding: const EdgeInsets.only(
         left: 20,
@@ -22,7 +25,7 @@ class BookingSummaryCard extends StatelessWidget {
         bottom: 5,
       ),
       decoration: BoxDecoration(
-        color: AppColors.boxDecorationColor,
+        color: colors.surfaceCard,
         borderRadius: BorderRadius.circular(24),
       ),
       child: Column(
@@ -58,19 +61,19 @@ class BookingSummaryCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       service.name,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
-                        color: AppColors.primaryBlack,
+                        color: colors.textPrimary,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
                   Text(
                     "${service.price.toStringAsFixed(0)} ${AppStrings.currency}",
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.primaryBlue,
+                      color: colors.primaryBlue,
                     ),
                   ),
                 ],

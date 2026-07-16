@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
-import '../../colors/app_colors.dart';
+import '../../../config/theme/custom_colors.dart'; // ✅ импорт динамических цветов
 import '../button/app_button.dart';
 
 class CreateNotificationBottomSheet extends StatefulWidget {
@@ -19,6 +19,8 @@ class _CreateNotificationBottomSheetState
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Container(
       padding: EdgeInsets.only(
         top: 20,
@@ -26,9 +28,9 @@ class _CreateNotificationBottomSheetState
         right: 20,
         bottom: MediaQuery.of(context).viewInsets.bottom + 20,
       ),
-      decoration: const BoxDecoration(
-        color: AppColors.primaryWhite,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      decoration: BoxDecoration(
+        color: colors.surfaceCard,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -38,38 +40,68 @@ class _CreateNotificationBottomSheetState
             child: Divider(thickness: 4, indent: 140, endIndent: 140),
           ),
           const SizedBox(height: 20),
-          const Text(
+
+          Text(
             AppStrings.extraNotifications,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: colors.textPrimary,
+            ),
           ),
           const SizedBox(height: 16),
 
           TextField(
             controller: _titleController,
+            style: TextStyle(color: colors.textPrimary),
             decoration: InputDecoration(
               hintText: AppStrings.themeOfNotification,
-              hintStyle: const TextStyle(
-                color: AppColors.primaryGrey,
+              hintStyle: TextStyle(
+                color: colors.textHint,
                 fontWeight: FontWeight.w400,
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: colors.borderLight),
               ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: colors.borderLight),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: colors.primaryBlue, width: 2),
+              ),
+              filled: true,
+              fillColor: colors.surfaceInput,
             ),
           ),
           const SizedBox(height: 12),
+
           TextField(
             controller: _bodyController,
             maxLines: 3,
+            style: TextStyle(color: colors.textPrimary),
             decoration: InputDecoration(
               hintText: AppStrings.themeOfNotificationForClient,
-              hintStyle: const TextStyle(
-                color: AppColors.primaryGrey, // Используем твой серый из UIKit
+              hintStyle: TextStyle(
+                color: colors.textHint,
                 fontWeight: FontWeight.w400,
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: colors.borderLight),
               ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: colors.borderLight),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: colors.primaryBlue, width: 2),
+              ),
+              filled: true,
+              fillColor: colors.surfaceInput,
             ),
           ),
           const SizedBox(height: 20),
@@ -79,8 +111,12 @@ class _CreateNotificationBottomSheetState
               // Здесь будет логика отправки через репозиторий
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text(AppStrings.notificationSuccessfullySent),
+                SnackBar(
+                  content: Text(
+                    AppStrings.notificationSuccessfullySent,
+                    style: TextStyle(color: colors.textOnPrimary),
+                  ),
+                  backgroundColor: colors.statusSuccess,
                 ),
               );
             },

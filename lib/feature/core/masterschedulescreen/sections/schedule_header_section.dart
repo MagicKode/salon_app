@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
-import '../../../../uikit/colors/app_colors.dart';
 
-class ScheduleHeaderSection extends StatelessWidget implements PreferredSizeWidget {
+import '../../../../config/theme/custom_colors.dart';
+
+class ScheduleHeaderSection extends StatelessWidget
+    implements PreferredSizeWidget {
   const ScheduleHeaderSection({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return AppBar(
-      backgroundColor: AppColors.primaryWhite,
+      backgroundColor: colors.backgroundPrimary, // ✅ динамический фон
       elevation: 0,
       centerTitle: true,
-      title: const Text(
+      title: Text(
         AppStrings.scheduler,
         style: TextStyle(
           fontWeight: FontWeight.bold,
-          color: AppColors.primaryBlack,
+          color: colors.textPrimary, // ✅ динамический цвет текста
         ),
       ),
     );

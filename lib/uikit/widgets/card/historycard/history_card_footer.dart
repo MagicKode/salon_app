@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/uikit/colors/app_colors.dart';
+
+import '../../../../config/theme/custom_colors.dart';
 
 class HistoryCardFooter extends StatelessWidget {
   final bool isExpanded;
@@ -13,13 +14,15 @@ class HistoryCardFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return GestureDetector(
       onTap: onToggle,
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          color: AppColors.primaryBlue.withAlpha(8),
+          color: colors.primaryBlue.withOpacity(0.15),
           borderRadius: const BorderRadius.only(
             bottomLeft: Radius.circular(12),
             bottomRight: Radius.circular(12),
@@ -30,7 +33,11 @@ class HistoryCardFooter extends StatelessWidget {
           children: [
             Text(
               isExpanded ? 'Скрыть ▲' : 'Подробнее ▼',
-              style: const TextStyle(color: AppColors.primaryBlue, fontSize: 12),
+              style: TextStyle(
+                color: colors.textOnPrimary,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ],
         ),

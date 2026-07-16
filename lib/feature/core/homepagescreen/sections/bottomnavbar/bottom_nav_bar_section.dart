@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../../uikit/colors/app_colors.dart';
+
+import '../../../../../config/theme/custom_colors.dart';
 import '../../../../../uikit/strings/app_strings.dart';
 import '../../domain/bottom_nav_item.dart';
 import '../../domain/nav_item_model.dart';
@@ -20,6 +21,7 @@ class BottomNavBarSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
     // Формируем список айтемов динамически внутри build
     final List<NavItemModel> dynamicNavItems = [
       const NavItemModel(
@@ -34,7 +36,8 @@ class BottomNavBarSection extends StatelessWidget {
         label: isMaster ? AppStrings.orders : AppStrings.navBooking,
       ),
       NavItemModel(
-        icon: isMaster ? Icons.calendar_month_outlined : Icons.  menu_book_outlined,
+        icon:
+            isMaster ? Icons.calendar_month_outlined : Icons.menu_book_outlined,
         activeIcon: isMaster ? Icons.calendar_month : Icons.menu_book,
         label: isMaster ? AppStrings.scheduler : AppStrings.navHistory,
       ),
@@ -50,10 +53,10 @@ class BottomNavBarSection extends StatelessWidget {
       child: Container(
         height: 65,
         decoration: BoxDecoration(
-          color: AppColors.primaryWhite,
+          color: colors.backgroundPrimary,
           boxShadow: [
             BoxShadow(
-              color: AppColors.primaryBlackShadow,
+              color: colors.shadow,
               blurRadius: 10,
               offset: const Offset(0, -4),
             ),

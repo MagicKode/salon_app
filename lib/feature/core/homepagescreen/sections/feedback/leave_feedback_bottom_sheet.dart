@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/uikit/colors/app_colors.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 import 'package:salon_flutter/uikit/widgets/button/app_button.dart';
 
+import '../../../../../config/theme/custom_colors.dart';
 import 'bloc/review_bloc.dart';
 import 'bloc/review_event.dart';
 
@@ -29,11 +29,13 @@ class _LeaveFeedbackBottomSheetState extends State<LeaveFeedbackBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Container(
       height: MediaQuery.of(context).size.height * 0.75,
-      decoration: const BoxDecoration(
-        color: AppColors.primaryWhite,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      decoration: BoxDecoration(
+        color: colors.backgroundPrimary,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
         children: [
@@ -45,7 +47,11 @@ class _LeaveFeedbackBottomSheetState extends State<LeaveFeedbackBottomSheet> {
             padding: const EdgeInsets.all(20),
             child: Text(
               AppStrings.leaveFeedback,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: colors.textPrimary,
+              ),
             ),
           ),
 
@@ -56,7 +62,7 @@ class _LeaveFeedbackBottomSheetState extends State<LeaveFeedbackBottomSheet> {
               return IconButton(
                 icon: Icon(
                   index < _rating ? Icons.star : Icons.star_border,
-                  color: AppColors.starsYellow,
+                  color: colors.ratingStar,
                   size: 40,
                 ),
                 onPressed: () {
@@ -76,11 +82,21 @@ class _LeaveFeedbackBottomSheetState extends State<LeaveFeedbackBottomSheet> {
               maxLines: 5,
               decoration: InputDecoration(
                 hintText: AppStrings.writeYourFeedback,
+                hintStyle: TextStyle(color: colors.textHint),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide(color: colors.borderLight),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide(color: colors.borderLight),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide(color: colors.primaryBlue, width: 2),
                 ),
                 filled: true,
-                fillColor: AppColors.primaryBackgroundColor,
+                fillColor: colors.surfaceInput,
               ),
             ),
           ),
@@ -104,9 +120,9 @@ class _LeaveFeedbackBottomSheetState extends State<LeaveFeedbackBottomSheet> {
                 Navigator.pop(context);
 
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text(AppStrings.thanksForYourFeedback),
-                    backgroundColor: AppColors.primaryBlue,
+                  SnackBar(
+                    content: const Text(AppStrings.thanksForYourFeedback),
+                    backgroundColor: colors.primaryBlue,
                   ),
                 );
               },
@@ -115,5 +131,11 @@ class _LeaveFeedbackBottomSheetState extends State<LeaveFeedbackBottomSheet> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _commentController.dispose();
+    super.dispose();
   }
 }

@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:salon_flutter/feature/catalog/domain/repositories/catalog_repository.dart';
 import 'package:salon_flutter/feature/core/servicedetailscreen/domain/service_detail_data.dart';
-import 'package:salon_flutter/feature/core/servicedetailscreen/sections/servicedescription/service_description_section.dart';
 import 'package:salon_flutter/feature/core/servicedetailscreen/sections/serviceimageheader/service_image_header_section.dart';
 import 'package:salon_flutter/feature/core/servicedetailscreen/sections/serviceinfo/service_info_section.dart';
-import 'package:salon_flutter/feature/catalog/domain/repositories/catalog_repository.dart';
-import 'package:salon_flutter/uikit/colors/app_colors.dart';
-import 'package:salon_flutter/uikit/widgets/button/app_button.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
+import 'package:salon_flutter/uikit/widgets/button/app_button.dart';
+
+import '../../../../config/theme/custom_colors.dart';
 import '../../catalog/data/models/service_dto.dart';
 import '../catalogscreen/domain/catalog_service.dart';
-import 'domain/service_detail_data.dart';
 
 class ServiceDetailBody extends StatefulWidget {
   final ServiceDetail service;
   final bool isMaster;
   final Function(CatalogService selectedService)? onServiceSelected;
   final VoidCallback? onServiceUpdated;
+  final VoidCallback? onBookPressed; // ✅ новый колбэк
 
   const ServiceDetailBody({
     super.key,
@@ -24,6 +24,7 @@ class ServiceDetailBody extends StatefulWidget {
     required this.isMaster,
     this.onServiceSelected,
     this.onServiceUpdated,
+    this.onBookPressed,
   });
 
   @override
@@ -38,7 +39,9 @@ class _ServiceDetailBodyState extends State<ServiceDetailBody> {
   @override
   void initState() {
     super.initState();
-    _descriptionController = TextEditingController(text: widget.service.description);
+    _descriptionController = TextEditingController(
+      text: widget.service.description,
+    );
   }
 
   @override
@@ -50,13 +53,14 @@ class _ServiceDetailBodyState extends State<ServiceDetailBody> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
     final service = widget.service;
     final isMaster = widget.isMaster;
 
     return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.primaryWhite,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      decoration: BoxDecoration(
+        color: colors.backgroundPrimary,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
@@ -77,15 +81,20 @@ class _ServiceDetailBodyState extends State<ServiceDetailBody> {
                     children: [
                       ServiceInfoSection(service: service),
                       const Divider(height: 24),
-                      _buildDescriptionSection(context),
+                      _buildDescriptionSection(context, colors),
                       if (!isMaster) ...[
                         const SizedBox(height: 24),
                         AppButton(
                           text: AppStrings.bookNow,
                           onPressed: () {
-                            final computedPrice = double.tryParse(
-                              service.price.toString().replaceAll(RegExp(r'[^0-9.]'), ''),
-                            ) ?? 0.0;
+                            final computedPrice =
+                                double.tryParse(
+                                  service.price.toString().replaceAll(
+                                    RegExp(r'[^0-9.]'),
+                                    '',
+                                  ),
+                                ) ??
+                                0.0;
 
                             final selectedService = CatalogService(
                               id: service.title,
@@ -94,7 +103,10 @@ class _ServiceDetailBodyState extends State<ServiceDetailBody> {
                               duration: '1 ч.',
                             );
 
-                            if (widget.onServiceSelected != null) {
+                            // ✅ вызываем колбэк, если передан
+                            if (widget.onBookPressed != null) {
+                              widget.onBookPressed!();
+                            } else if (widget.onServiceSelected != null) {
                               widget.onServiceSelected!(selectedService);
                             } else {
                               Navigator.pop(context, selectedService);
@@ -102,7 +114,9 @@ class _ServiceDetailBodyState extends State<ServiceDetailBody> {
                           },
                         ),
                       ],
-                      SizedBox(height: MediaQuery.of(context).padding.bottom + 10),
+                      SizedBox(
+                        height: MediaQuery.of(context).padding.bottom + 10,
+                      ),
                     ],
                   ),
                 ),
@@ -114,7 +128,7 @@ class _ServiceDetailBodyState extends State<ServiceDetailBody> {
     );
   }
 
-  Widget _buildDescriptionSection(BuildContext context) {
+  Widget _buildDescriptionSection(BuildContext context, CustomColors colors) {
     final isMaster = widget.isMaster;
     final service = widget.service;
 
@@ -124,30 +138,36 @@ class _ServiceDetailBodyState extends State<ServiceDetailBody> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
+            Text(
               AppStrings.descriptionHeader,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: colors.textPrimary,
+              ),
             ),
             if (isMaster && !_isEditing)
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade200.withOpacity(0.6),
+                  color: colors.surfaceInput.withOpacity(0.6),
                   shape: BoxShape.circle,
                 ),
                 child: IconButton(
-                  icon: const Icon(Icons.edit, size: 18, color: AppColors.primaryBlue),
+                  icon: Icon(Icons.edit, size: 18, color: colors.primaryBlue),
                   onPressed: () {
                     setState(() {
                       _isEditing = true;
                       _descriptionController.text = service.description;
                     });
-                    // Фокусируем поле после открытия
                     WidgetsBinding.instance.addPostFrameCallback((_) {
                       _focusNode.requestFocus();
                     });
                   },
                   padding: const EdgeInsets.all(6),
-                  constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                  constraints: const BoxConstraints(
+                    minWidth: 32,
+                    minHeight: 32,
+                  ),
                 ),
               ),
           ],
@@ -161,11 +181,24 @@ class _ServiceDetailBodyState extends State<ServiceDetailBody> {
                 controller: _descriptionController,
                 focusNode: _focusNode,
                 maxLines: 5,
+                style: TextStyle(color: colors.textPrimary),
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: colors.borderLight),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: colors.borderLight),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: colors.primaryBlue, width: 2),
                   ),
                   hintText: 'Введите новое описание',
+                  hintStyle: TextStyle(color: colors.textHint),
+                  filled: true,
+                  fillColor: colors.surfaceInput,
                 ),
               ),
               const SizedBox(height: 12),
@@ -178,14 +211,17 @@ class _ServiceDetailBodyState extends State<ServiceDetailBody> {
                         _isEditing = false;
                       });
                     },
-                    child: const Text('Отмена'),
+                    child: Text(
+                      'Отмена',
+                      style: TextStyle(color: colors.textSecondary),
+                    ),
                   ),
                   const SizedBox(width: 8),
                   ElevatedButton(
                     onPressed: _saveDescription,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primaryBlue,
-                      foregroundColor: Colors.white,
+                      backgroundColor: colors.primaryBlue,
+                      foregroundColor: colors.textOnPrimary,
                     ),
                     child: const Text('Сохранить'),
                   ),
@@ -196,9 +232,9 @@ class _ServiceDetailBodyState extends State<ServiceDetailBody> {
         else
           Text(
             service.description,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 16,
-              color: AppColors.primaryBlack,
+              color: colors.textPrimary,
               height: 1.5,
             ),
           ),
@@ -207,10 +243,17 @@ class _ServiceDetailBodyState extends State<ServiceDetailBody> {
   }
 
   Future<void> _saveDescription() async {
+    final colors = Theme.of(context).extension<CustomColors>()!;
     final newDescription = _descriptionController.text.trim();
     if (newDescription.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Описание не может быть пустым')),
+        SnackBar(
+          content: Text(
+            'Описание не может быть пустым',
+            style: TextStyle(color: colors.textOnPrimary),
+          ),
+          backgroundColor: colors.statusError,
+        ),
       );
       return;
     }
@@ -219,7 +262,7 @@ class _ServiceDetailBodyState extends State<ServiceDetailBody> {
       final repo = context.read<CatalogRepository>();
       final allServices = await repo.getServices();
       final existing = allServices.firstWhere(
-            (s) => s.id.toString() == widget.service.id,
+        (s) => s.id.toString() == widget.service.id,
         orElse: () => throw Exception('Услуга не найдена'),
       );
 
@@ -240,12 +283,14 @@ class _ServiceDetailBodyState extends State<ServiceDetailBody> {
         widget.onServiceUpdated!();
       }
       Navigator.pop(context);
-
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Ошибка сохранения: $e'),
-          backgroundColor: Colors.red,
+          content: Text(
+            'Ошибка сохранения: $e',
+            style: TextStyle(color: colors.textOnPrimary),
+          ),
+          backgroundColor: colors.statusError,
         ),
       );
     }

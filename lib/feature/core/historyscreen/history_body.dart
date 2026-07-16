@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../config/theme/custom_colors.dart';
 import '../../../uikit/colors/app_colors.dart';
 import '../../../uikit/widgets/card/historycard/historybookingcard/history_booking_card.dart';
 import '../../../uikit/widgets/emptyscreen/history_empty_screen.dart';
@@ -24,6 +25,8 @@ class HistoryBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     final displayBookings =
         bookings.where((b) => b.status != 'CANCELED').toList();
 
@@ -32,7 +35,6 @@ class HistoryBody extends StatelessWidget {
     }
 
     Widget _buildDismissible(BookingEntity booking, Widget child) {
-
       if (!enableDelete) {
         return child;
       }
@@ -47,10 +49,10 @@ class HistoryBody extends StatelessWidget {
           alignment: Alignment.centerRight,
           padding: const EdgeInsets.only(right: 20),
           decoration: BoxDecoration(
-            color: AppColors.primaryRed,
+            color: colors.statusError,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: const Icon(Icons.delete, color: AppColors.primaryWhite, size: 30),
+          child: Icon(Icons.delete, color: colors.textOnPrimary, size: 30),
         ),
         child: Padding(
           padding: const EdgeInsets.only(bottom: 12),
@@ -61,7 +63,7 @@ class HistoryBody extends StatelessWidget {
 
     return RefreshIndicator(
       onRefresh: onRefresh,
-      color: AppColors.primaryBlue,
+      color: colors.primaryBlue,
       child: ListView(
         padding: const EdgeInsets.all(20),
         physics: const AlwaysScrollableScrollPhysics(

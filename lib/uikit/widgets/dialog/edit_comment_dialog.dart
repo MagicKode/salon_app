@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../uikit/colors/app_colors.dart';
+import '../../../config/theme/custom_colors.dart'; // ✅ импорт динамических цветов
 import '../../../feature/checkout/domain/repository/booking_repository.dart';
+import '../../colors/app_colors.dart';
 
 class EditCommentDialog extends StatefulWidget {
   final String bookingId;
@@ -39,11 +40,20 @@ class _EditCommentDialogState extends State<EditCommentDialog> {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Получаем динамические цвета
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return AlertDialog(
+      backgroundColor: colors.backgroundPrimary,
+      // ✅ динамический фон
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      title: const Text(
+      title: Text(
         'Комментарий к записи',
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 18,
+          color: colors.textPrimary, // ✅ динамический цвет заголовка
+        ),
       ),
       content:
           _isLoading
@@ -51,7 +61,9 @@ class _EditCommentDialogState extends State<EditCommentDialog> {
                 height: 100,
                 child: Center(
                   child: CircularProgressIndicator(
-                    color: AppColors.primaryBlue,
+                    color:
+                        AppColors
+                            .primaryBlue, // оставляем или заменим на colors.primaryBlue
                   ),
                 ),
               )
@@ -59,19 +71,33 @@ class _EditCommentDialogState extends State<EditCommentDialog> {
                 controller: _commentController,
                 maxLines: 3,
                 maxLength: 200,
+                style: TextStyle(color: colors.textPrimary),
+                // ✅ динамический текст
                 decoration: InputDecoration(
                   hintText: 'Например: опоздаю на 5 минут / нужен дизайн...',
                   hintStyle: TextStyle(
-                    color: Colors.grey.withValues(alpha: 0.7),
+                    color: colors.textHint, // ✅ динамическая подсказка
                     fontSize: 14,
                   ),
-                  border: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12)),
-                  ),
-                  focusedBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                  filled: true,
+                  fillColor: colors.surfaceInput,
+                  // ✅ динамический фон поля
+                  border: OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(Radius.circular(12)),
                     borderSide: BorderSide(
-                      color: AppColors.primaryBlue,
+                      color: colors.borderLight,
+                    ), // ✅ динамическая граница
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(Radius.circular(12)),
+                    borderSide: BorderSide(
+                      color: colors.borderLight,
+                    ), // ✅ динамическая граница
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(Radius.circular(12)),
+                    borderSide: BorderSide(
+                      color: colors.primaryBlue, // ✅ динамический синий
                       width: 1.5,
                     ),
                   ),
@@ -83,14 +109,18 @@ class _EditCommentDialogState extends State<EditCommentDialog> {
               : [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text(
+                  child: Text(
                     'Отмена',
-                    style: TextStyle(color: AppColors.primaryGrey),
+                    style: TextStyle(
+                      color: colors.textSecondary,
+                    ), // ✅ динамический серый
                   ),
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryBlue,
+                    backgroundColor: colors.primaryBlue, // ✅ динамический синий
+                    foregroundColor:
+                        colors.textOnPrimary, // ✅ динамический белый
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -100,7 +130,6 @@ class _EditCommentDialogState extends State<EditCommentDialog> {
 
                     setState(() => _isLoading = true);
 
-                    // ВЫЗЫВАЕМ РЕАЛЬНЫЙ МЕТОД РЕПОЗИТОРИЯ
                     final success = await widget.bookingRepository
                         .updateBookingComment(widget.bookingId, newComment);
 
@@ -108,21 +137,21 @@ class _EditCommentDialogState extends State<EditCommentDialog> {
                       setState(() => _isLoading = false);
                       if (success) {
                         Navigator.pop(context, newComment);
-                        widget.onUpdateSuccess
-                            ?.call(); // Вызываем onRefresh на экране истории
+                        widget.onUpdateSuccess?.call();
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Не удалось сохранить изменения'),
+                          SnackBar(
+                            content: Text(
+                              'Не удалось сохранить изменения',
+                              style: TextStyle(color: colors.textOnPrimary),
+                            ),
+                            backgroundColor: colors.statusError,
                           ),
                         );
                       }
                     }
                   },
-                  child: const Text(
-                    'Сохранить',
-                    style: TextStyle(color: AppColors.primaryWhite),
-                  ),
+                  child: const Text('Сохранить'),
                 ),
               ],
     );

@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../../../../config/theme/custom_colors.dart';
 import '../../../../../../uikit/widgets/card/addphoto/action_buttons.dart';
 import '../../../../../../uikit/widgets/card/addphoto/drag_handle.dart';
 import '../../../../../../uikit/widgets/card/addphoto/header_widget.dart';
@@ -122,7 +123,8 @@ class _AddPhotoSheetState extends State<AddPhotoSheet> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: failCount == 0 ? Colors.green : Colors.orange,
+        backgroundColor:
+            failCount == 0 ? Colors.green.shade600 : Colors.orange.shade700,
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -134,11 +136,13 @@ class _AddPhotoSheetState extends State<AddPhotoSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Container(
       padding: const EdgeInsets.only(top: 12),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      decoration: BoxDecoration(
+        color: colors.backgroundPrimary,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,

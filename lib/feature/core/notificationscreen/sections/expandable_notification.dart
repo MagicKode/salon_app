@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
+
+import '../../../../config/theme/custom_colors.dart';
 import '../../mastercalendarscreen/master_calendar_screen.dart';
 import '../domain/notification_model.dart';
 
@@ -24,6 +26,8 @@ class _ExpandableNotificationState extends State<ExpandableNotification> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     final notification = widget.notification;
     final isUnread = !notification.isRead;
 
@@ -48,11 +52,11 @@ class _ExpandableNotificationState extends State<ExpandableNotification> {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colors.surfaceInput,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
+            color: colors.shadow,
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -60,8 +64,9 @@ class _ExpandableNotificationState extends State<ExpandableNotification> {
         border: Border.all(
           color:
               isUnread
-                  ? AppColors.primaryGreen
-                  : AppColors.primaryGrey.withOpacity(0.2),
+                  ? colors
+                      .statusSuccess
+                  : colors.borderLight,
           width: isUnread ? 1.5 : 1,
         ),
       ),
@@ -69,16 +74,13 @@ class _ExpandableNotificationState extends State<ExpandableNotification> {
         color: Colors.transparent,
         child: InkWell(
           onTap: () {
-            // setState(() => _expanded = !_expanded);
             if (isUnread) widget.onRead(notification.id);
             if (widget.isMaster) {
-              // Переход на экран расписания для Мастера
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => const MasterCalendarScreen()),
               );
             } else {
-              // Для Клиента – просто раскрываем/сворачиваем уведомление
               setState(() => _expanded = !_expanded);
             }
           },
@@ -95,9 +97,7 @@ class _ExpandableNotificationState extends State<ExpandableNotification> {
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: _accentColor(
-                          notification.type,
-                        ).withValues(alpha: 0.1),
+                        color: _accentColor(notification.type).withOpacity(0.1),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -121,8 +121,8 @@ class _ExpandableNotificationState extends State<ExpandableNotification> {
                               fontSize: 14,
                               color:
                                   isUnread
-                                      ? Colors.black87
-                                      : Colors.grey.shade600,
+                                      ? colors.textPrimary
+                                      : colors.textSecondary,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -130,17 +130,17 @@ class _ExpandableNotificationState extends State<ExpandableNotification> {
                           if (bookingLine.isNotEmpty) ...[
                             Text(
                               clientLine,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w500,
-                                color: Colors.black87,
+                                color: colors.textPrimary,
                               ),
                             ),
                             Text(
                               bookingLine,
                               style: TextStyle(
                                 fontSize: 13,
-                                color: Colors.grey.shade700,
+                                color: colors.textSecondary,
                               ),
                             ),
                           ] else ...[
@@ -148,7 +148,7 @@ class _ExpandableNotificationState extends State<ExpandableNotification> {
                               clientLine,
                               style: TextStyle(
                                 fontSize: 13,
-                                color: Colors.grey.shade700,
+                                color: colors.textSecondary,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -165,7 +165,7 @@ class _ExpandableNotificationState extends State<ExpandableNotification> {
                           notification.timeAgo,
                           style: TextStyle(
                             fontSize: 11,
-                            color: Colors.grey.shade500,
+                            color: colors.textHint,
                           ),
                         ),
                         if (isUnread)
@@ -174,7 +174,7 @@ class _ExpandableNotificationState extends State<ExpandableNotification> {
                             width: 6,
                             height: 6,
                             decoration: BoxDecoration(
-                              color: AppColors.primaryGreen,
+                              color: colors.statusSuccess,
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -190,7 +190,7 @@ class _ExpandableNotificationState extends State<ExpandableNotification> {
                       notification.body,
                       style: TextStyle(
                         fontSize: 13,
-                        color: Colors.grey.shade700,
+                        color: colors.textSecondary,
                       ),
                     ),
                   ),
@@ -203,28 +203,18 @@ class _ExpandableNotificationState extends State<ExpandableNotification> {
   }
 
   String _formatClientInfo(String raw) {
-    // raw = "Клиент Иван +375291234567" или "Клиент +375291234567"
     if (!raw.startsWith('Клиент')) return raw;
-
-    // Убираем "Клиент "
     String withoutPrefix = raw.substring('Клиент'.length).trim();
-
-    // Ищем номер телефона (начинается с + или цифры)
-    // Регулярка для белорусского номера: +375 или +37529...
     RegExp phoneRegex = RegExp(r'(\+\d{10,15})');
     Match? match = phoneRegex.firstMatch(withoutPrefix);
     String? phone;
     String name = '';
     if (match != null) {
       phone = match.group(0);
-      // Имя — всё, что до номера
       name = withoutPrefix.substring(0, match.start).trim();
     } else {
-      // Если номера нет, значит, это просто текст
       name = withoutPrefix;
     }
-
-    // Форматируем результат
     if (name.isNotEmpty && phone != null) {
       return 'Клиент: $name ($phone)';
     } else if (phone != null) {
@@ -243,7 +233,8 @@ class _ExpandableNotificationState extends State<ExpandableNotification> {
       case 'BOOKING_UPDATED':
         return Colors.orange.shade700;
       default:
-        return AppColors.primaryBlue;
+        return AppColors
+            .primaryBlue; // оставляем статический, или можно использовать colors.primaryBlue
     }
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/uikit/colors/app_colors.dart';
+
+import '../../../config/theme/custom_colors.dart'; // ✅ импорт динамических цветов
 
 class PasswordTextField extends StatefulWidget {
   final TextEditingController controller;
@@ -25,6 +26,11 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Получаем динамические цвета
+    final colors = Theme.of(context).extension<CustomColors>()!;
+    final bool hasError = widget.errorText != null || _errorText != null;
+    final Color errorColor = colors.statusError;
+
     return TextFormField(
       controller: widget.controller,
       onChanged: (value) {
@@ -33,15 +39,18 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
         });
       },
       obscureText: _obscureText,
-      style: const TextStyle(fontSize: 16, color: AppColors.primaryBlack),
+      style: TextStyle(
+        fontSize: 16,
+        color: colors.textSecondary, // ✅ тусклый цвет текста
+      ),
       decoration: InputDecoration(
         hintText: widget.hintText,
-        hintStyle: const TextStyle(color: AppColors.primaryGrey),
-        prefixIcon: const Icon(Icons.lock_outline, color: AppColors.primaryGrey),
+        hintStyle: TextStyle(color: colors.textHint),
+        prefixIcon: Icon(Icons.lock_outline, color: colors.textSecondary),
         suffixIcon: IconButton(
           icon: Icon(
             _obscureText ? Icons.visibility_off : Icons.visibility,
-            color: AppColors.primaryGrey,
+            color: colors.textSecondary,
           ),
           onPressed: () {
             setState(() {
@@ -53,22 +62,26 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
           },
         ),
         errorText: widget.errorText ?? _errorText,
-        errorStyle: const TextStyle(fontSize: 12, color: AppColors.primaryRed),
+        errorStyle: TextStyle(fontSize: 12, color: errorColor),
         filled: true,
-        fillColor: AppColors.primaryBackgroundColor,
+        fillColor: colors.surfaceInput,
+        // ✅ динамический фон поля
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.primaryRed, width: 1.5),
+          borderSide: BorderSide(color: errorColor, width: 1.5),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.primaryRed, width: 1.5),
+          borderSide: BorderSide(color: errorColor, width: 1.5),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {

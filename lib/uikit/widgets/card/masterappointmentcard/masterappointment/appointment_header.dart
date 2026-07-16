@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/uikit/colors/app_colors.dart';
+
+import '../../../../../config/theme/custom_colors.dart';
 import 'appointment_status_chip.dart';
 
 class MasterAppointmentHeader extends StatelessWidget {
@@ -20,10 +21,13 @@ class MasterAppointmentHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Получаем динамические цвета
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: _headerColor(),
+        color: _headerColor(colors),
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(12),
           topRight: Radius.circular(12),
@@ -39,22 +43,22 @@ class MasterAppointmentHeader extends StatelessWidget {
               child: InkWell(
                 borderRadius: BorderRadius.circular(16),
                 onTap: onDelete,
-                child: const Padding(
-                  padding: EdgeInsets.all(4),
+                child: Padding(
+                  padding: const EdgeInsets.all(4),
                   child: Icon(
                     Icons.delete_outline,
-                    color: AppColors.primaryRed,
+                    color: colors.statusError, // ✅ динамический красный
                     size: 23,
                   ),
                 ),
               ),
             )
           else
-            const Padding(
-              padding: EdgeInsets.all(4),
+            Padding(
+              padding: const EdgeInsets.all(4),
               child: Icon(
                 Icons.delete_outline,
-                color: AppColors.primaryGrey,
+                color: colors.textSecondary, // ✅ динамический серый
                 size: 23,
               ),
             ),
@@ -63,16 +67,16 @@ class MasterAppointmentHeader extends StatelessWidget {
     );
   }
 
-  Color _headerColor() {
+  Color _headerColor(CustomColors colors) {
     switch (status?.toUpperCase()) {
       case 'CONFIRMED':
-        return Colors.green.withAlpha(20);
+        return colors.statusSuccess.withOpacity(0.08);
       case 'PENDING':
-        return Colors.orange.withAlpha(20);
+        return colors.statusWarning.withOpacity(0.08);
       case 'CANCELED':
-        return Colors.red.withAlpha(20);
+        return colors.statusError.withOpacity(0.08);
       default:
-        return AppColors.primaryBlue.withAlpha(13);
+        return colors.primaryBlue.withOpacity(0.05);
     }
   }
 }

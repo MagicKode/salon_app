@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:salon_flutter/uikit/colors/app_colors.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
+
+import '../../../../../config/theme/custom_colors.dart';
 
 class HomeSearchBar extends StatelessWidget {
   final VoidCallback? onTap;
@@ -9,6 +10,8 @@ class HomeSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
@@ -17,26 +20,26 @@ class HomeSearchBar extends StatelessWidget {
             child: Container(
               height: 48,
               decoration: BoxDecoration(
-                color: AppColors.primaryBackgroundColor,
+                color: colors.surfaceInput,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: TextField(
                 readOnly: true,
                 onTap: onTap,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 15,
-                  color: Colors.grey,
+                  color: colors.textSecondary,
                 ),
                 decoration: InputDecoration(
                   hintText: AppStrings.hintServiceMasterSearch,
-                  hintStyle: const TextStyle(
+                  hintStyle: TextStyle(
                     fontSize: 14,
-                    color: Colors.grey,
+                    color: colors.textHint,
                   ),
-                  prefixIcon: const Icon(
+                  prefixIcon: Icon(
                     Icons.search,
                     size: 20,
-                    color: AppColors.primaryBlue,
+                    color: colors.primaryBlue,
                   ),
                   border: InputBorder.none,
                   contentPadding: const EdgeInsets.symmetric(vertical: 14),

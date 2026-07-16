@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
-import '../../../uikit/colors/app_colors.dart';
+import '../../../config/theme/custom_colors.dart';
 import '../../../uikit/widgets/card/calendar_view_card.dart';
 import '../../../uikit/widgets/card/daysummery/day_summary_card.dart';
 import '../../auth/authblock/bloc/auth_block.dart';
@@ -16,11 +16,13 @@ class MasterScheduleBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return BlocBuilder<MasterScheduleBloc, MasterScheduleState>(
       builder: (context, state) {
         if (state is MasterScheduleLoading) {
-          return const Center(
-            child: CircularProgressIndicator(color: AppColors.primaryBlue),
+          return Center(
+            child: CircularProgressIndicator(color: colors.primaryBlue),
           );
         }
 
@@ -31,11 +33,12 @@ class MasterScheduleBody extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.error_outline, size: 48, color: AppColors.primaryRed),
+                  Icon(Icons.error_outline, size: 48, color: colors.statusError),
                   const SizedBox(height: 16),
-                  Text(state.errorMessage,
+                  Text(
+                    state.errorMessage,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: AppColors.primaryRed, fontSize: 16),
+                    style: TextStyle(color: colors.statusError, fontSize: 16),
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton.icon(
@@ -50,6 +53,10 @@ class MasterScheduleBody extends StatelessWidget {
                         );
                       }
                     },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: colors.primaryBlue,
+                      foregroundColor: colors.textOnPrimary,
+                    ),
                     icon: const Icon(Icons.refresh),
                     label: const Text("Повторить"),
                   ),
@@ -69,8 +76,54 @@ class MasterScheduleBody extends StatelessWidget {
               ): item.status,
           };
 
+          // ✅ Календарь и легенда – статическая верхняя часть
+          final calendarWidget = Column(
+            children: [
+              CalendarViewCard(
+                focusedDay: state.selectedDay,
+                onDaySelected: (day) {
+                  final auth = context.read<AuthBloc>().state;
+                  if (auth is AuthSuccess) {
+                    context.read<MasterScheduleBloc>().add(
+                      ChangeSelectedDay(auth.user.masterName, day),
+                    );
+                  }
+                },
+                availability: availabilityMap,
+              ),
+              _buildLegend(colors),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                child: Divider(color: colors.borderLight),
+              ),
+            ],
+          );
+
+          // ✅ Заявки – скроллится только этот блок
+          final appointmentsWidget = DaySummaryCard(
+            appointments: state.selectedDayAppointments,
+            selectedDate: state.selectedDay,
+            availability: availabilityMap,
+            onRefresh: () {
+              final auth = context.read<AuthBloc>().state;
+              if (auth is AuthSuccess) {
+                context.read<MasterScheduleBloc>().add(
+                  LoadScheduleMonth(
+                    masterName: auth.user.masterName,
+                    month: state.selectedDay,
+                  ),
+                );
+              }
+            },
+          );
+
+          // 📏 Вычисляем высоту экрана для корректного скролла
+          final screenHeight = MediaQuery.of(context).size.height;
+          final appBarHeight = kToolbarHeight + MediaQuery.of(context).padding.top;
+          final calendarHeight = 350.0; // высота календаря + легенда
+
           return RefreshIndicator(
-            color: AppColors.primaryBlue,
+            color: colors.primaryBlue,
             onRefresh: () async {
               final auth = context.read<AuthBloc>().state;
               if (auth is AuthSuccess) {
@@ -82,54 +135,16 @@ class MasterScheduleBody extends StatelessWidget {
                 );
               }
             },
-            child: CustomScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              slivers: [
-                // Календарь – фиксированная часть (не скроллится)
-                SliverToBoxAdapter(
-                  child: Column(
-                    children: [
-                      CalendarViewCard(
-                        focusedDay: state.selectedDay,
-                        onDaySelected: (day) {
-                          final auth = context.read<AuthBloc>().state;
-                          if (auth is AuthSuccess) {
-                            context.read<MasterScheduleBloc>().add(
-                              ChangeSelectedDay(auth.user.masterName, day),
-                            );
-                          }
-                        },
-                        availability: availabilityMap,
-                      ),
-                      _buildLegend(),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                        child: Divider(color: AppColors.lightBorder),
-                      ),
-                    ],
+            child: Container(
+              height: screenHeight - appBarHeight - 10, // ✅ фиксированная высота для Column
+              child: Column(
+                children: [
+                  calendarWidget,
+                  Expanded(
+                    child: appointmentsWidget, // ✅ занимает всё оставшееся место
                   ),
-                ),
-                // Список записей – занимает всё оставшееся место, скроллится независимо
-                SliverFillRemaining(
-                  hasScrollBody: true,
-                  child: DaySummaryCard(
-                    appointments: state.selectedDayAppointments,
-                    selectedDate: state.selectedDay,
-                    availability: availabilityMap,
-                    onRefresh: () {
-                      final auth = context.read<AuthBloc>().state;
-                      if (auth is AuthSuccess) {
-                        context.read<MasterScheduleBloc>().add(
-                          LoadScheduleMonth(
-                            masterName: auth.user.masterName,
-                            month: state.selectedDay,
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         }
@@ -139,28 +154,38 @@ class MasterScheduleBody extends StatelessWidget {
     );
   }
 
-  Widget _buildLegend() {
+  Widget _buildLegend(CustomColors colors) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          _legendItem(AppColors.primaryGrey, AppStrings.dayIsFull),
+          _legendItem(colors, colors.textSecondary, AppStrings.dayIsFull),
           const SizedBox(width: 16),
-          _legendItem(AppColors.primaryBlue, AppStrings.chosenDay),
+          _legendItem(colors, colors.primaryBlue, AppStrings.chosenDay),
           const SizedBox(width: 16),
-          _legendItem(AppColors.primaryRed, AppStrings.weekend),
+          _legendItem(colors, colors.statusError, AppStrings.weekend),
         ],
       ),
     );
   }
 
-  Widget _legendItem(Color color, String text) {
+  Widget _legendItem(CustomColors colors, Color color, String text) {
     return Row(
       children: [
-        Container(width: 10, height: 10, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+        Container(
+          width: 10,
+          height: 10,
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        ),
         const SizedBox(width: 6),
-        Text(text, style: const TextStyle(fontSize: 10, color: AppColors.primaryGrey)),
+        Text(
+          text,
+          style: TextStyle(
+            fontSize: 10,
+            color: colors.textSecondary,
+          ),
+        ),
       ],
     );
   }

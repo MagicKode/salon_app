@@ -16,6 +16,7 @@ import 'package:salon_flutter/feature/core/homepagescreen/sections/specialists/s
 import 'package:salon_flutter/uikit/colors/app_colors.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
+import '../../../config/theme/custom_colors.dart';
 import '../../catalog/bloc/catalog_bloc.dart';
 import '../../catalog/bloc/catalog_event.dart';
 import '../../catalog/bloc/catalog_state.dart';
@@ -72,6 +73,8 @@ class _HomePageBodyState extends State<HomePageBody> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     // ✅ Загружаем только если ещё нет данных
     final catalogState = context.read<CatalogBloc>().state;
     if (catalogState is! CatalogSuccess) {
@@ -85,15 +88,15 @@ class _HomePageBodyState extends State<HomePageBody> {
     }
 
     return Scaffold(
-      backgroundColor: AppColors.primaryWhite,
+      backgroundColor: colors.backgroundPrimary,
       appBar: AppBarSection(isMaster: widget.isMaster),
       body: SafeArea(
         child: BlocBuilder<CatalogBloc, CatalogState>(
           builder: (context, state) {
             // 1. СОСТОЯНИЕ ЗАГРУЗКИ: Показываем красивый индикатор, пока идет запрос
             if (state is CatalogLoading) {
-              return const Center(
-                child: CircularProgressIndicator(color: AppColors.primaryBlue),
+              return Center(
+                child: CircularProgressIndicator(color: colors.primaryBlue),
               );
             }
 
@@ -108,8 +111,8 @@ class _HomePageBodyState extends State<HomePageBody> {
                       Text(
                         state.errorMessage,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: AppColors.primaryRed,
+                        style: TextStyle(
+                          color: colors.statusError,
                           fontSize: 16,
                         ),
                       ),
@@ -120,6 +123,10 @@ class _HomePageBodyState extends State<HomePageBody> {
                             CatalogFetchRequested(),
                           );
                         },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: colors.primaryBlue,
+                          foregroundColor: colors.textOnPrimary,
+                        ),
                         child: const Text(AppStrings.tryAgain),
                       ),
                     ],
@@ -139,7 +146,9 @@ class _HomePageBodyState extends State<HomePageBody> {
                 children: [
                   SingleChildScrollView(
                     controller: _scrollController,
-                    padding: EdgeInsets.only(bottom: widget.isMaster ? 20 : 100),
+                    padding: EdgeInsets.only(
+                      bottom: widget.isMaster ? 20 : 100,
+                    ),
                     child: Column(
                       children: [
                         if (!widget.isMaster)
@@ -167,7 +176,10 @@ class _HomePageBodyState extends State<HomePageBody> {
                         ServiceGridSection(
                           key: ValueKey(_servicesRefreshCounter),
                           isMaster: widget.isMaster,
-                          onQuickBookRequested: widget.isMaster ? null : widget.onQuickBookRequested,
+                          onQuickBookRequested:
+                              widget.isMaster
+                                  ? null
+                                  : widget.onQuickBookRequested,
                           onServiceUpdated: _refreshServices,
                         ),
 
@@ -214,8 +226,8 @@ class _HomePageBodyState extends State<HomePageBody> {
                                 ),
                                 child: Text(
                                   "Не удалось загрузить отзывы: ${reviewState.errorMessage}",
-                                  style: const TextStyle(
-                                    color: AppColors.primaryRed,
+                                  style: TextStyle(
+                                    color: colors.statusError,
                                     fontSize: 12,
                                   ),
                                 ),

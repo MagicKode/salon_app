@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
-import '../../../../uikit/colors/app_colors.dart';
+
+import '../../../../config/theme/custom_colors.dart';
 
 class CatalogSearchBar extends StatefulWidget {
   final TextEditingController controller;
@@ -33,39 +34,41 @@ class _CatalogSearchBarState extends State<CatalogSearchBar> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<CustomColors>()!;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Container(
         height: 48,
         decoration: BoxDecoration(
-          color: AppColors.primaryBackgroundColor,
+          color: colors.surfaceInput,
           borderRadius: BorderRadius.circular(12),
         ),
         child: TextField(
           controller: widget.controller,
           onChanged: widget.onChanged,
           autofocus: false,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 15,
-            color: Colors.grey, // ✅ тусклый цвет, как hint
+            color: colors.textSecondary,
           ),
           decoration: InputDecoration(
             hintText: AppStrings.hintServiceMasterSearch,
-            hintStyle: const TextStyle(
+            hintStyle: TextStyle(
               fontSize: 14,
-              color: Colors.grey,
+              color:  colors.textHint,
             ),
-            prefixIcon: const Icon(
+            prefixIcon: Icon(
               Icons.search,
               size: 20,
-              color: AppColors.primaryBlue,
+              color: colors.primaryBlue,
             ),
             suffixIcon: widget.controller.text.isNotEmpty
                 ? IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.clear_rounded,
                 size: 20,
-                color: AppColors.primaryGrey,
+                color: colors.textSecondary,
               ),
               onPressed: () {
                 widget.controller.clear();
