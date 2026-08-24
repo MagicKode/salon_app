@@ -4,11 +4,13 @@ import 'package:salon_flutter/feature/core/bookingservicescreen/booking_service_
 import 'package:salon_flutter/feature/core/homepagescreen/sections/servicesgrid/service_item.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
+import '../../../../../config/theme/custom_colors.dart';
 import '../../../../catalog/data/models/service_dto.dart';
 import '../../../../catalog/domain/repositories/catalog_repository.dart';
 import '../../../catalogscreen/domain/catalog_service.dart';
 import '../../../servicedetailscreen/domain/service_detail_data.dart';
 import '../../../servicedetailscreen/service_detail_body.dart';
+import '../../../../../uikit/widgets/dialog/add_service_sheet.dart';
 
 class ServiceGridSection extends StatelessWidget {
   final bool isMaster;
@@ -40,11 +42,27 @@ class ServiceGridSection extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
-              padding: EdgeInsets.fromLTRB(16, 0, 16, 10),
-              child: Text(
-                AppStrings.ourServices,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    AppStrings.ourServices,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  if (isMaster)
+                    IconButton(
+                      icon: const Icon(Icons.add_circle_outline, size: 28),
+                      color:
+                          Theme.of(
+                            context,
+                          ).extension<CustomColors>()?.primaryBlue,
+                      onPressed: () {
+                        _showAddServiceSheet(context, onServiceUpdated);
+                      },
+                    ),
+                ],
               ),
             ),
             SizedBox(
@@ -128,5 +146,17 @@ class ServiceGridSection extends StatelessWidget {
         onQuickBookRequested?.call(result);
       }
     });
+  }
+
+  void _showAddServiceSheet(
+    BuildContext context,
+    VoidCallback? onServiceUpdated,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => AddServiceSheet(onServiceAdded: onServiceUpdated),
+    );
   }
 }

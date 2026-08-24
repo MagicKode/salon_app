@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import '../../data/models/catalog_image.dart';
 import '../../data/models/category_dto.dart';
 import '../../data/models/salon_model.dart';
@@ -12,4 +14,14 @@ abstract class CatalogRepository {
   Future<void> deleteImage(int imageId);
   Future<ServiceDto> updateService(ServiceDto service);
   void clearGalleryCache();
+  Future<String> uploadServiceImage(File image);
+  Future<ServiceDto> createService({
+    required String name,
+    required double price,
+    required int durationMinutes,
+    String? description,
+    String? imageId,
+    int? categoryId,
+    int? sortOrder,
+  });
 }

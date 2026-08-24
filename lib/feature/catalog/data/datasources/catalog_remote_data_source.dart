@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
@@ -24,6 +26,18 @@ abstract class CatalogRemoteDataSource {
   Future<void> deleteImage(int imageId);
 
   Future<ServiceDto> updateService(ServiceDto service);
+
+  Future<String> uploadServiceImage(File image);
+
+  Future<ServiceDto> createService({
+    required String name,
+    required double price,
+    required int durationMinutes,
+    String? description,
+    String? imageId,
+    int? categoryId,
+    int? sortOrder,
+  });
 }
 
 class CatalogRemoteDataSourceImpl implements CatalogRemoteDataSource {
@@ -32,6 +46,7 @@ class CatalogRemoteDataSourceImpl implements CatalogRemoteDataSource {
   final String imagesBaseUrl;
   final String servicesBaseUrl;
   final String categoriesBaseUrl;
+  final String imagesUploadUrl;
 
   CatalogRemoteDataSourceImpl({
     required this.dio,
@@ -39,6 +54,7 @@ class CatalogRemoteDataSourceImpl implements CatalogRemoteDataSource {
     required this.imagesBaseUrl,
     required this.servicesBaseUrl,
     required this.categoriesBaseUrl,
+    required this.imagesUploadUrl,
   });
 
   dynamic _extractData(Response response) {
@@ -179,5 +195,48 @@ class CatalogRemoteDataSourceImpl implements CatalogRemoteDataSource {
     );
     final data = response.data['data'];
     return ServiceDto.fromJson(data, imagesBaseUrl: imagesBaseUrl);
+  }
+
+  @override
+  Future<ServiceDto> createService({
+    required String name,
+    required double price,
+    required int durationMinutes,
+    String? description,
+    String? imageId,
+    int? categoryId,
+    int? sortOrder,
+  }) async {
+    final body = {
+      'name': name,
+      'price': price,
+      'durationMinutes': durationMinutes,
+      'description': description ?? '',
+      'imageId': imageId, // если бэкенд ожидает это поле
+      'categoryId': categoryId,
+      'sortOrder': sortOrder ?? 0,
+    };
+    final response = await dio.post(
+      servicesBaseUrl,
+      data: body,
+    );
+    final data = response.data['data'] ?? response.data;
+    return ServiceDto.fromJson(data, imagesBaseUrl: imagesBaseUrl);
+  }
+
+  @override
+  Future<String> uploadServiceImage(File image) async {
+    final formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(image.path),
+    });
+    final response = await dio.post(
+      imagesUploadUrl,
+      queryParameters: {
+        'relatedType': 'service'
+      },
+      data: formData,
+    );
+    // Предположим, ответ: { "id": 123 }
+    return response.data['id'].toString();
   }
 }

@@ -52,21 +52,17 @@ const String reviewBaseUrl = 'http://$_host:8086/api/v1/reviews';
 const String clientBaseUrl = 'http://$_host:8082/api/v1/clients';
 const String notificationBaseUrl = 'http://$_host:8085/api/v1/notifications';
 const String catalogImagesBaseUrl = 'http://$_host:8081/api/v1/catalog/images';
-const String catalogServicesBaseUrl =
-    'http://$_host:8081/api/v1/catalog/services';
-const String catalogCategoriesBaseUrl =
-    'http://$_host:8081/api/v1/catalog/categories';
-const String catalogImagesUploadUrl =
-    'http://$_host:8081/api/v1/catalog/images/upload';
+const String catalogServicesBaseUrl = 'http://$_host:8081/api/v1/catalog/services';
+const String catalogCategoriesBaseUrl = 'http://$_host:8081/api/v1/catalog/categories';
+const String catalogImagesUploadUrl = 'http://$_host:8081/api/v1/catalog/images/upload';
 
 //P и порты для сервисов для запуска ПК как Сервера для дистанционной демонстрации приложения.
 const String ngrokHost = 'gnarly-bounce-paper.ngrok-free.dev';
-//
+// //
 // const String authBaseUrl = 'https://$ngrokHost/api/v1/auth';
 // const String catalogBaseUrl = 'https://$ngrokHost/api/v1/catalog/salon';
 // const String bookingBaseUrl = 'https://$ngrokHost/api/v1/bookings';
-// const String masterScheduleBaseUrl =
-//     'https://$ngrokHost/api/v1/master/schedule';
+// const String masterScheduleBaseUrl = 'https://$ngrokHost/api/v1/master/schedule';
 // const String historyBaseUrl = 'https://$ngrokHost/api/v1/history';
 // const String reviewBaseUrl = 'https://$ngrokHost/api/v1/reviews';
 // const String clientBaseUrl = 'https://$ngrokHost/api/v1/clients';
@@ -88,7 +84,7 @@ void main() async {
   await initializeDateFormatting('ru', null);
 
   // ✅ Даем время на инициализацию биндингов
-  await Future.delayed(const Duration(milliseconds: 100));
+  // await Future.delayed(const Duration(milliseconds: 100));
 
   // Firebase
   try {
@@ -150,7 +146,9 @@ void main() async {
     imagesBaseUrl: catalogImagesBaseUrl,
     servicesBaseUrl: catalogServicesBaseUrl,
     categoriesBaseUrl: catalogCategoriesBaseUrl,
+    imagesUploadUrl: catalogImagesUploadUrl,
   );
+
   final catalogRepository = CatalogRepositoryImpl(
     remoteDataSource: catalogRemoteDataSource,
   );

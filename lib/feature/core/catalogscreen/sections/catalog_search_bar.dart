@@ -32,8 +32,6 @@ class _CatalogSearchBarState extends State<CatalogSearchBar> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<CustomColors>()!;
-
-    // ✅ Определяем цвет фона для поля
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final Color searchBackgroundColor = isDark
         ? colors.surfaceInput
@@ -75,12 +73,14 @@ class _CatalogSearchBarState extends State<CatalogSearchBar> {
               ),
               onPressed: () {
                 widget.controller.clear();
+                // Оповещаем родителя о пустой строке
+                widget.onChanged?.call('');
               },
             )
                 : null,
             border: InputBorder.none,
             filled: true,
-            fillColor: Colors.transparent, // ✅ делаем фон прозрачным
+            fillColor: Colors.transparent,
             contentPadding: const EdgeInsets.symmetric(vertical: 14),
           ),
         ),

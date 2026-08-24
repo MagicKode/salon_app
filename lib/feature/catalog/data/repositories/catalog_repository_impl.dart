@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:salon_flutter/feature/catalog/data/models/category_dto.dart';
 
 import '../../domain/repositories/catalog_repository.dart';
@@ -121,5 +123,33 @@ class CatalogRepositoryImpl implements CatalogRepository {
 
   void clearCache() {
     _cache.clear();
+  }
+
+  @override
+  Future<ServiceDto> createService({
+    required String name,
+    required double price,
+    required int durationMinutes,
+    String? description,
+    String? imageId,
+    int? categoryId,
+    int? sortOrder
+  }) async {
+    final newService = await remoteDataSource.createService(
+      name: name,
+      price: price,
+      durationMinutes: durationMinutes,
+      description: description,
+      imageId: imageId,
+      categoryId: categoryId,
+      sortOrder: sortOrder,
+    );
+    _cache.removeWhere((key, value) => key.startsWith('services_'));
+    return newService;
+  }
+
+  @override
+  Future<String> uploadServiceImage(File image) async {
+    return remoteDataSource.uploadServiceImage(image);
   }
 }
