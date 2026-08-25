@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:http/http.dart' as client;
 import 'package:salon_flutter/uikit/strings/app_strings.dart';
 
 import '../models/catalog_image.dart';
@@ -38,6 +40,8 @@ abstract class CatalogRemoteDataSource {
     int? categoryId,
     int? sortOrder,
   });
+
+  Future<void> softDeleteService(int serviceId);
 }
 
 class CatalogRemoteDataSourceImpl implements CatalogRemoteDataSource {
@@ -113,7 +117,7 @@ class CatalogRemoteDataSourceImpl implements CatalogRemoteDataSource {
       throw Exception('Ожидался список, получено: ${data.runtimeType}');
     }
     final result =
-        (data as List)
+        (data)
             .map(
               (json) =>
                   CatalogImage.fromJson(json, imagesBaseUrl: imagesBaseUrl),
@@ -212,14 +216,11 @@ class CatalogRemoteDataSourceImpl implements CatalogRemoteDataSource {
       'price': price,
       'durationMinutes': durationMinutes,
       'description': description ?? '',
-      'imageId': imageId, // если бэкенд ожидает это поле
+      'imageId': imageId,
       'categoryId': categoryId,
       'sortOrder': sortOrder ?? 0,
     };
-    final response = await dio.post(
-      servicesBaseUrl,
-      data: body,
-    );
+    final response = await dio.post(servicesBaseUrl, data: body);
     final data = response.data['data'] ?? response.data;
     return ServiceDto.fromJson(data, imagesBaseUrl: imagesBaseUrl);
   }
@@ -231,12 +232,17 @@ class CatalogRemoteDataSourceImpl implements CatalogRemoteDataSource {
     });
     final response = await dio.post(
       imagesUploadUrl,
-      queryParameters: {
-        'relatedType': 'service'
-      },
+      queryParameters: {'relatedType': 'service'},
       data: formData,
     );
-    // Предположим, ответ: { "id": 123 }
     return response.data['id'].toString();
+  }
+
+  @override
+  Future<void> softDeleteService(int serviceId) async {
+    final response = await dio.patch('$servicesBaseUrl/$serviceId/deactivate');
+    if (response.statusCode != 200) {
+      throw Exception('Failed to deactivate service: ${response.statusCode}');
+    }
   }
 }

@@ -24,4 +24,5 @@ abstract class CatalogRepository {
     int? categoryId,
     int? sortOrder,
   });
+  Future<void> softDeleteService(int serviceId);
 }

@@ -9,6 +9,7 @@ class ServiceDto {
   final int? categoryId;
   final int sortOrder;
   final CatalogImage? image;
+  final bool isDeleted;
 
   const ServiceDto({
     required this.id,
@@ -19,6 +20,7 @@ class ServiceDto {
     this.categoryId,
     required this.sortOrder,
     this.image,
+    this.isDeleted = false,
   });
 
   factory ServiceDto.fromJson(Map<String, dynamic> json, {required String imagesBaseUrl}) {
@@ -33,6 +35,7 @@ class ServiceDto {
       image: json['image'] != null
           ? CatalogImage.fromJson(json['image'], imagesBaseUrl: imagesBaseUrl)
           : null,
+      isDeleted: json['isActive'] == null ? false : !json['isActive'],
     );
   }
 

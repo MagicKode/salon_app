@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:http/http.dart' as apiClient;
 import 'package:salon_flutter/feature/catalog/data/models/category_dto.dart';
 
 import '../../domain/repositories/catalog_repository.dart';
@@ -151,5 +152,11 @@ class CatalogRepositoryImpl implements CatalogRepository {
   @override
   Future<String> uploadServiceImage(File image) async {
     return remoteDataSource.uploadServiceImage(image);
+  }
+
+  @override
+  Future<void> softDeleteService(int serviceId) async {
+    await remoteDataSource.softDeleteService(serviceId);
+    _cache.removeWhere((key, value) => key.startsWith('services_'));
   }
 }

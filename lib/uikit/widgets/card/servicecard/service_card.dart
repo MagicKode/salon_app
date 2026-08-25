@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../config/theme/custom_colors.dart';
-import '../../../../../uikit/widgets/card/images/networkimagewithplaceholder.dart';
+import '../../../../config/theme/custom_colors.dart';
+import '../images/networkimagewithplaceholder.dart';
 
-class ServiceItem extends StatelessWidget {
-  final String imageUrl; // ✅ заменили category на прямую ссылку
+class ServiceCard extends StatelessWidget {
+  final String imageUrl;
   final String title;
-  final String subtitle;
+  final String? subtitle;
+  final bool showDeleteButton;
+  final VoidCallback? onDelete;
 
-  const ServiceItem({
+  const ServiceCard({
     super.key,
     required this.imageUrl,
     required this.title,
     required this.subtitle,
+    this.showDeleteButton = false,
+    this.onDelete,
   });
 
   @override
@@ -73,6 +77,36 @@ class ServiceItem extends StatelessWidget {
               ),
             ),
           ),
+
+          // 4. Крестик удаления (если showDeleteButton == true)
+          if (onDelete != null)
+            Positioned(
+              top: 6,
+              right: 6,
+              child: Material(
+                color: Colors.transparent,
+                shape: const CircleBorder(),
+                clipBehavior: Clip.hardEdge,
+                child: InkWell(
+                  onTap: onDelete,
+                  customBorder: const CircleBorder(),
+                  splashColor: Colors.white.withOpacity(0.3),
+                  highlightColor: Colors.white.withOpacity(0.1),
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: const BoxDecoration(
+                      color: Colors.black54,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.close_rounded,
+                      size: 18,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );
