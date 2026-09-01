@@ -19,7 +19,10 @@ class MasterScheduleBloc extends Bloc<MasterScheduleEvent, MasterScheduleState> 
       LoadScheduleMonth event,
       Emitter<MasterScheduleState> emit,
       ) async {
-    // Если месяц уже загружен – просто обновляем день
+    // Сразу показываем загрузку с выбранной датой
+    emit(MasterScheduleLoading(event.month));
+
+    // Если месяц уже загружен – просто обновляем день без повторного запроса месяца
     if (_lastLoadedMonth != null &&
         _lastLoadedMonth!.year == event.month.year &&
         _lastLoadedMonth!.month == event.month.month &&
@@ -27,8 +30,6 @@ class MasterScheduleBloc extends Bloc<MasterScheduleEvent, MasterScheduleState> 
       await _loadDayAppointments(event.masterName, event.month, emit);
       return;
     }
-
-    emit(MasterScheduleLoading());
 
     try {
       // Загружаем статусы дней
@@ -48,17 +49,19 @@ class MasterScheduleBloc extends Bloc<MasterScheduleEvent, MasterScheduleState> 
       _allMonthAppointments = monthAppointments;
       _lastLoadedMonth = event.month;
 
-      // Фильтруем записи на выбранный день (сегодня)
+      // Фильтруем записи на выбранный день
       final bookings = _filterAppointmentsByDay(monthAppointments, event.month);
 
-      // ✅ Эмитим Success СРАЗУ, не вызывая _loadDayAppointments
       emit(MasterScheduleSuccess(
         availability: availability,
         selectedDayAppointments: bookings,
         selectedDay: event.month,
       ));
     } catch (e) {
-      emit(MasterScheduleFailure(e.toString().replaceAll('Exception: ', '')));
+      emit(MasterScheduleFailure(
+        e.toString().replaceAll('Exception: ', ''),
+        event.month,
+      ));
     }
   }
 
@@ -71,7 +74,6 @@ class MasterScheduleBloc extends Bloc<MasterScheduleEvent, MasterScheduleState> 
     }
   }
 
-  // Обновление записей для выбранного дня (только при Success)
   Future<void> _loadDayAppointments(
       String masterName,
       DateTime day,

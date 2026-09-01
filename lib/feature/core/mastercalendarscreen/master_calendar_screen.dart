@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:salon_flutter/feature/core/mastercalendarscreen/master_calendar_body.dart';
 import 'package:salon_flutter/feature/core/mastercalendarscreen/sections/calendar_header_section.dart';
 
-import '../../../config/theme/custom_colors.dart'; // ✅ динамические цвета
+import '../../../config/theme/custom_colors.dart';
 import '../../auth/authblock/bloc/auth_block.dart';
 import '../../auth/authblock/bloc/auth_state.dart';
 import 'bloc/master_calendar_bloc.dart';
 import 'bloc/master_calendar_event.dart';
 import 'domain/master_calendar_repository.dart';
+import 'master_calendar_body.dart';
 
 class MasterCalendarScreen extends StatelessWidget {
   const MasterCalendarScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // ✅ Получаем динамические цвета
     final colors = Theme.of(context).extension<CustomColors>()!;
 
     return BlocProvider(
-      create:
-          (_) => MasterCalendarBloc(context.read<MasterCalendarRepository>()),
+      create: (_) => MasterCalendarBloc(
+        context.read<MasterCalendarRepository>(),
+      ),
       child: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, authState) {
           if (authState is! AuthSuccess) {
@@ -36,7 +36,7 @@ class MasterCalendarScreen extends StatelessWidget {
           );
 
           return Scaffold(
-            backgroundColor: colors.backgroundPrimary, // ✅ динамический фон
+            backgroundColor: colors.backgroundPrimary,
             appBar: CalendarHeaderSection(selectedDate: DateTime.now()),
             body: const MasterCalendarBody(),
             floatingActionButton: FloatingActionButton.small(
@@ -48,10 +48,10 @@ class MasterCalendarScreen extends StatelessWidget {
                   );
                 }
               },
-              backgroundColor: colors.primaryBlue, // ✅ динамический синий
+              backgroundColor: colors.primaryBlue,
               child: Icon(
                 Icons.refresh,
-                color: colors.textOnPrimary, // ✅ динамический белый
+                color: colors.textOnPrimary,
               ),
             ),
           );

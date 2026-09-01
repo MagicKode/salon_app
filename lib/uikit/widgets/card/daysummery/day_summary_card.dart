@@ -150,7 +150,7 @@ class DaySummaryCard extends StatelessWidget {
                           Text(
                             'Отменена',
                             style: TextStyle(
-                              fontSize: 15,
+                              fontSize: 12,
                               color: colors.statusError,
                               // ✅ динамический красный
                               fontWeight: FontWeight.w700,

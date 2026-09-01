@@ -24,9 +24,25 @@ class MasterScheduleBody extends StatelessWidget {
 
     return BlocBuilder<MasterScheduleBloc, MasterScheduleState>(
       builder: (context, state) {
-        // ✅ Загрузка – красивый лоадер
-        if (state is MasterScheduleLoading) {
+        // ✅ Начальное состояние – загружаем данные
+        if (state is MasterScheduleInitial) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            final auth = context.read<AuthBloc>().state;
+            if (auth is AuthSuccess) {
+              context.read<MasterScheduleBloc>().add(
+                LoadScheduleMonth(
+                  masterName: auth.user.masterName,
+                  month: DateTime.now(),
+                ),
+              );
+            }
+          });
           return const LoadingWidget(message: 'Загрузка расписания...');
+        }
+
+        // ✅ Загрузка
+        if (state is MasterScheduleLoading) {
+          return const LoadingWidget(message: 'Обновление расписания...');
         }
 
         // ✅ Ошибка с проверкой интернета
@@ -51,26 +67,18 @@ class MasterScheduleBody extends StatelessWidget {
                   },
                 );
               }
-              // Интернет есть, но ошибка
               return Center(
                 child: Padding(
                   padding: const EdgeInsets.all(24),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
-                        Icons.error_outline,
-                        size: 48,
-                        color: colors.statusError,
-                      ),
+                      Icon(Icons.error_outline, size: 48, color: colors.statusError),
                       const SizedBox(height: 16),
                       Text(
                         state.errorMessage,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: colors.statusError,
-                          fontSize: 16,
-                        ),
+                        style: TextStyle(color: colors.statusError, fontSize: 16),
                       ),
                       const SizedBox(height: 24),
                       ElevatedButton.icon(
@@ -100,15 +108,15 @@ class MasterScheduleBody extends StatelessWidget {
           );
         }
 
+        // ✅ Успех – показываем календарь и записи
         if (state is MasterScheduleSuccess) {
           final availabilityMap = <DateTime, DayStatus>{
             for (var item in state.availability)
               DateTime.utc(
-                    DateTime.parse(item.date).year,
-                    DateTime.parse(item.date).month,
-                    DateTime.parse(item.date).day,
-                  ):
-                  item.status,
+                DateTime.parse(item.date).year,
+                DateTime.parse(item.date).month,
+                DateTime.parse(item.date).day,
+              ): item.status,
           };
 
           final calendarWidget = Column(
@@ -127,10 +135,7 @@ class MasterScheduleBody extends StatelessWidget {
               ),
               _buildLegend(colors),
               Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 8,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                 child: Divider(color: colors.borderLight),
               ),
             ],
@@ -154,9 +159,7 @@ class MasterScheduleBody extends StatelessWidget {
           );
 
           final screenHeight = MediaQuery.of(context).size.height;
-          final appBarHeight =
-              kToolbarHeight + MediaQuery.of(context).padding.top;
-          final calendarHeight = 350.0;
+          final appBarHeight = kToolbarHeight + MediaQuery.of(context).padding.top;
 
           return RefreshIndicator(
             color: colors.primaryBlue,
@@ -174,7 +177,10 @@ class MasterScheduleBody extends StatelessWidget {
             child: Container(
               height: screenHeight - appBarHeight - 10,
               child: Column(
-                children: [calendarWidget, Expanded(child: appointmentsWidget)],
+                children: [
+                  calendarWidget,
+                  Expanded(child: appointmentsWidget),
+                ],
               ),
             ),
           );
