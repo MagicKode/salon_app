@@ -112,10 +112,7 @@ class _ServiceGridSectionState extends State<ServiceGridSection> {
       return Center(child: Text('Ошибка: $_error'));
     }
 
-    if (_services.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
+    // ✅ ВСЕГДА ПОКАЗЫВАЕМ ЗАГОЛОВОК И КНОПКУ
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -139,35 +136,45 @@ class _ServiceGridSectionState extends State<ServiceGridSection> {
             ],
           ),
         ),
-        SizedBox(
-          height: 240,
-          child: GridView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 10,
-              crossAxisSpacing: 10,
-              childAspectRatio: 0.75,
+        // ✅ Если услуг нет — показываем заглушку
+        if (_services.isEmpty)
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+            child: Text(
+              'Услуги пока не добавлены',
+              style: TextStyle(color: Colors.grey, fontSize: 14),
             ),
-            itemCount: _services.length,
-            itemBuilder: (context, index) {
-              final s = _services[index];
-              return GestureDetector(
-                onTap: () {
-                  _showServiceDetails(context, s);
-                },
-                child: ServiceCard(
-                  imageUrl: s.image?.url ?? '',
-                  title: s.name,
-                  subtitle: 'от ${s.price} Br',
-                  showDeleteButton: widget.isMaster,
-                  onDelete: widget.isMaster ? () => _deleteService(s) : null,
-                ),
-              );
-            },
+          )
+        else
+          SizedBox(
+            height: 240,
+            child: GridView.builder(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+                childAspectRatio: 0.75,
+              ),
+              itemCount: _services.length,
+              itemBuilder: (context, index) {
+                final s = _services[index];
+                return GestureDetector(
+                  onTap: () {
+                    _showServiceDetails(context, s);
+                  },
+                  child: ServiceCard(
+                    imageUrl: s.image?.url ?? '',
+                    title: s.name,
+                    subtitle: 'от ${s.price} Br',
+                    showDeleteButton: widget.isMaster,
+                    onDelete: widget.isMaster ? () => _deleteService(s) : null,
+                  ),
+                );
+              },
+            ),
           ),
-        ),
       ],
     );
   }

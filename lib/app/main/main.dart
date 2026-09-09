@@ -40,7 +40,7 @@ const bool isEmulator = false;
 // const bool isEmulator = true;
 
 // Определяем базовый IP и порты для сервисов
-const String _host = isEmulator ? '10.0.2.2' : '192.168.1.223';
+const String _host = isEmulator ? '10.0.2.2' : '192.168.1.224';
 
 const String authBaseUrl = 'http://$_host:8082/api/v1/auth';
 const String catalogBaseUrl = 'http://$_host:8081/api/v1/catalog/salon';
